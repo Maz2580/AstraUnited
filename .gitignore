@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+dist
+.vercel
+.env
+.env*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.tsbuildinfo
+
+# Raw client/source-transfer files kept outside version control
+*.zip
+Content Copies-20260602T085649Z-3-001/
+Astra Logo-Final.png
