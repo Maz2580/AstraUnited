@@ -2,7 +2,6 @@ node_modules
 .next
 out
 dist
-.vercel
 .env
 .env*.local
 npm-debug.log*
@@ -15,3 +14,5 @@ pnpm-debug.log*
 *.zip
 Content Copies-20260602T085649Z-3-001/
 Astra Logo-Final.png
+
+.vercel
