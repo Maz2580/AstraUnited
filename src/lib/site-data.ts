@@ -87,35 +87,35 @@ export const newsPreview = [
   {
     kicker: "Match reports",
     title: "Senior Team Secure Crucial Three Points",
-    copy: "Weekly match summaries and team updates will give families and supporters a clear view of the season."
+    copy: "Weekly summaries of how our senior and academy teams perform across the competition."
   },
   {
     kicker: "Events",
-    title: "Presentation Night and Football Camps",
-    copy: "The events calendar is prepared for awards nights, holiday camps, fundraisers, and community days."
+    title: "Presentation Night & Holiday Camps",
+    copy: "Awards nights, school-holiday football camps, fundraisers, and community gala days."
   },
   {
     kicker: "Media",
     title: "Astra in Action",
-    copy: "A future gallery can host match-day highlights, academy days, celebrations, and consent-approved media."
+    copy: "Match-day highlights, academy days, and celebrations from across the Astra family."
   }
 ];
 
 export const upcomingMoments = [
   {
     title: "2026 registrations",
-    meta: "January campaign",
-    copy: "Registration and trials are priority moments in the annual campaign plan."
+    meta: "Open now",
+    copy: "Registration and trials are open for the 2026 season - secure your place at Astra."
   },
   {
-    title: "Winter camps",
-    meta: "June campaign",
-    copy: "Holiday camp announcements and family-focused training activity are built into the content rhythm."
+    title: "Winter school-holiday camps",
+    meta: "June-July",
+    copy: "Professional coaching across the school holidays, with limited spots each intake."
   },
   {
-    title: "Season awards",
-    meta: "October campaign",
-    copy: "The site is ready to support awards night announcements and club-wide season storytelling."
+    title: "Season awards night",
+    meta: "October",
+    copy: "Celebrating the season's milestones with players, coaches, and families."
   }
 ];
 
@@ -133,46 +133,46 @@ export const pages: MarketingPage[] = [
     eyebrow: "Our Story",
     title: "Football for all, played the Astra way.",
     intro:
-      "Astra United FC is a community-focused football club in Melbourne's north, built around technical excellence, sportsmanship, and a safe pathway for players of all ages.",
+      "Astra United FC is a community-focused football club in Melbourne's north, known for technical excellence, sportsmanship, and the Astra Way: football for all, played the right way.",
     sections: [
       {
         title: "History, mission, and honours",
         copy:
-          "Founded with a vision to elevate local football, Astra has grown from a passionate football project into a structured club environment for families, players, coaches, and supporters.",
+          "Founded with a vision to elevate local football, Astra grew from a small group of passionate players and coaches into a structured, multi-team club. Our mission is a safe, inclusive, professional environment where players of all ages develop their skills, build friendships, and embrace the competitive spirit of the game - we don't just coach players, we mentor the next generation of community leaders.",
         bullets: [
           "Professional standards at grassroots level",
-          "A mission to develop players and future community leaders",
-          "Honours and club milestones ready for future trophy cabinet content"
+          "A mission to develop players and community leaders",
+          "Club honours and trophy cabinet - to be confirmed"
         ]
       },
       {
         title: "Committee and staff",
         copy:
-          "The club is powered by dedicated volunteers, qualified coaches, and welfare-focused leadership across football operations and match-day delivery.",
+          "Astra is powered by dedicated volunteers and qualified professionals. All lead coaches hold recognised Football Australia coaching qualifications and current Working With Children Checks.",
         bullets: [
-          "Leadership team and committee contacts",
+          "Committee and leadership - contacts to be confirmed",
           "Football Australia-qualified lead coaches",
-          "Working With Children and welfare responsibilities"
+          "Dedicated Welfare Officer for player wellbeing"
         ]
       },
       {
         title: "Governance and safeguarding",
         copy:
-          "Astra operates with transparency, accountability, child safety, and alignment with Football Australia and venue requirements.",
+          "Astra operates with transparency and accountability, aligned with Football Australia and local council regulations. The safety of our youth players is our absolute priority.",
         bullets: [
-          "Club constitution and governance documents",
-          "Safeguarding and welfare policies",
+          "Club constitution and governance",
+          "Safeguarding and welfare policy",
           "AGM minutes and member updates"
         ]
       },
       {
         title: "Facilities and fields",
         copy:
-          "Training and match-day activity is based at Darebin International Sports Centre, with venue information, parking guidance, and field updates prepared for future expansion.",
+          "We train and play at Darebin International Sports Centre, with well-maintained pitches, on-site parking, and match-day amenities.",
         bullets: [
-          "Darebin International Sports Centre",
-          "Parking and match-day amenities",
-          "Pitch status and location updates"
+          "Darebin International Sports Centre, Thornbury",
+          "On-site parking and match-day stewards",
+          "Pitch-status updates on match mornings"
         ]
       }
     ]
@@ -183,18 +183,18 @@ export const pages: MarketingPage[] = [
     eyebrow: "Pathways",
     title: "From Mini-Kickers to senior football.",
     intro:
-      "Astra's football structure supports boys, girls, youth players, U23s, and senior squads with a clear pathway from early development into competitive football.",
+      "Astra's pathway supports boys, girls, youth players, U23s, and senior squads - a clear route from first touch to first team.",
     sections: [
       {
         title: "Senior teams",
         copy:
-          "The senior program represents the final stage of the Astra pathway, combining experienced players with emerging talent.",
+          "Our senior program shows the club's philosophy at a competitive level: a Men's First Team in the Victorian league system, a growing Women's First Team, and an Under-23s squad bridging youth and senior football.",
         bullets: ["Men's First Team", "Women's First Team", "Under-23s development squad"]
       },
       {
         title: "Youth Academy",
         copy:
-          "The Astra Academy is designed around long-term player development, technical confidence, and a healthy team-first culture.",
+          "Based at Darebin, our Academy gives boys and girls from Under 6s to Under 18s a safe, structured environment built on development over results - technical excellence, game intelligence, and social growth.",
         bullets: [
           "Development over results",
           "Two structured training sessions per week",
@@ -204,7 +204,7 @@ export const pages: MarketingPage[] = [
       {
         title: "Fixtures and results",
         copy:
-          "The site is scaffolded for fixtures, standings, and match locations, with future integrations able to plug into the public experience.",
+          "Upcoming fixtures, results, and league standings live here - check match locations and kit colours before kick-off. Locations can change with the weather, so check the home-page pitch status on match mornings.",
         bullets: [
           "Upcoming fixtures and kick-off details",
           "Latest results and match summaries",
@@ -219,22 +219,22 @@ export const pages: MarketingPage[] = [
     eyebrow: "Registration",
     title: "Join the Astra family.",
     intro:
-      "Whether a player is returning or joining for the first time, Astra is prepared for a clear registration, trial, and volunteer pathway.",
+      "Joining Astra is straightforward, whether you're returning or playing with us for the first time. The 2026 season runs March to September, with pre-season from February.",
     sections: [
       {
         title: "Registration",
         copy:
-          "The 2026 season runs from March to September, with pre-season activity beginning in February. Registration content is prepared for online forms, document upload, and payment instructions.",
+          "Complete our secure online registration; new players upload a proof-of-age document for league registration. Pay in full or by monthly direct debit. Fees cover league affiliations, insurance, pitch hire, Football Australia-aligned coaching, and kit maintenance.",
         bullets: [
-          "Academy Members U6-U12",
-          "Youth Members U13-U18",
-          "Senior members and pathway players"
+          "Academy members (U6-U12) - fees on request",
+          "Youth members (U13-U18) - fees on request",
+          "Senior members - fees on request"
         ]
       },
       {
         title: "Trials and scouting",
         copy:
-          "Open trials and scouting assessments focus on technical ability, tactical awareness, physical literacy, and character.",
+          "We hold open trials annually and scout throughout the season, assessing four pillars: technical ability, tactical awareness, physical literacy, and character.",
         bullets: [
           "Youth Academy trial pathway",
           "Senior and U23 assessment pathway",
@@ -244,7 +244,7 @@ export const pages: MarketingPage[] = [
       {
         title: "Volunteers",
         copy:
-          "The club depends on team managers, coaches, match-day helpers, media volunteers, referees, and family support.",
+          "Astra is community-run. We rely on team managers and coaches (qualifications supported), match-day marshals, the BBQ crew, referees, and media volunteers. All volunteers working with children must meet Working With Children requirements.",
         bullets: [
           "Team managers and coaches",
           "Match-day marshals and referees",
@@ -259,12 +259,12 @@ export const pages: MarketingPage[] = [
     eyebrow: "News and Media",
     title: "From the training ground to the touchline.",
     intro:
-      "Astra's content plan covers match reports, club announcements, player spotlights, photo galleries, events, camps, and community campaigns.",
+      "From the training ground to the touchline: match reports, club announcements, player spotlights, photos, and events from across the Astra community.",
     sections: [
       {
         title: "Latest news",
         copy:
-          "The site is prepared for match reports, club announcements, kit updates, camp dates, registration deadlines, and player spotlights.",
+          "Weekly match reports for our senior and academy teams, plus announcements on kit launches, camp dates, and registration deadlines.",
         bullets: [
           "Match reports and results summaries",
           "Club announcements",
@@ -274,7 +274,7 @@ export const pages: MarketingPage[] = [
       {
         title: "Photo and video gallery",
         copy:
-          "Media can showcase match-day highlights, academy training, celebrations, and community moments once consent-approved assets are ready.",
+          "Explore our teams in action - match-day highlights, academy days, and celebrations. All media is published in line with our consent and child-safety policies.",
         bullets: [
           "Match-day action",
           "Academy days",
@@ -284,7 +284,7 @@ export const pages: MarketingPage[] = [
       {
         title: "Events calendar",
         copy:
-          "The consultancy calendar highlights registrations, winter camps, finals coverage, awards night, women in football features, and seasonal community campaigns.",
+          "Training, socials, and fundraisers run year-round - presentation night, the summer football gala, charity fundraisers, and school-holiday camps.",
         bullets: [
           "Club socials and fundraisers",
           "Holiday football camps",
@@ -299,12 +299,12 @@ export const pages: MarketingPage[] = [
     eyebrow: "Partners",
     title: "Support grassroots football in Melbourne's north.",
     intro:
-      "Astra welcomes businesses and organisations who want visibility while investing in youth development, coaching, facilities, and community football.",
+      "Astra welcomes businesses who want visibility while investing in youth development, coaching, facilities, and community football in Melbourne's north.",
     sections: [
       {
         title: "Partnership opportunities",
         copy:
-          "Partner placements can support senior and academy levels, player development programs, match-day facilities, and digital community reach.",
+          "When you support Astra you invest in the health, development, and future of young people across Melbourne's north - more than a logo on a shirt.",
         bullets: [
           "Principal Club Partner",
           "Gold Partners",
@@ -314,7 +314,7 @@ export const pages: MarketingPage[] = [
       {
         title: "Sponsorship packages",
         copy:
-          "Astra can support tiered sponsorship across match kits, training wear, pitch-side visibility, player pathways, and match ball recognition.",
+          "Tiered packages to suit any business, with bespoke options available - high visibility across match days and digital platforms.",
         bullets: [
           "Main Kit Sponsor",
           "Training Wear Sponsor",
@@ -331,12 +331,12 @@ export const pages: MarketingPage[] = [
     eyebrow: "Contact",
     title: "Get in touch with Astra United FC.",
     intro:
-      "For joining, sponsorship, volunteering, media, safeguarding, or general questions, Astra is prepared for direct contact and a future enquiry form.",
+      "Questions about joining, sponsorship, volunteering, media, or safeguarding? We'd love to hear from you and aim to respond within 48 business hours.",
     sections: [
       {
         title: "General enquiries",
         copy:
-          "The contact experience is scaffolded for an enquiry form, response-time expectations, and subject routing.",
+          "Reach us for general questions, player registration and trials, sponsorship, media, or volunteering.",
         bullets: [
           "General enquiry",
           "Player registration and trials",
@@ -357,11 +357,11 @@ export const pages: MarketingPage[] = [
       {
         title: "Safeguarding and welfare",
         copy:
-          "Player welfare contact pathways are planned as part of the club's child safety and governance obligations.",
+          "For player-welfare concerns, contact our Welfare Officer directly. All information is handled per our privacy and child-safety policies.",
         bullets: [
           "Dedicated welfare contact",
-          "Privacy and child safety policies",
-          "Respectful communication across channels"
+          "Privacy and child-safety policies",
+          "Respectful communication across all channels"
         ]
       }
     ]

@@ -67,10 +67,10 @@ export default async function AdminPage() {
     <main id="main-content" className="min-h-screen bg-astra-white pt-20">
       <section className="field-grid px-5 py-20 text-white">
         <div className="container-wide">
-          <p className="mb-4 text-sm font-black uppercase tracking-normal text-astra-gold">Phase 2 scaffold</p>
+          <p className="mb-4 text-sm font-black uppercase tracking-normal text-astra-gold">Club admin</p>
           <h1 className="crest-type max-w-5xl text-5xl leading-[0.9] sm:text-7xl">Admin and events.</h1>
           <p className="mt-6 max-w-3xl text-lg leading-8 text-white/76">
-            Supabase auth, role-gating, and the events CRUD surface are prepared for the next build phase.
+            Manage club events, registrations, and published content. Sign in with your admin account to get started.
           </p>
         </div>
       </section>
@@ -155,9 +155,9 @@ function AdminDashboard({ email, name }: { email?: string; name: string | null }
               <ShieldCheck aria-hidden="true" className="h-6 w-6" />
               <span className="text-sm font-black uppercase tracking-normal">Admin verified</span>
             </div>
-            <h2 className="text-3xl font-black text-astra-ink">Events CRUD scaffold</h2>
+            <h2 className="text-3xl font-black text-astra-ink">Events management</h2>
             <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700">
-              Signed in as {name ?? email ?? "an admin"}. The next phase can wire these controls to Supabase mutations.
+              Signed in as {name ?? email ?? "an admin"}. Use these controls to manage club events and published content.
             </p>
           </div>
           <button

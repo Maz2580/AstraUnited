@@ -28,7 +28,7 @@ export function createSupabaseServerClient() {
               cookieStore.set(name, value, options);
             });
           } catch {
-            // Server Components cannot always set response cookies. Middleware can handle refresh in Phase 2.
+            // Server Components cannot always set response cookies. Middleware handles refresh when needed.
           }
         }
       }
