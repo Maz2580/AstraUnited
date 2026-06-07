@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
+import { display, sans } from "@/src/lib/fonts";
 import { SiteFooter } from "@/src/components/SiteFooter";
 import { SiteHeader } from "@/src/components/SiteHeader";
 
@@ -36,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en-AU">
+    <html lang="en-AU" className={`${display.variable} ${sans.variable}`}>
       <body>
         <a
           href="#main-content"
