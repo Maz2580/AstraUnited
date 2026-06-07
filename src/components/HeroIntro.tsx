@@ -1,133 +1,189 @@
 "use client";
 
-import Image from "next/image";
+import Link from "next/link";
 import { motion } from "framer-motion";
-import { ArrowDown, Play } from "lucide-react";
+import { ArrowDown, ArrowRight, Play } from "lucide-react";
+import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
 import { SoccerBall } from "@/src/components/SoccerBall";
+import { heroContent } from "@/src/lib/content/home";
 
-export type HeroIntroAsset =
-  | { kind: "video"; src: string; poster?: string }
-  | { kind: "lottie"; src: string }
-  | { kind: "rive"; src: string }
-  | { kind: "frames"; framePattern: string; frameCount: number };
-
-type HeroIntroProps = {
-  asset?: HeroIntroAsset;
+// Three strongest hero photos, pulled from public/images/manifest.json.
+const heroMedia: HeroSource = {
+  kind: "crossfade",
+  intervalMs: 6000,
+  images: [
+    {
+      src: "/images/kit/astra-kit-ball-1920.webp",
+      alt: "Astra United Academy jersey draped on the corner of the pitch beside the official match ball at the Darebin ground",
+      blurDataURL:
+        "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYgCdOUAAhXd8KMmZvxcAANc0QbnWA1e8eb71ZbYLPRtgKeFJOG3r962snakr3n7F2TwlfVFXyug2uWIbf+6UsjPW0qj8Ves/Qn88QAA="
+    },
+    {
+      src: "/images/match/astra-match-aerial-control-1920.webp",
+      alt: "Astra United player demonstrating aerial ball control on the touchline at the Darebin Sports and Ice Centre",
+      blurDataURL:
+        "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
+    },
+    {
+      src: "/images/ground/astra-ground-wide-sky-1920.webp",
+      alt: "Wide establishing shot of the Astra United Darebin pitch with blue sky, clouds, and floodlights in the background",
+      blurDataURL:
+        "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoQAB0APu1iqU2ppaOiMAgBMB2JZgCdACHwp9mDYDRqFT96VhYAAP6z4nrT7qYAdQc++QcVOP0fNj8+Y7CcCZ9j5Ag6IhhLBrl2nDa3N30OU8lU/IWd6GZ0yio1pEEepa9E3b2bcJSsn7ApfcljL5J5VMIUaf7PXfCH/VcNY5QlgAAA"
+    }
+  ]
 };
 
-export function HeroIntro({ asset }: HeroIntroProps) {
+// Compact stat rail (B) — static, energetic.
+const stats = [
+  { value: "U6–Snr", label: "One clear pathway" },
+  { value: "2×", label: "Week structured training" },
+  { value: "DISC", label: "Thornbury home ground" }
+];
+
+// Emphasise one word of the headline in gold.
+function renderHeadline(headline: string) {
+  const accent = /community/i.test(headline) ? "community" : null;
+  if (!accent) return headline;
+  const parts = headline.split(new RegExp(`(${accent})`, "i"));
+  return parts.map((part, i) =>
+    part.toLowerCase() === accent ? (
+      <span key={i} className="text-astra-gold">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
+}
+
+export function HeroIntro() {
   return (
     <section
-      className="hero-cutline field-grid relative isolate flex min-h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white"
+      className="hero-cutline relative isolate flex min-h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white"
       aria-label="Astra United FC introduction"
     >
-      {asset ? (
-        <div className="absolute inset-0 -z-20" data-hero-intro-asset={asset.kind}>
-          {asset.kind === "video" ? (
-            <video
-              src={asset.src}
-              poster={asset.poster}
-              autoPlay
-              muted
-              playsInline
-              className="h-full w-full object-cover"
-            />
-          ) : null}
-        </div>
-      ) : (
-        <Image
-          src="/images/academy-2.jpg"
-          alt=""
-          fill
-          priority
-          aria-hidden="true"
-          className="-z-20 object-cover opacity-32"
-          sizes="100vw"
-        />
-      )}
-      <div className="absolute inset-0 -z-10 bg-astra-ink/78" />
-      <div className="absolute inset-y-0 left-0 -z-10 w-2/5 skew-x-[-18deg] bg-astra-red/20" />
-      <div className="absolute inset-y-0 right-[-10%] -z-10 w-1/3 skew-x-[-18deg] bg-white/8" />
-      <div className="absolute inset-x-0 bottom-[18%] -z-10 h-px bg-white/25" />
-      <div className="absolute left-1/2 top-[16%] -z-10 h-[68svh] w-[70svh] -translate-x-1/2 rounded-full border border-white/12" />
-      <div className="absolute bottom-0 left-0 right-0 -z-10 h-24 bg-gradient-to-t from-astra-ink/50 to-transparent" />
-      <div
-        className="pointer-events-none absolute bottom-[7%] left-1/2 -z-10 hidden -translate-x-1/2 select-none font-display text-[17vw] font-black uppercase leading-none tracking-normal text-white/[0.055] lg:block"
-        aria-hidden="true"
-      >
-        Astra United
-      </div>
+      {/* Background media (decorative) */}
+      <HeroMedia source={heroMedia} />
 
-      <div className="container-wide relative z-10 grid min-h-[calc(100svh-9rem)] items-center gap-10 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="max-w-4xl">
+      {/* Overlays above the media, below the content — keep white text legible */}
+      <div className="absolute inset-0 -z-10 bg-astra-ink/72" aria-hidden="true" />
+      <div
+        className="absolute inset-0 -z-10 bg-gradient-to-br from-astra-navy/80 via-astra-ink/70 to-astra-ink/95"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute inset-y-0 left-0 -z-10 w-2/5 skew-x-[-18deg] bg-astra-red/15 blur-2xl"
+        aria-hidden="true"
+      />
+      <div
+        className="absolute bottom-0 left-0 right-0 -z-10 h-32 bg-gradient-to-t from-astra-ink to-transparent"
+        aria-hidden="true"
+      />
+      {/* Subtle film grain / vignette feel */}
+      <div
+        className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(6,17,26,0.55))] mix-blend-multiply"
+        aria-hidden="true"
+      />
+
+      <div className="container-wide relative z-10 grid min-h-[calc(100svh-9rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="max-w-3xl">
+          {/* Pitch-status pill */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease: "easeOut" }}
-            className="mb-7 inline-flex items-center gap-3 rounded border border-white/16 bg-white/8 px-3 py-2 text-xs font-bold uppercase tracking-normal text-white/80 backdrop-blur"
+            className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-astra-turf/50 bg-astra-turf/20 px-3.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide text-emerald-100 backdrop-blur"
           >
-            <span className="h-2 w-2 rounded-full bg-astra-red" />
-            Football academy and senior pathways
+            <span className="relative flex h-2 w-2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
+              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+            </span>
+            Pitch update · All pitches open
           </motion.div>
+
+          {/* Kicker */}
+          <motion.div
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.05, ease: "easeOut" }}
+            className="flex items-center gap-3"
+          >
+            <span className="h-px w-8 bg-astra-red" aria-hidden="true" />
+            <span className="text-xs font-bold uppercase tracking-[0.18em] text-astra-gold">
+              {heroContent.kicker}
+            </span>
+          </motion.div>
+
+          {/* Headline */}
           <motion.h1
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.08, ease: "easeOut" }}
-            className="crest-type max-w-4xl text-4xl leading-[0.9] sm:text-6xl lg:text-7xl xl:text-8xl"
+            transition={{ duration: 0.8, delay: 0.12, ease: "easeOut" }}
+            className="crest-type mt-5 max-w-3xl text-4xl leading-[0.92] text-white sm:text-6xl lg:text-7xl xl:text-8xl"
           >
-            The home of player development in Melbourne's north.
+            {renderHeadline(heroContent.headline)}
           </motion.h1>
+
+          {/* Lead */}
           <motion.p
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.18, ease: "easeOut" }}
-            className="mt-7 max-w-lg text-lg leading-8 text-white/78 lg:max-w-2xl"
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="mt-7 max-w-prose text-lg leading-8 text-white/75"
           >
-            Professional coaching, community values, and a clear pathway from grassroots football to senior squads at Darebin International Sports Centre.
+            {heroContent.lead}
           </motion.p>
+
+          {/* CTAs */}
           <motion.div
             initial={{ opacity: 0, y: 18 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.28, ease: "easeOut" }}
             className="mt-9 flex flex-col gap-3 sm:flex-row"
           >
-            <a
-              href="/join-us"
-              className="inline-flex items-center justify-center gap-2 rounded bg-astra-red px-5 py-3 text-sm font-black uppercase tracking-normal text-white transition hover:bg-red-700"
+            <Link
+              href={heroContent.primaryCta.href}
+              className="inline-flex items-center justify-center gap-2 rounded bg-astra-red px-6 py-3.5 text-sm font-black uppercase tracking-wide text-white transition hover:bg-red-700"
             >
-              Register for 2026
-            </a>
-            <a
-              href="/teams"
-              className="inline-flex items-center justify-center gap-2 rounded border border-white/24 px-5 py-3 text-sm font-black uppercase tracking-normal text-white transition hover:bg-white/10"
+              {heroContent.primaryCta.label}
+              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+            </Link>
+            <Link
+              href={heroContent.secondaryCta.href}
+              className="inline-flex items-center justify-center gap-2 rounded border border-white/30 px-6 py-3.5 text-sm font-black uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/10"
             >
               <Play aria-hidden="true" className="h-4 w-4" />
-              View pathways
-            </a>
+              {heroContent.secondaryCta.label}
+            </Link>
           </motion.div>
         </div>
 
-        <motion.div
-          initial={{ opacity: 0, scale: 0.94 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.9, delay: 0.18, ease: "easeOut" }}
-          className="relative mx-auto hidden aspect-square w-full max-w-[420px] items-center justify-center lg:flex"
+        {/* Stat rail (B) — right side on lg, stacked on mobile */}
+        <motion.dl
+          initial={{ opacity: 0, x: 24 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 0.9, delay: 0.22, ease: "easeOut" }}
+          className="mt-2 grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs"
         >
-          <div className="absolute inset-0 rounded-full border border-white/16" />
-          <div className="absolute inset-8 rounded-full border border-astra-red/50" />
-          <Image
-            src="/images/astra-logo.png"
-            alt="Astra United Football Club crest"
-            width={520}
-            height={520}
-            priority
-            className="h-full w-full object-contain drop-shadow-2xl"
-          />
-        </motion.div>
+          {stats.map((stat) => (
+            <div
+              key={stat.value}
+              className="flex flex-col gap-1 bg-astra-ink/30 px-5 py-5"
+            >
+              <dt className="crest-type text-3xl leading-none text-white lg:text-4xl">
+                <span className="text-astra-gold">{stat.value}</span>
+              </dt>
+              <dd className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/60">
+                {stat.label}
+              </dd>
+            </div>
+          ))}
+        </motion.dl>
       </div>
 
+      {/* Touchline handoff ball (decorative) */}
       <motion.div
-        className="absolute z-[5] h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
+        className="pointer-events-none absolute z-[5] h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
         style={{
           left: "var(--hero-handoff-x)",
           top: "var(--hero-handoff-y)",
@@ -142,9 +198,10 @@ export function HeroIntro({ asset }: HeroIntroProps) {
         <SoccerBall className="h-full w-full" label="Football at motion handoff point" />
       </motion.div>
 
+      {/* Scroll affordance */}
       <a
         href="#club-flow"
-        className="absolute left-1/2 top-[calc(100svh-3.75rem)] z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-xs font-black uppercase tracking-normal text-white/70 transition hover:text-white"
+        className="absolute left-1/2 top-[calc(100svh-3.75rem)] z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-xs font-black uppercase tracking-wide text-white/70 transition hover:text-white"
       >
         Scroll to explore
         <ArrowDown aria-hidden="true" className="h-5 w-5 animate-bounce" />
