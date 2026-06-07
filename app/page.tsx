@@ -34,7 +34,7 @@ export default function Home() {
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
               <h2 className="crest-type text-3xl leading-none text-astra-ink">All Astra FC pitches are open.</h2>
               <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700">
-                Training and match-day activity is currently available at Darebin International Sports Centre. This status area is ready for future admin updates.
+                Training and match-day activity is currently available at Darebin International Sports Centre. Check back on match mornings for any pitch-status changes.
               </p>
             </PopCard>
             <PopCard className="card-plain p-6 sm:p-8" delay={0.06}>
@@ -44,7 +44,7 @@ export default function Home() {
                   <p className="text-sm font-black uppercase tracking-normal text-astra-red">Next campaign moment</p>
                   <h3 className="mt-2 text-2xl font-black text-astra-ink">2026 registrations and trials</h3>
                   <p className="mt-3 text-sm leading-6 text-slate-700">
-                    The consultancy calendar flags registrations, trial windows, camps, and awards as key seasonal content.
+                    Registrations are open now for the 2026 season. Trial windows, camps, and awards night details are confirmed below.
                   </p>
                 </div>
               </div>
@@ -71,7 +71,7 @@ export default function Home() {
                 />
                 <div className="border-t border-white/10 p-5 text-white">
                   <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Academy training</p>
-                  <p className="mt-2 text-sm leading-6 text-white/72">Real club imagery from the provided media set, ready for a richer gallery in Phase 2.</p>
+                  <p className="mt-2 text-sm leading-6 text-white/72">Academy training at Darebin International Sports Centre.</p>
                 </div>
               </PopCard>
             </div>
@@ -92,7 +92,7 @@ export default function Home() {
             <SectionHeader
               eyebrow="Club essentials"
               title="Everything families ask first."
-              copy="The core Wix replacement pages are structured around the questions parents, players, sponsors, and volunteers already bring to the club."
+              copy="Everything parents, players, sponsors, and volunteers need to know about Astra United FC."
               inverse
             />
             <div data-flow-group className="flow-group mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -184,7 +184,7 @@ export default function Home() {
             <SectionHeader
               eyebrow="Join Astra"
               title="Ready to lace up your boots?"
-              copy="Registration, trials, and volunteer pathways are prepared for the 2026 season content. The admin events scaffold is ready for the next phase."
+              copy="Registration is open for the 2026 season. Join as a player, coach, volunteer, or community partner."
               inverse
             />
             <div className="grid gap-4 sm:grid-cols-2">
@@ -217,7 +217,7 @@ export default function Home() {
             <SectionHeader
               eyebrow="Contact"
               title="Based at Darebin, built for Melbourne's north."
-              copy="The contact page is ready for general enquiries, registration questions, sponsorship conversations, media, volunteering, and safeguarding pathways."
+              copy="Reach us for registration, sponsorship, volunteering, media, or safeguarding enquiries. We aim to respond within 48 business hours."
             />
             <PopCard className="card-plain p-6 sm:p-8">
               <MapPin aria-hidden="true" className="mb-5 h-7 w-7 text-astra-red" />

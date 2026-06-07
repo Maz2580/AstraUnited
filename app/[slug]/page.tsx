@@ -46,7 +46,7 @@ export default function MarketingPage({ params }: PageProps) {
       </section>
       <section className="section-band bg-white">
         <div className="container-wide">
-          <SectionHeader eyebrow={page.navLabel} title="Page structure" copy="These sections mirror the consultancy sitemap and copy deck, ready for final client-specific names, links, forms, and documents." />
+          <SectionHeader eyebrow={page.navLabel} title="What you need to know" copy="Key information about this area of the club. Contact us if you have questions not covered here." />
           <div className="mt-10 grid gap-5 lg:grid-cols-2">
             {page.sections.map((section) => (
               <article key={section.title} className="card-plain p-6 sm:p-8">
