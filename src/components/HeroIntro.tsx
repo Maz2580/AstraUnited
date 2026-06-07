@@ -15,18 +15,21 @@ const heroMedia: HeroSource = {
     {
       src: "/images/kit/astra-kit-ball-1920.webp",
       alt: "Astra United Academy jersey draped on the corner of the pitch beside the official match ball at the Darebin ground",
+      position: "center 70%",
       blurDataURL:
         "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYgCdOUAAhXd8KMmZvxcAANc0QbnWA1e8eb71ZbYLPRtgKeFJOG3r962snakr3n7F2TwlfVFXyug2uWIbf+6UsjPW0qj8Ves/Qn88QAA="
     },
     {
       src: "/images/match/astra-match-aerial-control-1920.webp",
       alt: "Astra United player demonstrating aerial ball control on the touchline at the Darebin Sports and Ice Centre",
+      position: "center 20%",
       blurDataURL:
         "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
     },
     {
       src: "/images/ground/astra-ground-wide-sky-1920.webp",
       alt: "Wide establishing shot of the Astra United Darebin pitch with blue sky, clouds, and floodlights in the background",
+      position: "center 38%",
       blurDataURL:
         "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoQAB0APu1iqU2ppaOiMAgBMB2JZgCdACHwp9mDYDRqFT96VhYAAP6z4nrT7qYAdQc++QcVOP0fNj8+Y7CcCZ9j5Ag6IhhLBrl2nDa3N30OU8lU/IWd6GZ0yio1pEEepa9E3b2bcJSsn7ApfcljL5J5VMIUaf7PXfCH/VcNY5QlgAAA"
     }

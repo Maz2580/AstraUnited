@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 
 export type HeroSource =
   | { kind: "image"; src: string; alt: string; blurDataURL?: string }
-  | { kind: "crossfade"; images: { src: string; alt: string; blurDataURL?: string }[]; intervalMs: number }
+  | {
+      kind: "crossfade";
+      images: { src: string; alt: string; blurDataURL?: string; position?: string }[];
+      intervalMs: number;
+    }
   | { kind: "video"; src: string; poster: string }
   | { kind: "frames"; framePattern: string; frameCount: number; poster: string };
 
@@ -53,6 +57,7 @@ export function HeroMedia({ source }: { source: HeroSource }) {
             placeholder={img.blurDataURL ? "blur" : "empty"}
             blurDataURL={img.blurDataURL}
             sizes="100vw"
+            style={img.position ? { objectPosition: img.position } : undefined}
             className={`object-cover transition-opacity duration-1000 ${i === index ? "opacity-100" : "opacity-0"}`}
           />
         ))}

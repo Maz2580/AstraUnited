@@ -197,10 +197,10 @@ export default function Home() {
                 src={photos.womens.src}
                 alt={photos.womens.alt}
                 width={1280}
-                height={853}
+                height={1920}
                 placeholder="blur"
                 blurDataURL={photos.womens.blurDataURL}
-                className="h-[420px] w-full object-cover"
+                className="h-[460px] w-full object-cover object-[center_22%]"
                 sizes="(min-width: 1024px) 45vw, 100vw"
               />
               <div className="border-t border-white/10 p-5 text-white">
