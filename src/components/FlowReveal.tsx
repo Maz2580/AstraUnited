@@ -49,7 +49,7 @@ export function PopCard({ children, className = "", delay = 0 }: PopCardProps) {
   return (
     <motion.div
       className={`tunnel-card ${className}`.trim()}
-      data-tunnel-card
+      data-flow-item
       onPointerMove={updatePointer}
       onPointerLeave={clearPointer}
       initial={reducedMotion ? false : { opacity: 0, y: 68, scale: 0.86, rotate: -1.25 }}
