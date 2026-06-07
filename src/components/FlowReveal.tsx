@@ -48,8 +48,8 @@ export function PopCard({ children, className = "", delay = 0 }: PopCardProps) {
 
   return (
     <motion.div
-      className={`tunnel-card ${className}`.trim()}
-      data-flow-item
+      className={`tunnel-card touchline-react ${className}`.trim()}
+      data-touchline-react
       onPointerMove={updatePointer}
       onPointerLeave={clearPointer}
       initial={reducedMotion ? false : { opacity: 0, y: 68, scale: 0.86, rotate: -1.25 }}

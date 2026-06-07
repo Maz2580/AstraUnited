@@ -12,7 +12,7 @@ import {
 } from "lucide-react";
 import { HeroIntro } from "@/src/components/HeroIntro";
 import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
-import { ScrollBallFlow } from "@/src/components/ScrollBallFlow";
+import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import {
   academyPathway,
@@ -27,9 +27,9 @@ export default function Home() {
   return (
     <main id="main-content">
       <HeroIntro />
-      <ScrollBallFlow>
+      <Touchline>
         <FlowReveal className="section-band bg-astra-white">
-          <div data-flow-group className="flow-group container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
+          <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
             <PopCard className="red-rule card-plain p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
               <h2 className="crest-type text-3xl leading-none text-astra-ink">All Astra FC pitches are open.</h2>
@@ -53,7 +53,7 @@ export default function Home() {
         </FlowReveal>
 
         <FlowReveal className="section-band bg-white">
-          <div data-flow-group className="flow-group container-wide grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
+          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div>
               <SectionHeader
                 eyebrow="Welcome"
@@ -95,7 +95,7 @@ export default function Home() {
               copy="Everything parents, players, sponsors, and volunteers need to know about Astra United FC."
               inverse
             />
-            <div data-flow-group className="flow-group mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div data-touchline-node className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
               {quickFacts.map((fact, index) => (
                 <PopCard key={fact.label} className="rounded border border-white/12 bg-white/6 p-5 backdrop-blur" delay={index * 0.05}>
                   <p className="text-xs font-black uppercase tracking-normal text-astra-gold">{fact.label}</p>
@@ -108,7 +108,7 @@ export default function Home() {
 
         <FlowReveal className="section-band bg-[#f3f6f8]">
           <div className="container-wide">
-            <div data-flow-group className="flow-group grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
+            <div data-touchline-node className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-end">
               <SectionHeader
                 eyebrow="Youth Academy"
                 title="Development over results."
@@ -128,7 +128,7 @@ export default function Home() {
         </FlowReveal>
 
         <FlowReveal className="section-band bg-white">
-          <div data-flow-group className="flow-group container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <SectionHeader
                 eyebrow="Senior pathway"
@@ -157,7 +157,7 @@ export default function Home() {
               title="A content hub ready for the annual campaign."
               copy="The spreadsheet's monthly calendar becomes a practical content system: registrations, camps, women in football, education, community partners, finals, and awards all have a place to live."
             />
-            <div data-flow-group className="flow-group mt-10 grid gap-4 lg:grid-cols-3">
+            <div data-touchline-node className="mt-10 grid gap-4 lg:grid-cols-3">
               {newsPreview.map((item, index) => (
                 <PopCard key={item.title} className="card-plain p-6" delay={index * 0.05}>
                   <p className="text-xs font-black uppercase tracking-normal text-astra-red">{item.kicker}</p>
@@ -166,7 +166,7 @@ export default function Home() {
                 </PopCard>
               ))}
             </div>
-            <div data-flow-group className="flow-group mt-8 grid gap-4 md:grid-cols-3">
+            <div data-touchline-node className="mt-8 grid gap-4 md:grid-cols-3">
               {upcomingMoments.map((moment, index) => (
                 <PopCard key={moment.title} className="rounded border border-astra-turf/20 bg-white p-5" delay={index * 0.05}>
                   <Clock aria-hidden="true" className="mb-4 h-5 w-5 text-astra-turf" />
@@ -180,7 +180,7 @@ export default function Home() {
         </FlowReveal>
 
         <FlowReveal className="section-band bg-astra-ink text-white">
-          <div data-flow-group className="flow-group container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <SectionHeader
               eyebrow="Join Astra"
               title="Ready to lace up your boots?"
@@ -213,7 +213,7 @@ export default function Home() {
         </FlowReveal>
 
         <FlowReveal className="section-band bg-white">
-          <div data-flow-group className="flow-group container-wide grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
+          <div data-touchline-node className="container-wide grid gap-10 lg:grid-cols-[1fr_0.9fr] lg:items-center">
             <SectionHeader
               eyebrow="Contact"
               title="Based at Darebin, built for Melbourne's north."
@@ -233,7 +233,7 @@ export default function Home() {
             </PopCard>
           </div>
         </FlowReveal>
-      </ScrollBallFlow>
+      </Touchline>
     </main>
   );
 }
