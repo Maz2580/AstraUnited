@@ -69,10 +69,10 @@ const academyCards = [
     age: "U6-U8",
     title: "Mini-Kickers",
     copy: "Fun-based football foundations, confidence on the ball, and first friendships in the game.",
-    src: "/images/camps/astra-camps-academy-session-1280.webp",
-    alt: "Astra United Academy holiday camp session with youth players gathering their gear at the Darebin ground",
+    src: "/images/academy/astra-academy-mini-kickers-1280.webp",
+    alt: "Young Astra United Academy players in navy kit and Academy bibs with their coaches during a Mini-Kickers session at Darebin",
     blurDataURL:
-      "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADwAwCdASoQABwAPu1iqU2ppaOiMAgBMB2JQBjegmeud9OrP/0R/LoAAN0DZnfFFhi/6X9EO9mJf2YxXYs4roqjpnWn7F9w4owXdrAOILJKdx2GpYLp4bl6nGqMStxSJvbpZ4PqWAtvljqXvED7ynXaniyrLGoEZGS1zVxQgYuA7fTCPkUYk0pdIXaNVvG1J5eGNA0tXNroyv/ua7ViyH5rbA8qGh8ivFfAAA="
+      "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAsAA4BaJbAAAhtn5084gAD+zezGkLAu1xBrykDOkTySbYuCC4ne6i0bTM/ToTRP7AFbfDayLKbGGuvZEFWIn2UTcr6zkt7iP5ZE+siu60gA"
   },
   {
     age: "U9-U12",
@@ -87,10 +87,10 @@ const academyCards = [
     age: "U13-U18",
     title: "Youth Development",
     copy: "A stronger bridge to 11-a-side football, game intelligence, and senior progression.",
-    src: "/images/match/astra-match-aerial-control-1280.webp",
-    alt: "Astra United player demonstrating aerial ball control on the touchline at the Darebin Sports and Ice Centre",
+    src: "/images/match/astra-match-volley-sky-1280.webp",
+    alt: "Astra United player controlling the ball mid-air against a clear blue sky at the Darebin pitch",
     blurDataURL:
-      "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
+      "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADQAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JYwC7ABSephBZU0+vAyAA1oUUskSwrc5j/qWGBJt+uH7ZdEcZPDMhSGQcRx9otXzqhi0rQSSR/DKilYEAz25N+Cq62bCw5ZfIR/zY8IQAAA="
   }
 ];
 
