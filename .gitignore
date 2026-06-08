@@ -21,3 +21,10 @@ Astra Logo-Final.png
 
 # local agent handoff notes
 details.md
+notes.md
+
+# scratch / review artifacts (not source)
+.playwright-mcp/
+*.jpeg
+scripts/_*.py
+scripts/_*.txt
