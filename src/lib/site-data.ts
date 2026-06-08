@@ -20,18 +20,49 @@ export type Highlight = {
   icon: LucideIcon;
 };
 
+export type Block =
+  | { type: "prose"; title: string; copy: string; bullets?: string[] }
+  | { type: "cards"; title?: string; intro?: string; items: { title: string; copy: string }[] }
+  | { type: "table"; title?: string; intro?: string; columns: string[]; rows: string[][] }
+  | { type: "steps"; title?: string; items: { title: string; copy: string }[] }
+  | { type: "pillars"; title?: string; items: { label: string; copy: string }[] }
+  | {
+      type: "contact";
+      email: string;
+      phone?: string;
+      welfare?: string;
+      socials: { label: string; handle: string; href: string }[];
+      address: string;
+      mapEmbed: string;
+    }
+  | { type: "form"; title: string; intro?: string; subjects?: string[]; submitLabel: string; mailto: string };
+
+export type PageHero = { src: string; alt: string; blurDataURL: string };
+
 export type MarketingPage = {
   slug: string;
   navLabel: string;
-  title: string;
   eyebrow: string;
+  title: string;
   intro: string;
-  sections: Array<{
-    title: string;
-    copy: string;
-    bullets?: string[];
-  }>;
+  hero: PageHero;
+  blocks: Block[];
 };
+
+export const clubContact = {
+  email: "info@astraunitedfootballclub.com",
+  ground: "Darebin International Sports Centre",
+  address: "281 Darebin Road, Thornbury VIC 3071"
+};
+
+export const socialLinks = [
+  { label: "Instagram", handle: "@AstraFC_Official", href: "https://instagram.com/AstraFC_Official" },
+  { label: "Facebook", handle: "/AstraFootballClub", href: "https://facebook.com/AstraFootballClub" },
+  { label: "X (Twitter)", handle: "@Astra_FC", href: "https://x.com/Astra_FC" }
+];
+
+export const mapEmbedSrc =
+  "https://www.google.com/maps?q=Darebin%20International%20Sports%20Centre%2C%20281%20Darebin%20Road%2C%20Thornbury%20VIC%203071&output=embed";
 
 export const navItems: NavItem[] = [
   { label: "The Club", href: "/the-club" },
@@ -134,45 +165,69 @@ export const pages: MarketingPage[] = [
     title: "Football for all, played the Astra way.",
     intro:
       "Astra United FC is a community-focused football club in Melbourne's north, known for technical excellence, sportsmanship, and the Astra Way: football for all, played the right way.",
-    sections: [
+    hero: {
+      src: "/images/ground/astra-ground-wide-sky-1280.webp",
+      alt: "Wide establishing shot of the Astra United Darebin pitch with blue sky, clouds, and floodlights",
+      blurDataURL:
+        "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoQAB0APu1iqU2ppaOiMAgBMB2JZgCdACHwp9mDYDRqFT96VhYAAP6z4nrT7qYAdQc++QcVOP0fNj8+Y7CcCZ9j5Ag6IhhLBrl2nDa3N30OU8lU/IWd6GZ0yio1pEEepa9E3b2bcJSsn7ApfcljL5J5VMIUaf7PXfCH/VcNY5QlgAAA"
+    },
+    blocks: [
       {
-        title: "History, mission, and honours",
+        type: "prose",
+        title: "Our story & mission",
         copy:
           "Founded with a vision to elevate local football, Astra grew from a small group of passionate players and coaches into a structured, multi-team club. Our mission is a safe, inclusive, professional environment where players of all ages develop their skills, build friendships, and embrace the competitive spirit of the game - we don't just coach players, we mentor the next generation of community leaders.",
         bullets: [
           "Professional standards at grassroots level",
           "A mission to develop players and community leaders",
-          "Club honours and trophy cabinet - to be confirmed"
+          "Proudly serving families across Melbourne's north"
         ]
       },
       {
-        title: "Committee and staff",
+        type: "prose",
+        title: "The trophy cabinet",
         copy:
-          "Astra is powered by dedicated volunteers and qualified professionals. All lead coaches hold recognised Football Australia coaching qualifications and current Working With Children Checks.",
+          "Astra's honours and club awards will be celebrated here as the club's competitive record grows.",
         bullets: [
-          "Committee and leadership - contacts to be confirmed",
-          "Football Australia-qualified lead coaches",
-          "Dedicated Welfare Officer for player wellbeing"
+          "League and cup honours - to be confirmed",
+          "Runners-up and finals appearances - to be confirmed",
+          "Club of the Year recognition - to be confirmed"
         ]
       },
       {
-        title: "Governance and safeguarding",
+        type: "cards",
+        title: "Committee & staff",
+        intro:
+          "Astra is powered by dedicated volunteers and qualified professionals. All lead coaches hold recognised Football Australia coaching qualifications and current Working With Children Checks.",
+        items: [
+          { title: "Club Chairperson", copy: "Club leadership and direction - name to be confirmed." },
+          { title: "Club Secretary", copy: "Administration and governance - name to be confirmed." },
+          { title: "Treasurer", copy: "Club finances and membership - name to be confirmed." },
+          { title: "Head of Academy", copy: "Youth development and coaching - name to be confirmed." },
+          { title: "Senior First Team Manager", copy: "Senior program - name to be confirmed." },
+          { title: "Welfare Officer", copy: "Your first point of contact for player wellbeing - name to be confirmed." }
+        ]
+      },
+      {
+        type: "prose",
+        title: "Governance & safeguarding",
         copy:
           "Astra operates with transparency and accountability, aligned with Football Australia and local council regulations. The safety of our youth players is our absolute priority.",
         bullets: [
-          "Club constitution and governance",
-          "Safeguarding and welfare policy",
+          "Club constitution and operating rules",
+          "Safeguarding & welfare policy (Football Australia aligned)",
           "AGM minutes and member updates"
         ]
       },
       {
-        title: "Facilities and fields",
+        type: "prose",
+        title: "Facilities & match-day",
         copy:
-          "We train and play at Darebin International Sports Centre, with well-maintained pitches, on-site parking, and match-day amenities.",
+          "We train and play at Darebin International Sports Centre (281 Darebin Road, Thornbury VIC 3071), with well-maintained pitches, on-site parking, and match-day amenities. Please park within designated bays and follow our match-day stewards to respect local residents.",
         bullets: [
           "Darebin International Sports Centre, Thornbury",
-          "On-site parking and match-day stewards",
-          "Pitch-status updates on match mornings"
+          "Ample on-site parking; match-day stewards",
+          "Toilets and changing facilities during scheduled windows"
         ]
       }
     ]
@@ -184,31 +239,44 @@ export const pages: MarketingPage[] = [
     title: "From Mini-Kickers to senior football.",
     intro:
       "Astra's pathway supports boys, girls, youth players, U23s, and senior squads - a clear route from first touch to first team.",
-    sections: [
+    hero: {
+      src: "/images/match/astra-match-aerial-control-1280.webp",
+      alt: "Astra United player demonstrating aerial ball control on the touchline at Darebin",
+      blurDataURL:
+        "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
+    },
+    blocks: [
       {
+        type: "cards",
         title: "Senior teams",
-        copy:
-          "Our senior program shows the club's philosophy at a competitive level: a Men's First Team in the Victorian league system, a growing Women's First Team, and an Under-23s squad bridging youth and senior football.",
-        bullets: ["Men's First Team", "Women's First Team", "Under-23s development squad"]
-      },
-      {
-        title: "Youth Academy",
-        copy:
-          "Based at Darebin, our Academy gives boys and girls from Under 6s to Under 18s a safe, structured environment built on development over results - technical excellence, game intelligence, and social growth.",
-        bullets: [
-          "Development over results",
-          "Two structured training sessions per week",
-          "Age-appropriate curriculum from U6 to U18"
+        intro:
+          "Our senior program shows the club's philosophy at a competitive level - and many senior players have progressed through our own Youth Academy.",
+        items: [
+          { title: "Men's First Team", copy: "Competing in the Victorian league system - a blend of experienced heads and emerging talent." },
+          { title: "Women's First Team", copy: "A core part of our identity - growing, competitive, and inspiring the next generation." },
+          { title: "Under-23s", copy: "The bridge between youth and senior football, refining technical and tactical discipline." }
         ]
       },
       {
-        title: "Fixtures and results",
+        type: "cards",
+        title: "Youth Academy",
+        intro:
+          "Based at Darebin, the Academy gives boys and girls from U6 to U18 a safe, structured environment built on development over results - technical excellence, game intelligence, and social growth.",
+        items: [
+          { title: "Mini-Kickers (U6-U8)", copy: "Fun-based introduction to the basics of football." },
+          { title: "Junior Academy (U9-U12)", copy: "Small-sided games focused on technical foundation." },
+          { title: "Youth Development (U13-U18)", copy: "Transition to 11-a-side football and tactical awareness." }
+        ]
+      },
+      {
+        type: "prose",
+        title: "Fixtures & results",
         copy:
-          "Upcoming fixtures, results, and league standings live here - check match locations and kit colours before kick-off. Locations can change with the weather, so check the home-page pitch status on match mornings.",
+          "Upcoming fixtures, latest results, and league standings will live here - check match locations and kit colours before kick-off. Locations can change with the weather, so check the home-page pitch status on match mornings.",
         bullets: [
-          "Upcoming fixtures and kick-off details",
-          "Latest results and match summaries",
-          "League table and venue links"
+          "Upcoming fixtures and kick-off details - to be confirmed",
+          "Latest results and match summaries - to be confirmed",
+          "League table and venue links - to be confirmed"
         ]
       }
     ]
@@ -220,75 +288,110 @@ export const pages: MarketingPage[] = [
     title: "Join the Astra family.",
     intro:
       "Joining Astra is straightforward, whether you're returning or playing with us for the first time. The 2026 season runs March to September, with pre-season from February.",
-    sections: [
+    hero: {
+      src: "/images/academy/astra-academy-training-wide-1280.webp",
+      alt: "Astra United youth academy players in training bibs during a drill session at Darebin",
+      blurDataURL:
+        "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAsAA4BaJbAAAxZbZ/GZAAD+1z/ZYKqmtnVc6okA+qCnDfoYAtrg2zI4XIaE2KYUl2ZAO/KqM+alyLiJIxqwefcpOOsovAA="
+    },
+    blocks: [
       {
-        title: "Registration",
-        copy:
-          "Complete our secure online registration; new players upload a proof-of-age document for league registration. Pay in full or by monthly direct debit. Fees cover league affiliations, insurance, pitch hire, Football Australia-aligned coaching, and kit maintenance.",
-        bullets: [
-          "Academy members (U6-U12) - fees on request",
-          "Youth members (U13-U18) - fees on request",
-          "Senior members - fees on request"
+        type: "table",
+        title: "Membership fees (2026 season)",
+        intro:
+          "We strive to keep football affordable while maintaining high standards of coaching and facilities. Fees cover league affiliations, insurance, pitch hire, Football Australia-aligned coaching, and kit maintenance.",
+        columns: ["Membership", "Ages", "Season fee"],
+        rows: [
+          ["Academy members", "U6-U12", "To be confirmed"],
+          ["Youth members", "U13-U18", "To be confirmed"],
+          ["Senior members", "Open age", "To be confirmed"]
         ]
       },
       {
-        title: "Trials and scouting",
-        copy:
-          "We hold open trials annually and scout throughout the season, assessing four pillars: technical ability, tactical awareness, physical literacy, and character.",
-        bullets: [
-          "Youth Academy trial pathway",
-          "Senior and U23 assessment pathway",
-          "Team-first attitude and work rate"
+        type: "steps",
+        title: "How to register",
+        items: [
+          { title: "Complete the online form", copy: "Fill in our secure digital registration form for the 2026 season." },
+          { title: "Upload documentation", copy: "New players upload a proof-of-age document (birth certificate or passport) for league registration." },
+          { title: "Make payment", copy: "Pay in full or via monthly direct-debit instalments." }
         ]
       },
       {
-        title: "Volunteers",
-        copy:
-          "Astra is community-run. We rely on team managers and coaches (qualifications supported), match-day marshals, the BBQ crew, referees, and media volunteers. All volunteers working with children must meet Working With Children requirements.",
-        bullets: [
-          "Team managers and coaches",
-          "Match-day marshals and referees",
-          "Media and community volunteers"
+        type: "pillars",
+        title: "What we look for at trials",
+        items: [
+          { label: "Technical", copy: "Ball control and passing range." },
+          { label: "Tactical", copy: "Understanding of the game and positioning." },
+          { label: "Physical", copy: "Speed, agility, and balance." },
+          { label: "Character", copy: "Work rate, respect, and a team-first attitude." }
         ]
+      },
+      {
+        type: "cards",
+        title: "Volunteers - our off-pitch heroes",
+        intro:
+          "Astra is community-run. All volunteers working with children must meet Working With Children requirements.",
+        items: [
+          { title: "Team managers & coaches", copy: "Lead a squad and develop young talent (qualifications supported by the club)." },
+          { title: "Match-day marshals", copy: "Help with parking and pitch-side setup for a safe environment." },
+          { title: "The BBQ crew", copy: "Keep players and fans fed during home tournaments and gala days." },
+          { title: "Referees", copy: "Qualified officials (or those wishing to train) for our junior fixtures." },
+          { title: "Media volunteers", copy: "Capture photos and videos for our social channels." }
+        ]
+      },
+      {
+        type: "form",
+        title: "Register your interest",
+        intro: "Send us your details and our registrar will be in touch about registration and trials.",
+        subjects: ["Player registration", "Open trials", "Volunteering"],
+        submitLabel: "Send registration enquiry",
+        mailto: "info@astraunitedfootballclub.com"
       }
     ]
   },
   {
     slug: "news-media",
     navLabel: "News",
-    eyebrow: "News and Media",
+    eyebrow: "News & Media",
     title: "From the training ground to the touchline.",
     intro:
-      "From the training ground to the touchline: match reports, club announcements, player spotlights, photos, and events from across the Astra community.",
-    sections: [
+      "Match reports, club announcements, player spotlights, photos, and events from across the Astra community.",
+    hero: {
+      src: "/images/community/astra-community-team-photo-1280.webp",
+      alt: "Astra United FC youth squad and coaching staff posing for a team photo at Darebin",
+      blurDataURL:
+        "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsAA4BaJaAC7AEO51NfsyAA/uhR8gOKYM+H/sHOAha6twOxn++SjZ011xmUaPcrFeIDsIUFYFIA3e9Pz9z6rxA4narSxexzNwWSAAA="
+    },
+    blocks: [
       {
+        type: "cards",
         title: "Latest news",
-        copy:
-          "Weekly match reports for our senior and academy teams, plus announcements on kit launches, camp dates, and registration deadlines.",
-        bullets: [
-          "Match reports and results summaries",
-          "Club announcements",
-          "Player and coach spotlights"
+        intro: "Your official source for club updates, match reports, and community news.",
+        items: [
+          { title: "Match reports", copy: "Weekly breakdowns of our senior and academy performances." },
+          { title: "Club announcements", copy: "Kit launches, holiday-camp dates, and registration deadlines." },
+          { title: "Player spotlights", copy: "Celebrating individual achievements and milestones in the Astra family." }
         ]
       },
       {
-        title: "Photo and video gallery",
-        copy:
-          "Explore our teams in action - match-day highlights, academy days, and celebrations. All media is published in line with our consent and child-safety policies.",
-        bullets: [
-          "Match-day action",
-          "Academy days",
-          "Trophy and celebration galleries"
+        type: "cards",
+        title: "Photo & video gallery",
+        intro: "Explore our teams in action throughout the season. A full gallery is coming soon.",
+        items: [
+          { title: "Match-day highlights", copy: "High-energy shots from our recent league fixtures." },
+          { title: "Academy days", copy: "The fun and focus of our youth development sessions." },
+          { title: "Celebrations", copy: "Trophies, team huddles, and post-match smiles." }
         ]
       },
       {
+        type: "cards",
         title: "Events calendar",
-        copy:
-          "Training, socials, and fundraisers run year-round - presentation night, the summer football gala, charity fundraisers, and school-holiday camps.",
-        bullets: [
-          "Club socials and fundraisers",
-          "Holiday football camps",
-          "Presentation and awards nights"
+        intro: "Our club is active all year round.",
+        items: [
+          { title: "Annual presentation night", copy: "Celebrating the season's successes with players and families." },
+          { title: "Summer football gala", copy: "Our flagship community tournament for all age groups." },
+          { title: "Charity fundraisers", copy: "Quiz nights, sponsored walks, and community support events." },
+          { title: "School-holiday camps", copy: "Professional coaching to keep kids active during school breaks." }
         ]
       }
     ]
@@ -300,28 +403,48 @@ export const pages: MarketingPage[] = [
     title: "Support grassroots football in Melbourne's north.",
     intro:
       "Astra welcomes businesses who want visibility while investing in youth development, coaching, facilities, and community football in Melbourne's north.",
-    sections: [
+    hero: {
+      src: "/images/kit/astra-kit-ball-1280.webp",
+      alt: "Astra United Academy jersey beside the official match ball at the Darebin ground",
+      blurDataURL:
+        "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYgCdOUAAhXd8KMmZvxcAANc0QbnWA1e8eb71ZbYLPRtgKeFJOG3r962snakr3n7F2TwlfVFXyug2uWIbf+6UsjPW0qj8Ves/Qn88QAA="
+    },
+    blocks: [
       {
-        title: "Partnership opportunities",
+        type: "prose",
+        title: "More than a logo on a shirt",
         copy:
-          "When you support Astra you invest in the health, development, and future of young people across Melbourne's north - more than a logo on a shirt.",
-        bullets: [
-          "Principal Club Partner",
-          "Gold Partners",
-          "Community Supporters"
+          "At Astra, football is the heartbeat of the community. Maintaining high-quality pitches, providing Football Australia-aligned coaching, and keeping membership affordable is only possible through our partners. When you support Astra you invest in the health, development, and future of young people across Melbourne's north."
+      },
+      {
+        type: "cards",
+        title: "Partnership tiers",
+        items: [
+          { title: "Principal Club Partner", copy: "Our lead sponsor, supporting the club across all senior and academy levels." },
+          { title: "Gold Partners", copy: "Key supporters of our match-day kits and facility maintenance." },
+          { title: "Community Supporters", copy: "Local businesses helping us grow our grassroots programmes." }
         ]
       },
       {
+        type: "table",
         title: "Sponsorship packages",
-        copy:
-          "Tiered packages to suit any business, with bespoke options available - high visibility across match days and digital platforms.",
-        bullets: [
-          "Main Kit Sponsor",
-          "Training Wear Sponsor",
-          "Pitch-side Partner",
-          "Player Pathway Sponsor",
-          "Match Ball Sponsor"
+        intro: "Tiered packages to suit any business, with bespoke options available. All placements are subject to venue and council guidelines.",
+        columns: ["Package", "What's included"],
+        rows: [
+          ["Main Kit Sponsor", "Front-of-shirt branding on match-day kits, featured website placement, social spotlight."],
+          ["Training Wear Sponsor", "Logo on all player training gear and tracksuits."],
+          ["Pitch-side Partner", "High-visibility perimeter signage at home fixtures (subject to approval)."],
+          ["Player Pathway Sponsor", "Directly fund coaching certifications and equipment for the Youth Academy."],
+          ["Match Ball Sponsor", "Recognition on our Match Day graphics for every home game."]
         ]
+      },
+      {
+        type: "form",
+        title: "Enquire about sponsorship",
+        intro: "Tell us about your business and we'll send the 2026 sponsorship prospectus and tailored options.",
+        subjects: ["Sponsorship enquiry"],
+        submitLabel: "Enquire about sponsorship",
+        mailto: "info@astraunitedfootballclub.com"
       }
     ]
   },
@@ -332,36 +455,38 @@ export const pages: MarketingPage[] = [
     title: "Get in touch with Astra United FC.",
     intro:
       "Questions about joining, sponsorship, volunteering, media, or safeguarding? We'd love to hear from you and aim to respond within 48 business hours.",
-    sections: [
+    hero: {
+      src: "/images/ground/astra-ground-player-pitch-1280.webp",
+      alt: "Astra United player on the Darebin pitch with goalposts, floodlights, and open sky",
+      blurDataURL:
+        "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoQABwAPu1iqk4ppaQiMAgBMB2JZgCdAYuu3967A0EcV+3wAAD+31caLlVyArnNznOh98UjbQR0g5rNnNy7nZlXIllAMTcwtFjK9smeMCXQt/rYAjGPGfOo5gzOpQBRyvcEJTEK2dMmJzbsSOZqKRaOocQdL0Vxx8oAnHGD3ECAnVxR8hbjOYs1QLgAAA"
+    },
+    blocks: [
       {
-        title: "General enquiries",
-        copy:
-          "Reach us for general questions, player registration and trials, sponsorship, media, or volunteering.",
-        bullets: [
-          "General enquiry",
-          "Player registration and trials",
-          "Sponsorship opportunities",
-          "Media and volunteering"
-        ]
+        type: "form",
+        title: "Send us a message",
+        intro: "We aim to respond to all enquiries within 48 business hours.",
+        subjects: ["General enquiry", "Player registration & trials", "Sponsorship opportunities", "Media & press", "Volunteering"],
+        submitLabel: "Send message",
+        mailto: "info@astraunitedfootballclub.com"
       },
       {
-        title: "Where to find us",
-        copy:
-          "Astra trains and plays at Darebin International Sports Centre in Thornbury.",
-        bullets: [
-          "Darebin International Sports Centre",
-          "281 Darebin Road, Thornbury VIC 3071",
-          "Melbourne's northern community"
-        ]
+        type: "contact",
+        email: "info@astraunitedfootballclub.com",
+        phone: "To be confirmed",
+        welfare: "Welfare Officer contact - to be confirmed",
+        socials: socialLinks,
+        address: "Darebin International Sports Centre, 281 Darebin Road, Thornbury VIC 3071",
+        mapEmbed: mapEmbedSrc
       },
       {
-        title: "Safeguarding and welfare",
-        copy:
-          "For player-welfare concerns, contact our Welfare Officer directly. All information is handled per our privacy and child-safety policies.",
+        type: "prose",
+        title: "Before you get in touch",
+        copy: "Your answer might be a click away.",
         bullets: [
-          "Dedicated welfare contact",
-          "Privacy and child-safety policies",
-          "Respectful communication across all channels"
+          "Where do we train? Darebin International Sports Centre, Thornbury",
+          "How much are membership fees? See the Join Us page",
+          "Are the pitches open today? Check the pitch status on our home page"
         ]
       }
     ]
@@ -405,18 +530,6 @@ export const contactMethods = [
     label: "Programs",
     value: "Academy, youth, U23, women's, senior, volunteers"
   }
-];
-
-export const clubContact = {
-  email: "info@astraunitedfootballclub.com",
-  ground: "Darebin International Sports Centre",
-  address: "281 Darebin Road, Thornbury VIC 3071"
-};
-
-export const socialLinks = [
-  { label: "Instagram", handle: "@AstraFC_Official", href: "https://instagram.com/AstraFC_Official" },
-  { label: "Facebook", handle: "/AstraFootballClub", href: "https://facebook.com/AstraFootballClub" },
-  { label: "X (Twitter)", handle: "@Astra_FC", href: "https://x.com/Astra_FC" }
 ];
 
 export function getPageBySlug(slug: string) {
