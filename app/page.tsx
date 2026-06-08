@@ -17,11 +17,7 @@ import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
 import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
-import {
-  academyPathway,
-  newsPreview,
-  upcomingMoments
-} from "@/src/lib/site-data";
+import { newsPreview, upcomingMoments } from "@/src/lib/site-data";
 import { welcome, whyAstra } from "@/src/lib/content/home";
 
 // In-page photos pulled from public/images/manifest.json (-1280.webp variants).
@@ -67,6 +63,45 @@ const sponsorTiers = [
   }
 ];
 
+// Image-forward academy cards (photos from public/images/manifest.json).
+const academyCards = [
+  {
+    age: "U6-U8",
+    title: "Mini-Kickers",
+    copy: "Fun-based football foundations, confidence on the ball, and first friendships in the game.",
+    src: "/images/camps/astra-camps-academy-session-1280.webp",
+    alt: "Astra United Academy holiday camp session with youth players gathering their gear at the Darebin ground",
+    blurDataURL:
+      "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAADwAwCdASoQABwAPu1iqU2ppaOiMAgBMB2JQBjegmeud9OrP/0R/LoAAN0DZnfFFhi/6X9EO9mJf2YxXYs4roqjpnWn7F9w4owXdrAOILJKdx2GpYLp4bl6nGqMStxSJvbpZ4PqWAtvljqXvED7ynXaniyrLGoEZGS1zVxQgYuA7fTCPkUYk0pdIXaNVvG1J5eGNA0tXNroyv/ua7ViyH5rbA8qGh8ivFfAAA="
+  },
+  {
+    age: "U9-U12",
+    title: "Junior Academy",
+    copy: "Small-sided training, technical repetition, and age-appropriate tactical awareness.",
+    src: "/images/academy/astra-academy-dribble-duel-1280.webp",
+    alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
+    blurDataURL:
+      "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoQAAsAA4BaJYgAAv+5vRNYAAD+voAKXwDNy2IhEEynnmVSeUn0lKdwz3awb6C8nEReoy/qU7ZZOAAA"
+  },
+  {
+    age: "U13-U18",
+    title: "Youth Development",
+    copy: "A stronger bridge to 11-a-side football, game intelligence, and senior progression.",
+    src: "/images/match/astra-match-aerial-control-1280.webp",
+    alt: "Astra United player demonstrating aerial ball control on the touchline at the Darebin Sports and Ice Centre",
+    blurDataURL:
+      "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
+  }
+];
+
+// The four assessment pillars (from Join Us / Trials content).
+const trialPillars = [
+  { label: "Technical", copy: "Ball control and passing range." },
+  { label: "Tactical", copy: "Game understanding and positioning." },
+  { label: "Physical", copy: "Speed, agility, and balance." },
+  { label: "Character", copy: "Work rate, respect, team-first attitude." }
+];
+
 export default function Home() {
   return (
     <main id="main-content">
@@ -74,22 +109,22 @@ export default function Home() {
       <BrandMarquee />
       <Touchline>
         {/* 1 — Live pitch status + next moment */}
-        <FlowReveal className="section-band bg-astra-white">
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
-            <PopCard className="red-rule card-plain p-6 pl-8 sm:p-8 sm:pl-10">
+            <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
-              <h2 className="crest-type text-3xl leading-none text-astra-ink">All Astra FC pitches are open.</h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-slate-700">
+              <h2 className="crest-type text-3xl leading-none text-white">All Astra FC pitches are open.</h2>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-white/72">
                 Training and match-day activity is currently available at Darebin International Sports Centre. Check back on match mornings for any pitch-status changes.
               </p>
             </PopCard>
-            <PopCard className="card-plain p-6 sm:p-8" delay={0.06}>
+            <PopCard className="card-dark p-6 sm:p-8" delay={0.06}>
               <div className="flex items-start gap-4">
-                <CalendarDays aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 text-astra-red" />
+                <CalendarDays aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 text-astra-gold" />
                 <div>
                   <p className="text-sm font-black uppercase tracking-normal text-astra-red">Next campaign moment</p>
-                  <h3 className="mt-2 text-2xl font-black text-astra-ink">2026 registrations and trials</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">
+                  <h3 className="mt-2 text-2xl font-black text-white">2026 registrations and trials</h3>
+                  <p className="mt-3 text-sm leading-6 text-white/72">
                     Registrations are open now for the 2026 season. Trial windows, camps, and awards night details are confirmed below.
                   </p>
                 </div>
@@ -99,11 +134,11 @@ export default function Home() {
         </FlowReveal>
 
         {/* 2 — Welcome / why Astra */}
-        <FlowReveal className="section-band bg-white">
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
             <div>
-              <SectionHeader eyebrow={welcome.eyebrow} title={welcome.title} copy={welcome.copy} />
-              <PopCard className="mt-8 overflow-hidden rounded border border-astra-ink/12 bg-astra-ink shadow-crest">
+              <SectionHeader eyebrow={welcome.eyebrow} title={welcome.title} copy={welcome.copy} inverse />
+              <PopCard className="card-dark mt-8 overflow-hidden">
                 <Image
                   src={photos.welcome.src}
                   alt={photos.welcome.alt}
@@ -122,11 +157,11 @@ export default function Home() {
             </div>
             <div className="grid gap-4 sm:grid-cols-2">
               {whyAstra.map((reason, index) => (
-                <PopCard key={reason} className="card-plain flex items-start gap-3 p-5" delay={index * 0.04}>
-                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-astra-red/10">
+                <PopCard key={reason} className="card-dark flex items-start gap-3 p-5" delay={index * 0.04}>
+                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-astra-red/15">
                     <Check aria-hidden="true" className="h-4 w-4 text-astra-red" />
                   </span>
-                  <p className="text-sm font-semibold leading-6 text-astra-ink">{reason}</p>
+                  <p className="text-sm font-semibold leading-6 text-white/90">{reason}</p>
                 </PopCard>
               ))}
             </div>
@@ -134,67 +169,75 @@ export default function Home() {
         </FlowReveal>
 
         {/* 3 — Academy pathway */}
-        <FlowReveal className="section-band bg-[#f3f6f8]">
+        <FlowReveal className="section-band band-fog">
           <div className="container-wide">
-            <div data-touchline-node className="grid gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:items-center">
-              <div>
-                <SectionHeader
-                  eyebrow="Youth Academy"
-                  title="Development over results."
-                  copy="The academy is the heartbeat of Astra United FC: confident players, technical excellence, tactical awareness, and social growth from U6 to U18."
-                />
-                <PopCard className="mt-8 overflow-hidden rounded border border-astra-ink/12 shadow-crest">
+            <div data-touchline-node>
+              <SectionHeader
+                eyebrow="Youth Academy"
+                title="Development over results."
+                copy="The academy is the heartbeat of Astra United FC: confident players, technical excellence, tactical awareness, and social growth from U6 to U18."
+                inverse
+              />
+            </div>
+            <div className="mt-10 grid gap-5 md:grid-cols-3">
+              {academyCards.map((stage, index) => (
+                <PopCard key={stage.age} className="card-dark overflow-hidden" delay={index * 0.06}>
                   <Image
-                    src={photos.academy.src}
-                    alt={photos.academy.alt}
+                    src={stage.src}
+                    alt={stage.alt}
                     width={1280}
                     height={853}
                     placeholder="blur"
-                    blurDataURL={photos.academy.blurDataURL}
-                    className="h-[260px] w-full object-cover"
-                    sizes="(min-width: 1024px) 30vw, 100vw"
+                    blurDataURL={stage.blurDataURL}
+                    className="h-44 w-full object-cover"
+                    sizes="(min-width: 768px) 33vw, 100vw"
                   />
+                  <div className="p-6">
+                    <p className="crest-type text-2xl text-astra-gold">{stage.age}</p>
+                    <h3 className="mt-2 text-xl font-black text-white">{stage.title}</h3>
+                    <p className="mt-3 text-sm leading-6 text-white/72">{stage.copy}</p>
+                  </div>
                 </PopCard>
-              </div>
-              <div className="grid gap-4 md:grid-cols-3">
-                {academyPathway.map((stage, index) => (
-                  <PopCard key={stage.age} className="card-plain p-6" delay={index * 0.06}>
-                    <p className="crest-type text-3xl text-astra-red">{stage.age}</p>
-                    <h3 className="mt-4 text-xl font-black text-astra-ink">{stage.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-slate-700">{stage.copy}</p>
-                  </PopCard>
-                ))}
-              </div>
+              ))}
+            </div>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {trialPillars.map((pillar, index) => (
+                <PopCard key={pillar.label} className="card-dark p-5" delay={index * 0.04}>
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-red">{pillar.label}</p>
+                  <p className="mt-2 text-sm leading-6 text-white/72">{pillar.copy}</p>
+                </PopCard>
+              ))}
             </div>
           </div>
         </FlowReveal>
 
         {/* 4 — Founder feature */}
-        <FlowReveal className="section-band bg-astra-ink">
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide">
             <FounderFeature />
           </div>
         </FlowReveal>
 
         {/* 5 — Senior & Women's teams */}
-        <FlowReveal className="section-band bg-white">
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <SectionHeader
                 eyebrow="Senior pathway"
                 title="Men's, women's, and U23 football."
                 copy="The senior program gives emerging players a competitive destination and shows families that the academy has a real long-term pathway."
+                inverse
               />
               <div className="mt-8 grid gap-4 sm:grid-cols-3">
                 {["Men's First Team", "Women's First Team", "Under-23s"].map((team, index) => (
-                  <PopCard key={team} className="rounded border border-astra-ink/12 bg-astra-white p-5" delay={index * 0.05}>
-                    <Trophy aria-hidden="true" className="mb-4 h-6 w-6 text-astra-red" />
-                    <p className="font-black text-astra-ink">{team}</p>
+                  <PopCard key={team} className="card-dark p-5" delay={index * 0.05}>
+                    <Trophy aria-hidden="true" className="mb-4 h-6 w-6 text-astra-gold" />
+                    <p className="font-black text-white">{team}</p>
                   </PopCard>
                 ))}
               </div>
             </div>
-            <PopCard className="overflow-hidden rounded border border-astra-ink/12 bg-astra-ink shadow-crest">
+            <PopCard className="card-dark overflow-hidden">
               <Image
                 src={photos.womens.src}
                 alt={photos.womens.alt}
@@ -214,7 +257,7 @@ export default function Home() {
         </FlowReveal>
 
         {/* 6 — News & media */}
-        <FlowReveal className="section-band bg-[#eef3f1]">
+        <FlowReveal className="section-band band-deep">
           <div className="container-wide">
             <div data-touchline-node className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
@@ -222,18 +265,19 @@ export default function Home() {
                   eyebrow="News & media"
                   title="From the training ground to the touchline."
                   copy="Match reports, club announcements, events, and highlights from across the Astra community - a content hub for the whole season."
+                  inverse
                 />
                 <div className="mt-8 grid gap-4">
                   {newsPreview.map((item, index) => (
-                    <PopCard key={item.title} className="card-plain p-6" delay={index * 0.05}>
+                    <PopCard key={item.title} className="card-dark p-6" delay={index * 0.05}>
                       <p className="text-xs font-black uppercase tracking-normal text-astra-red">{item.kicker}</p>
-                      <h3 className="mt-3 text-2xl font-black leading-tight text-astra-ink">{item.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-slate-700">{item.copy}</p>
+                      <h3 className="mt-3 text-2xl font-black leading-tight text-white">{item.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-white/72">{item.copy}</p>
                     </PopCard>
                   ))}
                 </div>
               </div>
-              <PopCard className="overflow-hidden rounded border border-astra-ink/12 bg-astra-ink shadow-crest">
+              <PopCard className="card-dark overflow-hidden">
                 <Image
                   src={photos.news.src}
                   alt={photos.news.alt}
@@ -259,7 +303,7 @@ export default function Home() {
         </FlowReveal>
 
         {/* 7 — Sponsors */}
-        <FlowReveal className="section-band bg-astra-ink text-white">
+        <FlowReveal className="section-band band-deep text-white">
           <div data-touchline-node className="container-wide">
             <SectionHeader
               eyebrow="Sponsors"
@@ -269,7 +313,7 @@ export default function Home() {
             />
             <div className="mt-12 grid gap-4 md:grid-cols-3">
               {sponsorTiers.map((tier, index) => (
-                <PopCard key={tier.title} className="rounded border border-white/12 bg-white/6 p-6 backdrop-blur" delay={index * 0.05}>
+                <PopCard key={tier.title} className="card-dark p-6" delay={index * 0.05}>
                   <ShieldCheck aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
                   <h3 className="text-xl font-black text-white">{tier.title}</h3>
                   <p className="mt-3 text-sm leading-6 text-white/72">{tier.copy}</p>
@@ -287,29 +331,30 @@ export default function Home() {
         </FlowReveal>
 
         {/* 8 — Join / contact CTA */}
-        <FlowReveal className="section-band bg-white">
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <SectionHeader
               eyebrow="Join Astra"
               title="Ready to lace up your boots?"
               copy="Registration is open for the 2026 season. Join as a player, coach, volunteer, or community partner - we train and play at Darebin International Sports Centre."
+              inverse
             />
             <div className="grid gap-4 sm:grid-cols-2">
               <PopCard>
-                <Link href="/join-us" className="group block h-full rounded border border-astra-ink/12 bg-astra-white p-6 text-astra-ink transition hover:-translate-y-1 hover:shadow-crest">
-                  <Users aria-hidden="true" className="mb-5 h-7 w-7 text-astra-red" />
+                <Link href="/join-us" className="card-dark group block h-full p-6 text-white transition hover:-translate-y-1">
+                  <Users aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
                   <h3 className="text-xl font-black">Register or trial</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">Player registration, open trials, and development pathway information for the 2026 season.</p>
+                  <p className="mt-3 text-sm leading-6 text-white/72">Player registration, open trials, and development pathway information for the 2026 season.</p>
                   <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
                     Start here <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
                   </span>
                 </Link>
               </PopCard>
               <PopCard delay={0.08}>
-                <Link href="/contact" className="group block h-full rounded border border-astra-ink/12 bg-astra-white p-6 text-astra-ink transition hover:-translate-y-1 hover:shadow-crest">
-                  <MapPin aria-hidden="true" className="mb-5 h-7 w-7 text-astra-red" />
+                <Link href="/contact" className="card-dark group block h-full p-6 text-white transition hover:-translate-y-1">
+                  <MapPin aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
                   <h3 className="text-xl font-black">Darebin International Sports Centre</h3>
-                  <p className="mt-3 text-sm leading-6 text-slate-700">281 Darebin Road, Thornbury VIC 3071. Reach us for registration, sponsorship, volunteering, or media.</p>
+                  <p className="mt-3 text-sm leading-6 text-white/72">281 Darebin Road, Thornbury VIC 3071. Reach us for registration, sponsorship, volunteering, or media.</p>
                   <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
                     Contact the club <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
                   </span>
