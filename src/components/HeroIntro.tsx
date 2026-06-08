@@ -186,7 +186,7 @@ export function HeroIntro() {
 
       {/* Touchline handoff ball (decorative) */}
       <motion.div
-        className="pointer-events-none absolute z-[5] h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
+        className="pointer-events-none absolute z-[5] h-16 w-16 text-astra-gold sm:h-20 sm:w-20 lg:h-24 lg:w-24"
         style={{
           left: "var(--hero-handoff-x)",
           top: "var(--hero-handoff-y)",
