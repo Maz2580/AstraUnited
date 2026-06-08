@@ -7,6 +7,7 @@ import {
   buildPolyline,
   pointAtProgress,
   polylineLength,
+  railNodes,
   toSvgPath,
   type Point
 } from "@/src/lib/touchline/path";
@@ -16,14 +17,13 @@ type TouchlineProps = {
   children: ReactNode;
 };
 
-const BALL_SIZE = 60; // rendered ball size in px
+const BALL_SIZE = 48; // rendered ball size in px
 const BALL_RADIUS = BALL_SIZE / 2;
-const LERP = 0.18;
-const REACT_RADIUS = 360;
+const LERP = 0.4; // light smoothing — tracks the path, does not cut corners
+const REACT_RADIUS = 320;
 
 type ReactCard = {
   el: HTMLElement;
-  /** center in container coordinates */
   cx: number;
   cy: number;
 };
@@ -49,14 +49,12 @@ export function Touchline({ children }: TouchlineProps) {
   const progressPathRef = useRef<SVGPathElement>(null);
   const ballRef = useRef<HTMLDivElement>(null);
 
-  // Geometry (container coordinates), rebuilt by measure()
   const polyRef = useRef<Point[]>([]);
   const pathLenRef = useRef(0);
   const cHeightRef = useRef(0);
   const cTopDocRef = useRef(0);
   const reactCardsRef = useRef<ReactCard[]>([]);
 
-  // Ball motion state
   const currentXRef = useRef(0);
   const currentYRef = useRef(0);
   const prevXRef = useRef(0);
@@ -83,7 +81,6 @@ export function Touchline({ children }: TouchlineProps) {
       window.scrollTo({ top: 0, left: 0, behavior: "auto" });
     }
 
-    // --- Build master path in container coordinates ---
     const measure = () => {
       const cRect = container.getBoundingClientRect();
       const cRectTopDoc = cRect.top + window.scrollY;
@@ -93,31 +90,19 @@ export function Touchline({ children }: TouchlineProps) {
       cTopDocRef.current = cRectTopDoc;
       cHeightRef.current = cHeight;
 
-      const margin = Math.min(120, cWidth * 0.12);
-      const nodeEls = Array.from(
-        container.querySelectorAll<HTMLElement>("[data-touchline-node]")
+      // Side-rail geometry — ball lives in the left gutter, never over content.
+      const railX = Math.min(Math.max(44, cWidth * 0.07), 84);
+      const wave = Math.min(18, railX - 28);
+      const nodeCount = Math.max(
+        2,
+        container.querySelectorAll("[data-touchline-node]").length
       );
 
-      const nodes = nodeEls.map((el, i) => {
-        const r = el.getBoundingClientRect();
-        const yDoc = r.top + window.scrollY + r.height / 2 - cRectTopDoc;
-        const x = i % 2 === 0 ? margin : cWidth - margin;
-        return { x, y: yDoc };
-      });
-
-      const usableNodes =
-        nodes.length >= 2
-          ? nodes
-          : [
-              { x: cWidth / 2, y: 0 },
-              { x: cWidth / 2, y: cHeight }
-            ];
-
-      const poly = buildPolyline(usableNodes, 24);
+      const nodes = railNodes(nodeCount, cHeight, railX, wave);
+      const poly = buildPolyline(nodes, 24);
       polyRef.current = poly;
       pathLenRef.current = polylineLength(poly);
 
-      // Cache react-card centers in container coordinates.
       const cardEls = Array.from(
         container.querySelectorAll<HTMLElement>("[data-touchline-react]")
       );
@@ -130,7 +115,6 @@ export function Touchline({ children }: TouchlineProps) {
         };
       });
 
-      // Update SVG overlay geometry.
       const d = toSvgPath(poly);
       svgRef.current?.setAttribute("viewBox", `0 0 ${cWidth} ${cHeight}`);
       basePathRef.current?.setAttribute("d", d);
@@ -179,7 +163,6 @@ export function Touchline({ children }: TouchlineProps) {
         const cx = currentXRef.current;
         const cy = currentYRef.current;
 
-        // Roll proportional to distance travelled this frame.
         const dist = Math.hypot(cx - prevXRef.current, cy - prevYRef.current);
         rotationRef.current += rollDelta(dist, BALL_RADIUS);
         prevXRef.current = cx;
@@ -189,14 +172,12 @@ export function Touchline({ children }: TouchlineProps) {
           ballRef.current.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) rotate(${rotationRef.current}deg)`;
         }
 
-        // Reveal path as the ball advances.
         if (progressPathRef.current) {
           progressPathRef.current.style.strokeDashoffset = `${
             pathLenRef.current * (1 - progress)
           }`;
         }
 
-        // Passing wave: cards react as the ball sweeps past.
         const cards = reactCardsRef.current;
         for (let i = 0; i < cards.length; i += 1) {
           const card = cards[i];
@@ -215,7 +196,6 @@ export function Touchline({ children }: TouchlineProps) {
     resizeObserver.observe(container);
     window.addEventListener("resize", measure);
 
-    // Re-measure once fonts/layout settle.
     const settleTimer = window.setTimeout(measure, 400);
     if (document.fonts?.ready) {
       document.fonts.ready.then(() => measure()).catch(() => {});
@@ -232,7 +212,7 @@ export function Touchline({ children }: TouchlineProps) {
   }, [reducedMotion]);
 
   return (
-    <div ref={containerRef} id="club-flow" className="relative isolate bg-astra-white">
+    <div ref={containerRef} id="club-flow" className="relative isolate bg-astra-ink">
       {!reducedMotion && (
         <>
           <svg
@@ -247,8 +227,9 @@ export function Touchline({ children }: TouchlineProps) {
               d="M 0 0"
               fill="none"
               stroke="#f8fbfd"
-              strokeOpacity="0.55"
-              strokeWidth="14"
+              strokeOpacity="0.28"
+              strokeWidth="2"
+              strokeDasharray="2 9"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -257,8 +238,8 @@ export function Touchline({ children }: TouchlineProps) {
               d="M 0 0"
               fill="none"
               stroke="#f2c94c"
-              strokeOpacity="0.85"
-              strokeWidth="4"
+              strokeOpacity="0.9"
+              strokeWidth="3"
               strokeLinecap="round"
               strokeLinejoin="round"
             />
@@ -266,12 +247,11 @@ export function Touchline({ children }: TouchlineProps) {
           <div
             ref={ballRef}
             aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-0 z-10 drop-shadow-2xl"
+            className="pointer-events-none absolute left-0 top-0 z-10 text-white drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]"
             style={{ width: BALL_SIZE, height: BALL_SIZE, willChange: "transform" }}
           >
-            <span className="absolute inset-[-9px] rounded-full bg-astra-red/10 blur-[2px]" />
-            <span className="absolute inset-[-4px] rounded-full border border-white/60" />
-            <SoccerBall className="h-full w-full" />
+            <span className="absolute inset-[-5px] rounded-full border border-astra-gold/50" />
+            <SoccerBall className="h-full w-full" strokeWidth={1.4} />
           </div>
         </>
       )}
