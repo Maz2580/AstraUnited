@@ -407,6 +407,18 @@ export const contactMethods = [
   }
 ];
 
+export const clubContact = {
+  email: "info@astraunitedfootballclub.com",
+  ground: "Darebin International Sports Centre",
+  address: "281 Darebin Road, Thornbury VIC 3071"
+};
+
+export const socialLinks = [
+  { label: "Instagram", handle: "@AstraFC_Official", href: "https://instagram.com/AstraFC_Official" },
+  { label: "Facebook", handle: "/AstraFootballClub", href: "https://facebook.com/AstraFootballClub" },
+  { label: "X (Twitter)", handle: "@Astra_FC", href: "https://x.com/Astra_FC" }
+];
+
 export function getPageBySlug(slug: string) {
   return pages.find((page) => page.slug === slug);
 }
