@@ -74,6 +74,27 @@ export function pointAtProgress(pts: Point[], progress: number): Point {
   return { ...pts[pts.length - 1] };
 }
 
+/**
+ * Nodes for the side-rail touchline: evenly spaced down the page in y, with x
+ * gently alternating inside a narrow band around `railX` so the ball weaves
+ * softly but never leaves the left gutter.
+ */
+export function railNodes(
+  count: number,
+  cHeight: number,
+  railX: number,
+  wave: number
+): Node[] {
+  const n = Math.max(2, Math.floor(count));
+  const nodes: Node[] = [];
+  for (let i = 0; i < n; i += 1) {
+    const y = (i / (n - 1)) * cHeight;
+    const x = railX + (i % 2 === 0 ? -wave : wave);
+    nodes.push({ x, y });
+  }
+  return nodes;
+}
+
 /** Build an SVG path `d` from a polyline. */
 export function toSvgPath(pts: Point[]): string {
   if (pts.length === 0) return "M 0 0";
