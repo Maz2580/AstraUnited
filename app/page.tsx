@@ -87,10 +87,10 @@ const academyCards = [
     age: "U13-U18",
     title: "Youth Development",
     copy: "A stronger bridge to 11-a-side football, game intelligence, and senior progression.",
-    src: "/images/match/astra-match-volley-sky-1280.webp",
-    alt: "Astra United player controlling the ball mid-air against a clear blue sky at the Darebin pitch",
+    src: "/images/academy/astra-academy-youth-training-1280.webp",
+    alt: "Astra United youth players in kit and bibs training in a small-sided session with coaches on the Darebin pitch",
     blurDataURL:
-      "data:image/webp;base64,UklGRnQAAABXRUJQVlA4IGgAAADQAwCdASoQABgAPu1iqU2ppaQiMAgBMB2JYwC7ABSephBZU0+vAyAA1oUUskSwrc5j/qWGBJt+uH7ZdEcZPDMhSGQcRx9otXzqhi0rQSSR/DKilYEAz25N+Cq62bCw5ZfIR/zY8IQAAA="
+      "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQAAsAA4BaJagAAug2DgKfvetyAAD+xgfUyNK1w/lKOAgtvSCzlOqE+Hx4eWtZ3HVEdEyE3fivfit5t5StKNB36j998NH3YYAAAA=="
   }
 ];
 
