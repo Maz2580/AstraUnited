@@ -12,6 +12,7 @@ import {
   Users
 } from "lucide-react";
 import { HeroIntro } from "@/src/components/HeroIntro";
+import { BrandMarquee } from "@/src/components/BrandMarquee";
 import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
 import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
@@ -70,6 +71,7 @@ export default function Home() {
   return (
     <main id="main-content">
       <HeroIntro />
+      <BrandMarquee />
       <Touchline>
         {/* 1 — Live pitch status + next moment */}
         <FlowReveal className="section-band bg-astra-white">
