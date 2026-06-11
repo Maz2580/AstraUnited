@@ -166,10 +166,10 @@ export const pages: MarketingPage[] = [
     intro:
       "Astra United FC is a community-focused football club in Melbourne's north, known for technical excellence, sportsmanship, and the Astra Way: football for all, played the right way.",
     hero: {
-      src: "/images/ground/astra-ground-wide-sky-1920.webp",
-      alt: "Wide establishing shot of the Astra United Darebin pitch with blue sky, clouds, and floodlights",
+      src: "/images/community/astra-community-squad-portrait-1920.webp",
+      alt: "Astra United FC youth team and coaching staff together on the grass at Darebin International Sports Centre",
       blurDataURL:
-        "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoQAB0APu1iqU2ppaOiMAgBMB2JZgCdACHwp9mDYDRqFT96VhYAAP6z4nrT7qYAdQc++QcVOP0fNj8+Y7CcCZ9j5Ag6IhhLBrl2nDa3N30OU8lU/IWd6GZ0yio1pEEepa9E3b2bcJSsn7ApfcljL5J5VMIUaf7PXfCH/VcNY5QlgAAA"
+        "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAADwAQCdASoQAAsABABoJZgAAuXOXCXDyAAA/tc/3Z/dDhnMvQ0+6YsPJeM0qInnDy/v+MSoBiaFpczmNLw+iIPkoreRBW0fZLffCwo/VV78AA=="
     },
     blocks: [
       {
@@ -240,10 +240,10 @@ export const pages: MarketingPage[] = [
     intro:
       "Astra's pathway supports boys, girls, youth players, U23s, and senior squads - a clear route from first touch to first team.",
     hero: {
-      src: "/images/match/astra-match-aerial-control-1920.webp",
-      alt: "Astra United player demonstrating aerial ball control on the touchline at Darebin",
+      src: "/images/academy/astra-academy-dribble-duel-1920.webp",
+      alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
       blurDataURL:
-        "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
+        "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAsABABoJYgAAujepy+boAAA/qZ9FMOnd0YmL4PqBfvyeQt9ry32LYI2xMSvoaNQiAAA"
     },
     blocks: [
       {
@@ -456,10 +456,10 @@ export const pages: MarketingPage[] = [
     intro:
       "Questions about joining, sponsorship, volunteering, media, or safeguarding? We'd love to hear from you and aim to respond within 48 business hours.",
     hero: {
-      src: "/images/ground/astra-ground-player-pitch-1920.webp",
-      alt: "Astra United player on the Darebin pitch with goalposts, floodlights, and open sky",
+      src: "/images/academy/astra-academy-coaching-huddle-1920.webp",
+      alt: "Astra United coach gathered with young academy players for a huddle on the Darebin pitch",
       blurDataURL:
-        "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoQABwAPu1iqk4ppaQiMAgBMB2JZgCdAYuu3967A0EcV+3wAAD+31caLlVyArnNznOh98UjbQR0g5rNnNy7nZlXIllAMTcwtFjK9smeMCXQt/rYAjGPGfOo5gzOpQBRyvcEJTEK2dMmJzbsSOZqKRaOocQdL0Vxx8oAnHGD3ECAnVxR8hbjOYs1QLgAAA"
+        "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoQAAsABABoJZAAAuTwLVg8MAD+2+r5XKqoDqH7LCRtylnH9Qt9/v/Is3f8I/MoV315TuwN/+kHc+SiN5W9akQA"
     },
     blocks: [
       {
