@@ -28,3 +28,5 @@ notes.md
 *.jpeg
 scripts/_*.py
 scripts/_*.txt
+scripts/_*.jpg
+resume.md
