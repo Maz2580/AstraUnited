@@ -98,6 +98,15 @@ In `src/components/SiteHeader.tsx`:
 - `npm test` runs on S:; **`next build` cannot** — production build verified via the Vercel cloud preview for branch `round4-dynamic-motion`.
 - Visual QA on the preview URL: motion loop, hover separation, logo, reveals, mobile widths, reduced-motion emulation.
 
+## Hard constraint — do not touch (designer-approved)
+
+The designer signed off on the current **text formats, colours, and contrast**. Round 4 must not change them:
+
+- No changes to the palette (`--astra-*` variables), text colours, or opacity levels used for copy.
+- No changes to fonts, font sizes, weights, tracking, or the `crest-type` treatment.
+- Hover/motion work may only add *behavioural* states (transform, border-alpha, sweep overlays, underline) — a hovered element's resting appearance and its text styling stay identical. The one approved exception: the nav-link hover changes from a background block to a gold underline (behavioural, resting state untouched).
+- The logo size/one-line change is layout-only; the wordmark keeps its current font and colours.
+
 ## Out of scope (unchanged from Round 3 pending list)
 
 Photo/video gallery, dedicated founder page, functional (non-mailto) forms, fixtures embeds, online store. ChatGPT-generated imagery unless a visible problem demands it.
