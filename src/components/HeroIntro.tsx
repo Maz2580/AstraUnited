@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowDown, ArrowRight, Play } from "lucide-react";
+import { CtaLink } from "@/src/components/CtaLink";
 import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
 import { SoccerBall } from "@/src/components/SoccerBall";
 import { heroContent } from "@/src/lib/content/home";
@@ -130,20 +130,21 @@ export function HeroIntro() {
             transition={{ duration: 0.8, delay: 0.28, ease: "easeOut" }}
             className="mt-9 flex flex-col gap-3 sm:flex-row"
           >
-            <Link
+            <CtaLink
               href={heroContent.primaryCta.href}
-              className="inline-flex items-center justify-center gap-2 rounded bg-astra-red px-6 py-3.5 text-sm font-black uppercase tracking-wide text-white transition hover:bg-red-700"
+              className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
             >
               {heroContent.primaryCta.label}
-              <ArrowRight aria-hidden="true" className="h-4 w-4" />
-            </Link>
-            <Link
+              <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+            </CtaLink>
+            <CtaLink
               href={heroContent.secondaryCta.href}
-              className="inline-flex items-center justify-center gap-2 rounded border border-white/30 px-6 py-3.5 text-sm font-black uppercase tracking-wide text-white backdrop-blur transition hover:bg-white/10"
+              variant="ghost"
+              className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
             >
               <Play aria-hidden="true" className="h-4 w-4" />
               {heroContent.secondaryCta.label}
-            </Link>
+            </CtaLink>
           </motion.div>
         </div>
 

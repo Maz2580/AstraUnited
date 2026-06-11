@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
+import { CtaLink } from "@/src/components/CtaLink";
 import { navItems } from "@/src/lib/site-data";
 
 export function SiteHeader() {
@@ -32,13 +33,13 @@ export function SiteHeader() {
             </Link>
           ))}
         </div>
-        <Link
+        <CtaLink
           href="/join-us"
-          className="inline-flex items-center gap-2 rounded bg-astra-red px-4 py-2.5 text-sm font-black uppercase tracking-normal text-white shadow-lg shadow-red-950/20 transition hover:bg-red-700"
+          className="px-4 py-2.5 text-sm font-black uppercase tracking-normal shadow-lg shadow-red-950/20"
         >
           Register
-          <ArrowRight aria-hidden="true" className="h-4 w-4" />
-        </Link>
+          <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+        </CtaLink>
       </nav>
     </header>
   );

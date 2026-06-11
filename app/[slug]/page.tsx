@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ArrowRight } from "lucide-react";
+import { CtaLink } from "@/src/components/CtaLink";
 import { PageHero } from "@/src/components/blocks/PageHero";
 import { BlockRenderer } from "@/src/components/blocks/BlockRenderer";
 import { getPageBySlug, pages } from "@/src/lib/site-data";
@@ -34,13 +34,10 @@ export default function MarketingPage({ params }: PageProps) {
             <p className="text-sm font-black uppercase tracking-normal text-astra-gold">Next step</p>
             <h2 className="crest-type mt-2 text-4xl text-white">Talk to the club.</h2>
           </div>
-          <Link
-            href="/contact"
-            className="inline-flex items-center justify-center gap-2 rounded bg-astra-red px-5 py-3 text-sm font-black uppercase tracking-normal text-white transition hover:bg-red-700"
-          >
+          <CtaLink href="/contact" className="px-5 py-3 text-sm font-black uppercase tracking-normal">
             Contact Astra
-            <ArrowRight aria-hidden="true" className="h-4 w-4" />
-          </Link>
+            <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+          </CtaLink>
         </div>
       </section>
     </main>

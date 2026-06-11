@@ -11,6 +11,7 @@ import {
   Trophy,
   Users
 } from "lucide-react";
+import { CtaLink } from "@/src/components/CtaLink";
 import { HeroIntro } from "@/src/components/HeroIntro";
 import { BrandMarquee } from "@/src/components/BrandMarquee";
 import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
@@ -320,13 +321,10 @@ export default function Home() {
                 </PopCard>
               ))}
             </div>
-            <Link
-              href="/sponsors"
-              className="mt-9 inline-flex items-center gap-2 rounded bg-astra-red px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-red-700"
-            >
+            <CtaLink href="/sponsors" className="mt-9 px-5 py-3 text-sm font-black uppercase tracking-wide">
               View sponsorship packages
-              <ExternalLink aria-hidden="true" className="h-4 w-4" />
-            </Link>
+              <ExternalLink aria-hidden="true" className="btn-icon h-4 w-4" />
+            </CtaLink>
           </div>
         </FlowReveal>
 

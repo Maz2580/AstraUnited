@@ -40,9 +40,12 @@ export function ContactForm({ title, intro, subjects, submitLabel, mailto }: Pro
           </select>
         ) : null}
         <textarea className={`${field} min-h-[140px]`} placeholder="Your message" value={message} onChange={(e) => setMessage(e.target.value)} required aria-label="Your message" />
-        <button type="submit" className="inline-flex items-center justify-center gap-2 rounded bg-astra-red px-6 py-3.5 text-sm font-black uppercase tracking-wide text-white transition hover:bg-red-700">
+        <button
+          type="submit"
+          className="btn btn-primary btn-sweep inline-flex items-center justify-center gap-2 rounded bg-astra-red px-6 py-3.5 text-sm font-black uppercase tracking-wide text-white"
+        >
           {submitLabel}
-          <Send aria-hidden="true" className="h-4 w-4" />
+          <Send aria-hidden="true" className="btn-icon h-4 w-4" />
         </button>
         <p className="text-xs text-white/48">This opens your email app addressed to the club. We aim to respond within 48 business hours.</p>
       </form>

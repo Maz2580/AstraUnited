@@ -48,9 +48,12 @@ export default function ShopPage() {
             <p className="mt-4 text-base leading-7 text-white/76">
               The full club shop is on the way. In the meantime, contact the club directly for any kit-related enquiries.
             </p>
-            <Link href="/contact" className="mt-7 inline-flex items-center gap-2 text-sm font-black uppercase tracking-normal text-astra-red">
+            <Link
+              href="/contact"
+              className="group mt-7 inline-flex items-center gap-2 text-sm font-black uppercase tracking-normal text-astra-red"
+            >
               Contact the club
-              <ArrowRight aria-hidden="true" className="h-4 w-4" />
+              <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
             </Link>
           </div>
         </div>
