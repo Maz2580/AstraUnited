@@ -8,13 +8,15 @@ Branch: continues on `round4-dynamic-motion` (NOT yet shipped to production)
 
 Round 4 "Alive" is built and reviewed on `round4-dynamic-motion` (hero stop-motion
 loop, hover system, reveals, 64px one-line logo). Before shipping, Mazdak wants
-three additions:
+four additions:
 
 1. The Touchline scroll ball "looks like a wheel" (external feedback) — make it
    read as a real football.
 2. Some inner-page hero images are still over-zoomed — inspect all of them
    carefully and fix the bad ones.
-3. A full consistency review of everything on the branch before it ships.
+3. The Women's First Team card image (homepage) is disliked — replace it with a
+   stop-motion loop of a female player, hero-style, from newly gathered bursts.
+4. A full consistency review of everything on the branch before it ships.
 
 The homepage hero (stop-motion loop) is explicitly **untouched**.
 
@@ -92,7 +94,52 @@ zoomed"). Record a verdict per page before changing anything.
 Every swapped/regenerated hero gets a fresh 16px blurDataURL and honest alt
 text. Homepage hero: out of scope.
 
-## 3. Full consistency review
+## 3. Women's First Team card → stop-motion loop
+
+Replace the static `astra-womens-portrait-ball` photo in the homepage "Senior
+pathway" section's Women's First Team card (`app/page.tsx`, section 5) with a
+ping-pong stop-motion loop of a female player playing with the ball — the same
+technique as the hero, making the section distinctive rather than another
+static photo. The caption block under the card stays as-is.
+
+### Source material
+
+`Content Copies-…/preparing the motion graphic/women/`, hand-gathered by Mazdak:
+
+- **Character 1** — option 1: 12 frames (0J6A6502–6513); option 2: 21 frames
+  (0J6A6423–6443).
+- **Character 2** — option 1: 17 frames (0J6A6352–6368); option 2: 40 frames
+  (0J6A6380–6419).
+
+Which character + burst to use is chosen WITH Mazdak via a visual contact-sheet
+review at implementation start (same as the hero frame selection in Round 4).
+Burst continuity (numeric run, same camera position) decides how many frames
+survive curation; ping-pong looping means even a short run loops seamlessly.
+
+### Reuse and generalisation
+
+- `frameSrc()` in `src/lib/hero-frames.ts` currently hardcodes
+  `/images/hero-frames/` — it gains a frame-set/base-path parameter so multiple
+  loops can coexist (`/images/women-frames/` for this one). Existing tests
+  extend to cover the parameter.
+- `HeroFramesCanvas` accepts the frame set; everything else (rAF stepper, delta
+  clamp, ping-pong index, pause off-screen/hidden, poster fallback,
+  reduced-motion opt-out) is reused unchanged.
+- The build pipeline (`scripts/build-hero-frames.mjs` + config) is extended to
+  build multiple sets (hero + women) rather than forked. Frame dimensions are
+  tailored to the card (~648×460 rendered on desktop at 45vw, portrait-ish on
+  mobile at 100vw) — exact stage/crop decided in implementation after checking
+  the source orientation (rotate-then-measure, as established). Payload target:
+  meaningfully smaller than the hero's set, since the card renders smaller.
+
+### Loading behaviour (differs from hero)
+
+The card sits below the fold, so frames must NOT preload on page load (the hero
+preloads immediately because it's the first paint). Frame preloading is gated
+on the card approaching the viewport (IntersectionObserver), with a chosen
+still frame as poster until ready. Reduced-motion users keep the poster.
+
+## 4. Full consistency review
 
 Systematic pass over all pages on the preview. Checklist:
 
