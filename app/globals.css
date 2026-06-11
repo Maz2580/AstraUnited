@@ -517,6 +517,106 @@ svg {
   box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
 }
 
+/* --- Round 4: hover system (behavioural states only; resting styles frozen) --- */
+.btn {
+  position: relative;
+  overflow: hidden;
+  transition:
+    transform 220ms ease,
+    box-shadow 220ms ease,
+    border-color 220ms ease,
+    background-color 220ms ease;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+}
+
+.btn:active {
+  transform: translateY(0);
+  transition-duration: 80ms;
+}
+
+.btn .btn-icon {
+  transition: transform 220ms ease;
+}
+
+.btn:hover .btn-icon {
+  transform: translateX(3px);
+}
+
+.btn-primary:hover {
+  box-shadow: 0 16px 34px rgba(200, 25, 22, 0.34);
+}
+
+.btn-sweep::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-130%) skewX(-18deg);
+  background: linear-gradient(
+    105deg,
+    transparent 35%,
+    rgba(248, 251, 253, 0.25) 50%,
+    transparent 65%
+  );
+  transition: transform 520ms ease;
+  pointer-events: none;
+}
+
+.btn-sweep:hover::before {
+  transform: translateX(130%) skewX(-18deg);
+}
+
+.btn-ghost:hover {
+  border-color: rgba(248, 251, 253, 0.55);
+  background-color: rgba(248, 251, 253, 0.1);
+}
+
+/* Nav links: gold underline slides in (replaces the bg-block hover) */
+.nav-underline {
+  position: relative;
+}
+
+.nav-underline::after {
+  content: "";
+  position: absolute;
+  left: 0.75rem;
+  right: 0.75rem;
+  bottom: 0.3rem;
+  height: 2px;
+  background: var(--astra-gold);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+
+.nav-underline:hover::after,
+.nav-underline:focus-visible::after {
+  transform: scaleX(1);
+}
+
+/* Non-clickable cards: ambient whisper only — no lift, no pointer */
+.card-ambient {
+  transition: border-color 240ms ease, background-color 240ms ease;
+}
+
+.card-ambient:hover {
+  border-color: rgba(242, 201, 76, 0.26);
+  background-color: rgba(248, 251, 253, 0.06);
+}
+
+/* Clickable cards: unmistakably interactive */
+.card-link {
+  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+}
+
+.card-link:hover {
+  transform: translateY(-4px);
+  border-color: rgba(248, 251, 253, 0.32);
+  box-shadow: 0 22px 50px rgba(0, 0, 0, 0.4);
+}
+
 /* Red brand marquee — TRAIN / COMPETE / REPEAT */
 .marquee {
   overflow: hidden;
