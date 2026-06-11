@@ -7,19 +7,18 @@ import { navItems } from "@/src/lib/site-data";
 export function SiteHeader() {
   return (
     <header className="fixed inset-x-0 top-0 z-40 border-b border-white/10 bg-astra-ink/88 text-white backdrop-blur-xl">
-      <nav className="mx-auto flex min-h-20 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
+      <nav className="mx-auto flex min-h-24 w-full max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8" aria-label="Main navigation">
         <Link href="/" className="flex items-center gap-3">
           <Image
             src="/images/astra-logo.png"
             alt="Astra United Football Club"
-            width={58}
-            height={58}
-            className="h-12 w-12 object-contain"
+            width={64}
+            height={64}
+            className="h-16 w-16 object-contain"
             priority
           />
-          <span className="crest-type hidden text-lg leading-none sm:block">
-            Astra
-            <span className="block text-astra-red">United</span>
+          <span className="crest-type hidden text-xl leading-none sm:block">
+            Astra <span className="text-astra-red">United</span>
           </span>
         </Link>
         <div className="hidden items-center gap-1 lg:flex">
@@ -27,7 +26,7 @@ export function SiteHeader() {
             <Link
               key={item.href}
               href={item.href}
-              className="rounded px-3 py-2 text-sm font-semibold text-white/82 transition hover:bg-white/8 hover:text-white"
+              className="nav-underline rounded px-3 py-2 text-sm font-semibold text-white/82 transition hover:text-white"
             >
               {item.label}
             </Link>
