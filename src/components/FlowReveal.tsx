@@ -48,13 +48,12 @@ export function PopCard({ children, className = "", delay = 0 }: PopCardProps) {
 
   return (
     <motion.div
-      className={`tunnel-card touchline-react ${className}`.trim()}
+      className={`tunnel-card touchline-react card-ambient ${className}`.trim()}
       data-touchline-react
       onPointerMove={updatePointer}
       onPointerLeave={clearPointer}
       initial={reducedMotion ? false : { opacity: 0, y: 68, scale: 0.86, rotate: -1.25 }}
       whileInView={reducedMotion ? undefined : { opacity: 1, y: 0, scale: 1, rotate: 0 }}
-      whileHover={reducedMotion ? undefined : { y: -6, scale: 1.01 }}
       viewport={{ amount: 0.35, once: false }}
       transition={{ type: "spring", stiffness: 210, damping: 21, mass: 0.72, delay }}
     >

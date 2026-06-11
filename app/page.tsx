@@ -339,7 +339,7 @@ export default function Home() {
             />
             <div className="grid gap-4 sm:grid-cols-2">
               <PopCard>
-                <Link href="/join-us" className="card-dark group block h-full p-6 text-white transition hover:-translate-y-1">
+                <Link href="/join-us" className="card-dark card-link group block h-full p-6 text-white">
                   <Users aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
                   <h3 className="text-xl font-black">Register or trial</h3>
                   <p className="mt-3 text-sm leading-6 text-white/72">Player registration, open trials, and development pathway information for the 2026 season.</p>
@@ -349,7 +349,7 @@ export default function Home() {
                 </Link>
               </PopCard>
               <PopCard delay={0.08}>
-                <Link href="/contact" className="card-dark group block h-full p-6 text-white transition hover:-translate-y-1">
+                <Link href="/contact" className="card-dark card-link group block h-full p-6 text-white">
                   <MapPin aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
                   <h3 className="text-xl font-black">Darebin International Sports Centre</h3>
                   <p className="mt-3 text-sm leading-6 text-white/72">281 Darebin Road, Thornbury VIC 3071. Reach us for registration, sponsorship, volunteering, or media.</p>

@@ -29,6 +29,23 @@ const stats = [
   { value: "DISC", label: "Thornbury home ground" }
 ];
 
+// Staggered entrance for the stat rail; each row slides in, then a gold
+// accent line sweeps under its value.
+const railVariants = {
+  hidden: {},
+  show: { transition: { staggerChildren: 0.14, delayChildren: 0.3 } }
+};
+
+const statVariants = {
+  hidden: { opacity: 0, x: 24 },
+  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: "easeOut" } }
+};
+
+const sweepVariants = {
+  hidden: { scaleX: 0 },
+  show: { scaleX: 1, transition: { duration: 0.5, delay: 0.25, ease: "easeOut" } }
+};
+
 // Emphasise one word of the headline in gold.
 function renderHeadline(headline: string) {
   const accent = /community/i.test(headline) ? "community" : null;
@@ -150,23 +167,29 @@ export function HeroIntro() {
 
         {/* Stat rail (B) — right side on lg, stacked on mobile */}
         <motion.dl
-          initial={{ opacity: 0, x: 24 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 0.9, delay: 0.22, ease: "easeOut" }}
+          variants={railVariants}
+          initial="hidden"
+          animate="show"
           className="mt-2 grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs"
         >
           {stats.map((stat) => (
-            <div
+            <motion.div
               key={stat.value}
+              variants={statVariants}
               className="flex flex-col gap-1 bg-astra-ink/30 px-5 py-5"
             >
               <dt className="crest-type text-3xl leading-none text-white lg:text-4xl">
                 <span className="text-astra-gold">{stat.value}</span>
               </dt>
+              <motion.span
+                variants={sweepVariants}
+                aria-hidden="true"
+                className="block h-px w-10 origin-left bg-astra-gold/70"
+              />
               <dd className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/60">
                 {stat.label}
               </dd>
-            </div>
+            </motion.div>
           ))}
         </motion.dl>
       </div>

@@ -1,3 +1,5 @@
+import { Reveal } from "@/src/components/Reveal";
+
 type SectionHeaderProps = {
   eyebrow: string;
   title: string;
@@ -14,7 +16,7 @@ export function SectionHeader({
   inverse = false
 }: SectionHeaderProps) {
   return (
-    <div className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
+    <Reveal className={align === "center" ? "mx-auto max-w-3xl text-center" : "max-w-3xl"}>
       <p className={`mb-3 text-sm font-black uppercase tracking-normal ${inverse ? "text-astra-gold" : "text-astra-red"}`}>
         {eyebrow}
       </p>
@@ -26,6 +28,6 @@ export function SectionHeader({
           {copy}
         </p>
       ) : null}
-    </div>
+    </Reveal>
   );
 }
