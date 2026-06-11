@@ -1,6 +1,6 @@
-import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight, Quote } from "lucide-react";
+import { CtaLink } from "@/src/components/CtaLink";
 import { founder } from "@/src/lib/content/founder";
 
 // Placeholder portrait until a dedicated founder photo is supplied.
@@ -92,13 +92,10 @@ export function FounderFeature() {
             ))}
           </dl>
 
-          <Link
-            href="/the-club"
-            className="mt-9 inline-flex items-center gap-2 rounded bg-astra-red px-5 py-3 text-sm font-black uppercase tracking-wide text-white transition hover:bg-red-700"
-          >
+          <CtaLink href="/the-club" className="mt-9 px-5 py-3 text-sm font-black uppercase tracking-wide">
             Read the full story
-            <ArrowRight aria-hidden="true" className="h-4 w-4" />
-          </Link>
+            <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+          </CtaLink>
         </div>
       </div>
     </div>

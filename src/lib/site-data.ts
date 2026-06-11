@@ -166,7 +166,7 @@ export const pages: MarketingPage[] = [
     intro:
       "Astra United FC is a community-focused football club in Melbourne's north, known for technical excellence, sportsmanship, and the Astra Way: football for all, played the right way.",
     hero: {
-      src: "/images/ground/astra-ground-wide-sky-1280.webp",
+      src: "/images/ground/astra-ground-wide-sky-1920.webp",
       alt: "Wide establishing shot of the Astra United Darebin pitch with blue sky, clouds, and floodlights",
       blurDataURL:
         "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoQAB0APu1iqU2ppaOiMAgBMB2JZgCdACHwp9mDYDRqFT96VhYAAP6z4nrT7qYAdQc++QcVOP0fNj8+Y7CcCZ9j5Ag6IhhLBrl2nDa3N30OU8lU/IWd6GZ0yio1pEEepa9E3b2bcJSsn7ApfcljL5J5VMIUaf7PXfCH/VcNY5QlgAAA"
@@ -240,7 +240,7 @@ export const pages: MarketingPage[] = [
     intro:
       "Astra's pathway supports boys, girls, youth players, U23s, and senior squads - a clear route from first touch to first team.",
     hero: {
-      src: "/images/match/astra-match-aerial-control-1280.webp",
+      src: "/images/match/astra-match-aerial-control-1920.webp",
       alt: "Astra United player demonstrating aerial ball control on the touchline at Darebin",
       blurDataURL:
         "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
@@ -289,7 +289,7 @@ export const pages: MarketingPage[] = [
     intro:
       "Joining Astra is straightforward, whether you're returning or playing with us for the first time. The 2026 season runs March to September, with pre-season from February.",
     hero: {
-      src: "/images/academy/astra-academy-training-wide-1280.webp",
+      src: "/images/academy/astra-academy-training-wide-1920.webp",
       alt: "Astra United youth academy players in training bibs during a drill session at Darebin",
       blurDataURL:
         "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAsAA4BaJbAAAxZbZ/GZAAD+1z/ZYKqmtnVc6okA+qCnDfoYAtrg2zI4XIaE2KYUl2ZAO/KqM+alyLiJIxqwefcpOOsovAA="
@@ -357,7 +357,7 @@ export const pages: MarketingPage[] = [
     intro:
       "Match reports, club announcements, player spotlights, photos, and events from across the Astra community.",
     hero: {
-      src: "/images/community/astra-community-team-photo-1280.webp",
+      src: "/images/community/astra-community-team-photo-1920.webp",
       alt: "Astra United FC youth squad and coaching staff posing for a team photo at Darebin",
       blurDataURL:
         "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsAA4BaJaAC7AEO51NfsyAA/uhR8gOKYM+H/sHOAha6twOxn++SjZ011xmUaPcrFeIDsIUFYFIA3e9Pz9z6rxA4narSxexzNwWSAAA="
@@ -404,7 +404,7 @@ export const pages: MarketingPage[] = [
     intro:
       "Astra welcomes businesses who want visibility while investing in youth development, coaching, facilities, and community football in Melbourne's north.",
     hero: {
-      src: "/images/kit/astra-kit-ball-1280.webp",
+      src: "/images/kit/astra-kit-ball-1920.webp",
       alt: "Astra United Academy jersey beside the official match ball at the Darebin ground",
       blurDataURL:
         "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYgCdOUAAhXd8KMmZvxcAANc0QbnWA1e8eb71ZbYLPRtgKeFJOG3r962snakr3n7F2TwlfVFXyug2uWIbf+6UsjPW0qj8Ves/Qn88QAA="
@@ -456,7 +456,7 @@ export const pages: MarketingPage[] = [
     intro:
       "Questions about joining, sponsorship, volunteering, media, or safeguarding? We'd love to hear from you and aim to respond within 48 business hours.",
     hero: {
-      src: "/images/ground/astra-ground-player-pitch-1280.webp",
+      src: "/images/ground/astra-ground-player-pitch-1920.webp",
       alt: "Astra United player on the Darebin pitch with goalposts, floodlights, and open sky",
       blurDataURL:
         "data:image/webp;base64,UklGRp4AAABXRUJQVlA4IJIAAAAQBACdASoQABwAPu1iqk4ppaQiMAgBMB2JZgCdAYuu3967A0EcV+3wAAD+31caLlVyArnNznOh98UjbQR0g5rNnNy7nZlXIllAMTcwtFjK9smeMCXQt/rYAjGPGfOo5gzOpQBRyvcEJTEK2dMmJzbsSOZqKRaOocQdL0Vxx8oAnHGD3ECAnVxR8hbjOYs1QLgAAA"

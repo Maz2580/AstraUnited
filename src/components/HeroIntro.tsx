@@ -33,17 +33,17 @@ const stats = [
 // accent line sweeps under its value.
 const railVariants = {
   hidden: {},
-  show: { transition: { staggerChildren: 0.14, delayChildren: 0.3 } }
+  show: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } }
 };
 
 const statVariants = {
   hidden: { opacity: 0, x: 24 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.7, ease: "easeOut" } }
+  show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: "easeOut" } }
 };
 
 const sweepVariants = {
   hidden: { scaleX: 0 },
-  show: { scaleX: 1, transition: { duration: 0.5, delay: 0.25, ease: "easeOut" } }
+  show: { scaleX: 1, transition: { duration: 0.4, delay: 0.15, ease: "easeOut" } }
 };
 
 // Emphasise one word of the headline in gold.

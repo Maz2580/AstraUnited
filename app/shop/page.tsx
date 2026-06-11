@@ -29,7 +29,7 @@ export default function ShopPage() {
         title="Gear up for game day."
         intro="Show your colours with the official Astra United range - professional match-day kits for our players and comfortable sideline wear for our supporters."
         hero={{
-          src: "/images/kit/astra-kit-ball-1280.webp",
+          src: "/images/kit/astra-kit-ball-1920.webp",
           alt: "Astra United Academy jersey beside the official match ball at the Darebin ground",
           blurDataURL:
             "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYgCdOUAAhXd8KMmZvxcAANc0QbnWA1e8eb71ZbYLPRtgKeFJOG3r962snakr3n7F2TwlfVFXyug2uWIbf+6UsjPW0qj8Ves/Qn88QAA="
