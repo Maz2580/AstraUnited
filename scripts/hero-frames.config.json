@@ -1,0 +1,22 @@
+{
+  "sourceDir": "Content Copies-20260602T085649Z-3-001/preparing the motion graphic",
+  "outDir": "public/images/hero-frames",
+  "crop": { "leftPct": 0, "topPct": 0.02, "widthPct": 0.82, "heightPct": 0.94 },
+  "frames": [
+    "2/0J6A5974.JPG",
+    "2/0J6A5975.JPG",
+    "2/0J6A5976.JPG",
+    "2/0J6A5977.JPG",
+    "2/0J6A5978.JPG",
+    "2/0J6A5979.JPG",
+    "2/0J6A5980.JPG",
+    "2/0J6A5981.JPG",
+    "1/0J6A5982.JPG",
+    "1/0J6A5983.JPG",
+    "1/0J6A5984.JPG",
+    "1/0J6A5985.JPG",
+    "1/0J6A5987.JPG",
+    "1/0J6A5989.JPG",
+    "1/0J6A5991.JPG"
+  ]
+}
