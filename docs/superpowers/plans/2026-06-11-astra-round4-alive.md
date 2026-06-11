@@ -21,7 +21,7 @@
 **Files:**
 - Modify: `.gitignore`
 
-- [ ] **Step 1: Add scratch patterns**
+- [x] **Step 1: Add scratch patterns**
 
 Append to `.gitignore`:
 
@@ -30,12 +30,12 @@ resume.md
 scripts/_*.jpg
 ```
 
-- [ ] **Step 2: Verify untracked noise is gone**
+- [x] **Step 2: Verify untracked noise is gone**
 
 Run: `git status --short`
 Expected: `.claude/` may remain; `resume.md` and `scripts/_contact-*.jpg` no longer listed.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add .gitignore
@@ -50,7 +50,7 @@ git commit -m "chore: ignore resume notes and scratch contact sheets"
 - Create: `src/lib/hero-frames.ts`
 - Test: `src/lib/hero-frames.test.ts`
 
-- [ ] **Step 1: Write the failing tests**
+- [x] **Step 1: Write the failing tests**
 
 `src/lib/hero-frames.test.ts`:
 
@@ -107,12 +107,12 @@ describe("frame sources", () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 Run: `npm test -- src/lib/hero-frames.test.ts`
 Expected: FAIL — cannot resolve `./hero-frames`.
 
-- [ ] **Step 3: Implement**
+- [x] **Step 3: Implement**
 
 `src/lib/hero-frames.ts`:
 
@@ -158,12 +158,12 @@ export function frameSrc(index: number, width: FrameWidth): string {
 }
 ```
 
-- [ ] **Step 4: Run tests to verify they pass**
+- [x] **Step 4: Run tests to verify they pass**
 
 Run: `npm test -- src/lib/hero-frames.test.ts`
 Expected: 7 tests PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add src/lib/hero-frames.ts src/lib/hero-frames.test.ts
@@ -180,7 +180,7 @@ git commit -m "feat: hero frame stepper + ping-pong loop math (tested)"
 
 The candidate bursts in `Content Copies-20260602T085649Z-3-001/preparing the motion graphic/2` (consecutive runs): 5881–5888, 5893–5900, 5913–5918, 5923–5929, 5936–5942, 5953–5959, 5974–5981, 6040–6048.
 
-- [ ] **Step 1: Build one contact sheet per candidate burst**
+- [x] **Step 1: Build one contact sheet per candidate burst**
 
 Run from repo root (PowerShell-safe via Bash tool):
 
@@ -209,11 +209,11 @@ const bursts = [[5881,5888],[5893,5900],[5913,5918],[5923,5929],[5936,5942],[595
 
 Expected: 8 files `scripts/_burst-*.jpg`.
 
-- [ ] **Step 2: Review each sheet with the Read tool**
+- [x] **Step 2: Review each sheet with the Read tool**
 
 Read each `scripts/_burst-*.jpg`. Choose 3–5 bursts that share ONE camera position and framing (the chain must not jump). Prefer continuous juggling moves; total target 25–40 frames. Note where the subject sits in frame to choose a crop window (the hero is wide; source is 3:2) that keeps him and the ball inside every chosen frame.
 
-- [ ] **Step 3: Write the config**
+- [x] **Step 3: Write the config**
 
 `scripts/hero-frames.config.json` — fill `frames` with the chosen filenames IN PLAY ORDER and crop percentages from the review (the values below for `crop` are a starting point — tune to keep the subject centered in every chosen frame):
 
@@ -226,7 +226,7 @@ Read each `scripts/_burst-*.jpg`. Choose 3–5 bursts that share ONE camera posi
 }
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add scripts/hero-frames.config.json
@@ -241,7 +241,7 @@ git commit -m "feat: curated hero frame selection config"
 - Create: `scripts/build-hero-frames.mjs`
 - Generated: `public/images/hero-frames/frame-NNN-{1600,960}.webp`, `poster-1920.webp`
 
-- [ ] **Step 1: Write the pipeline**
+- [x] **Step 1: Write the pipeline**
 
 `scripts/build-hero-frames.mjs`:
 
@@ -311,16 +311,16 @@ console.log(
 );
 ```
 
-- [ ] **Step 2: Run it**
+- [x] **Step 2: Run it**
 
 Run: `node scripts/build-hero-frames.mjs`
 Expected: prints frameCount + blurDataURL; total size ≤ ~3.5 MB. If larger, drop quality to 55 or trim frames. RECORD the printed `frameCount` and `blurDataURL` — Task 6 pastes them.
 
-- [ ] **Step 3: Sanity-check one frame visually**
+- [x] **Step 3: Sanity-check one frame visually**
 
 Read `public/images/hero-frames/frame-001-1600.webp` — subject and ball fully inside frame, correct orientation. Spot-check the LAST frame too.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add scripts/build-hero-frames.mjs public/images/hero-frames
@@ -334,7 +334,7 @@ git commit -m "feat: hero frame pipeline + generated stop-motion frame set"
 **Files:**
 - Create: `src/components/HeroFramesCanvas.tsx`
 
-- [ ] **Step 1: Write the component**
+- [x] **Step 1: Write the component**
 
 ```tsx
 "use client";
@@ -461,12 +461,12 @@ export function HeroFramesCanvas({ frameCount, fps = 7 }: Props) {
 }
 ```
 
-- [ ] **Step 2: Typecheck**
+- [x] **Step 2: Typecheck**
 
 Run: `npm run typecheck`
 Expected: clean.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add src/components/HeroFramesCanvas.tsx
@@ -481,7 +481,7 @@ git commit -m "feat: stop-motion canvas player with pause/fallback behaviour"
 - Modify: `src/components/HeroMedia.tsx` (frames variant + branch)
 - Modify: `src/components/HeroIntro.tsx:10-37` (heroMedia const)
 
-- [ ] **Step 1: Update the frames variant of HeroSource**
+- [x] **Step 1: Update the frames variant of HeroSource**
 
 In `src/components/HeroMedia.tsx`, replace the old frames variant
 `| { kind: "frames"; framePattern: string; frameCount: number; poster: string }` with:
@@ -526,7 +526,7 @@ if (source.kind === "frames") {
 
 Also update the component doc comment if it references `framePattern`.
 
-- [ ] **Step 2: Switch HeroIntro to the frames source**
+- [x] **Step 2: Switch HeroIntro to the frames source**
 
 In `src/components/HeroIntro.tsx`, replace the entire `const heroMedia: HeroSource = { kind: "crossfade", ... }` block (lines ~10–37) with — pasting the REAL values printed by Task 4 Step 2:
 
@@ -544,12 +544,12 @@ const heroMedia: HeroSource = {
 
 Also update the comment above it (it currently says "Three strongest hero photos").
 
-- [ ] **Step 3: Tests + typecheck**
+- [x] **Step 3: Tests + typecheck**
 
 Run: `npm test` and `npm run typecheck`
 Expected: all suites pass; typecheck clean.
 
-- [ ] **Step 4: Commit and push for an early cloud-build check**
+- [x] **Step 4: Commit and push for an early cloud-build check**
 
 ```bash
 git add src/components/HeroMedia.tsx src/components/HeroIntro.tsx
@@ -566,7 +566,7 @@ Expected: Vercel builds preview `astra-united-git-round4-dynamic-motion-mazdaks-
 **Files:**
 - Modify: `app/globals.css` (append after the `.card-dark` block, before the marquee section)
 
-- [ ] **Step 1: Add the utilities**
+- [x] **Step 1: Add the utilities**
 
 Append to the "Dark $10k theme utilities" area of `app/globals.css`:
 
@@ -674,7 +674,7 @@ Append to the "Dark $10k theme utilities" area of `app/globals.css`:
 
 NOTE: these rules come AFTER `.card-dark` in the file, so their hover declarations win the cascade (same specificity, later order). Do not move them above `.card-dark`. The existing `prefers-reduced-motion` block at the end of the file already neutralises all of these transitions.
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add app/globals.css
@@ -689,7 +689,7 @@ git commit -m "feat: hover utility layer - buttons, nav underline, ambient vs in
 - Create: `src/components/CtaLink.tsx`
 - Modify: `src/components/SiteHeader.tsx:35-41`, `src/components/HeroIntro.tsx:147-161`, `app/[slug]/page.tsx:37-43`, `app/page.tsx:323-329`, `app/shop/page.tsx:51-54`, `src/components/blocks/ContactForm.tsx:43-46`
 
-- [ ] **Step 1: Create CtaLink**
+- [x] **Step 1: Create CtaLink**
 
 `src/components/CtaLink.tsx`:
 
@@ -726,7 +726,7 @@ export function CtaLink({ href, variant = "primary", className = "", children }:
 }
 ```
 
-- [ ] **Step 2: SiteHeader Register button**
+- [x] **Step 2: SiteHeader Register button**
 
 In `src/components/SiteHeader.tsx`, add `import { CtaLink } from "@/src/components/CtaLink";` and replace the Register `<Link ...>...</Link>` (lines 35–41) with:
 
@@ -740,7 +740,7 @@ In `src/components/SiteHeader.tsx`, add `import { CtaLink } from "@/src/componen
 </CtaLink>
 ```
 
-- [ ] **Step 3: HeroIntro CTAs**
+- [x] **Step 3: HeroIntro CTAs**
 
 In `src/components/HeroIntro.tsx`, add `import { CtaLink } from "@/src/components/CtaLink";` and replace the two `<Link ...>` CTAs inside the CTA `motion.div` (lines ~147–161) with:
 
@@ -764,7 +764,7 @@ In `src/components/HeroIntro.tsx`, add `import { CtaLink } from "@/src/component
 
 (`Link` may become an unused import in HeroIntro — remove it if so.)
 
-- [ ] **Step 4: Inner-page CTA (`app/[slug]/page.tsx`)**
+- [x] **Step 4: Inner-page CTA (`app/[slug]/page.tsx`)**
 
 Add `import { CtaLink } from "@/src/components/CtaLink";`, replace the Contact `<Link ...>` (lines 37–43) with:
 
@@ -777,7 +777,7 @@ Add `import { CtaLink } from "@/src/components/CtaLink";`, replace the Contact `
 
 Remove the now-unused `Link` import if nothing else uses it.
 
-- [ ] **Step 5: Homepage sponsors CTA (`app/page.tsx`)**
+- [x] **Step 5: Homepage sponsors CTA (`app/page.tsx`)**
 
 Add `import { CtaLink } from "@/src/components/CtaLink";`, replace the "View sponsorship packages" `<Link ...>` (lines 323–329) with:
 
@@ -788,7 +788,7 @@ Add `import { CtaLink } from "@/src/components/CtaLink";`, replace the "View spo
 </CtaLink>
 ```
 
-- [ ] **Step 6: Shop text link gets the arrow nudge**
+- [x] **Step 6: Shop text link gets the arrow nudge**
 
 In `app/shop/page.tsx`, the "Contact the club" red text link (lines 51–54): add `group` to the link's className and `transition group-hover:translate-x-1` to the ArrowRight:
 
@@ -799,7 +799,7 @@ In `app/shop/page.tsx`, the "Contact the club" red text link (lines 51–54): ad
 </Link>
 ```
 
-- [ ] **Step 7: ContactForm submit button**
+- [x] **Step 7: ContactForm submit button**
 
 In `src/components/blocks/ContactForm.tsx`, replace the submit `<button ...>` (lines 43–46) with:
 
@@ -813,12 +813,12 @@ In `src/components/blocks/ContactForm.tsx`, replace the submit `<button ...>` (l
 </button>
 ```
 
-- [ ] **Step 8: Tests + typecheck**
+- [x] **Step 8: Tests + typecheck**
 
 Run: `npm test` and `npm run typecheck`
 Expected: pass/clean. (Watch for unused `Link`/`ArrowRight` imports.)
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add src/components/CtaLink.tsx src/components/SiteHeader.tsx src/components/HeroIntro.tsx "app/[slug]/page.tsx" app/page.tsx app/shop/page.tsx src/components/blocks/ContactForm.tsx
@@ -832,7 +832,7 @@ git commit -m "feat: shared CtaLink with sweep/lift hover across all buttons"
 **Files:**
 - Modify: `src/components/SiteHeader.tsx`
 
-- [ ] **Step 1: Logo + wordmark**
+- [x] **Step 1: Logo + wordmark**
 
 Replace the logo `<Link href="/" ...>` block (crest + stacked span) with:
 
@@ -854,7 +854,7 @@ Replace the logo `<Link href="/" ...>` block (crest + stacked span) with:
 
 (The wordmark keeps `crest-type` and the red "United" — only layout changes: one line, slightly larger to balance the bigger crest.)
 
-- [ ] **Step 2: Header height + nav hover**
+- [x] **Step 2: Header height + nav hover**
 
 In the same file: change `min-h-20` to `min-h-24` on the `<nav>`; change each nav item's className from
 `"rounded px-3 py-2 text-sm font-semibold text-white/82 transition hover:bg-white/8 hover:text-white"` to:
@@ -863,11 +863,11 @@ In the same file: change `min-h-20` to `min-h-24` on the `<nav>`; change each na
 "nav-underline rounded px-3 py-2 text-sm font-semibold text-white/82 transition hover:text-white"
 ```
 
-- [ ] **Step 3: Check clearance below the taller header**
+- [x] **Step 3: Check clearance below the taller header**
 
 The hero uses `pt-28` (112px) against the new 96px header — still clears, but verify visually in the dev server or preview that the pitch-status pill is not cramped; if it is, bump the hero section's `pt-28` to `pt-32` in `HeroIntro.tsx`. `PageHero` uses `pt-32` (128px) — fine.
 
-- [ ] **Step 4: Typecheck + commit**
+- [x] **Step 4: Typecheck + commit**
 
 Run: `npm run typecheck` — clean.
 
@@ -884,7 +884,7 @@ git commit -m "feat: bigger 64px crest, one-line Astra United wordmark, nav unde
 - Create: `src/components/Reveal.tsx`
 - Modify: `src/components/FlowReveal.tsx:50-63` (PopCard), `src/components/SectionHeader.tsx`, `src/components/blocks/CardsBlock.tsx`, `src/components/blocks/StepsBlock.tsx`, `src/components/blocks/PillarsBlock.tsx`, `src/components/blocks/PageHero.tsx`, `app/page.tsx:343-362` (clickable cards), `src/components/HeroIntro.tsx:164-184` (stat rail)
 
-- [ ] **Step 1: PopCard stops lifting on hover (it wraps NON-clickable cards)**
+- [x] **Step 1: PopCard stops lifting on hover (it wraps NON-clickable cards)**
 
 In `src/components/FlowReveal.tsx`, in `PopCard`:
 1. Delete the line `whileHover={reducedMotion ? undefined : { y: -6, scale: 1.01 }}`.
@@ -896,7 +896,7 @@ className={`tunnel-card touchline-react card-ambient ${className}`.trim()}
 
 This is the designer's core complaint fixed: non-clickable cards no longer behave like buttons.
 
-- [ ] **Step 2: Clickable homepage cards get the strong treatment**
+- [x] **Step 2: Clickable homepage cards get the strong treatment**
 
 In `app/page.tsx` section 8 ("Join / contact CTA", lines ~343–362), the two `<Link className="card-dark group block h-full p-6 text-white transition hover:-translate-y-1">` become:
 
@@ -912,7 +912,7 @@ and
 
 (drop `transition hover:-translate-y-1` — `.card-link` handles it; inner arrow `group-hover:translate-x-1` spans stay).
 
-- [ ] **Step 3: Create the Reveal wrapper**
+- [x] **Step 3: Create the Reveal wrapper**
 
 `src/components/Reveal.tsx`:
 
@@ -941,7 +941,7 @@ export function Reveal({ children, className = "", delay = 0 }: Props) {
 }
 ```
 
-- [ ] **Step 4: SectionHeader reveals everywhere**
+- [x] **Step 4: SectionHeader reveals everywhere**
 
 `src/components/SectionHeader.tsx` — wrap the existing content in `Reveal` (the outer div's classes move onto Reveal):
 
@@ -981,7 +981,7 @@ export function SectionHeader({
 }
 ```
 
-- [ ] **Step 5: Inner-page blocks get staggered card entrances**
+- [x] **Step 5: Inner-page blocks get staggered card entrances**
 
 `src/components/blocks/CardsBlock.tsx` — replace the `<article>` map with PopCard:
 
@@ -1063,11 +1063,11 @@ export function PillarsBlock({ title, items }: Props) {
 }
 ```
 
-- [ ] **Step 6: PageHero text reveals on load**
+- [x] **Step 6: PageHero text reveals on load**
 
 In `src/components/blocks/PageHero.tsx`, add `import { Reveal } from "@/src/components/Reveal";` and change `<div className="container-wide">` to `<Reveal className="container-wide">` (and the closing tag to `</Reveal>`).
 
-- [ ] **Step 7: Hero stat rail — staggered entrance + gold sweep**
+- [x] **Step 7: Hero stat rail — staggered entrance + gold sweep**
 
 In `src/components/HeroIntro.tsx`, add above the component (module scope, after `stats`):
 
@@ -1119,12 +1119,12 @@ Replace the `<motion.dl ...>` block (lines ~165–184) with:
 </motion.dl>
 ```
 
-- [ ] **Step 8: Tests + typecheck**
+- [x] **Step 8: Tests + typecheck**
 
 Run: `npm test` and `npm run typecheck`
 Expected: pass/clean.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add src/components/Reveal.tsx src/components/FlowReveal.tsx src/components/SectionHeader.tsx src/components/blocks/CardsBlock.tsx src/components/blocks/StepsBlock.tsx src/components/blocks/PillarsBlock.tsx src/components/blocks/PageHero.tsx app/page.tsx src/components/HeroIntro.tsx
@@ -1135,12 +1135,12 @@ git commit -m "feat: hover separation (ambient vs interactive), inner-page revea
 
 ### Task 11: Full verification + preview QA
 
-- [ ] **Step 1: Full local checks**
+- [x] **Step 1: Full local checks**
 
 Run: `npm test` then `npm run typecheck`
 Expected: all green. (`next build` is NOT runnable on S: — the preview deploy is the build check.)
 
-- [ ] **Step 2: Push and confirm the preview build**
+- [x] **Step 2: Push and confirm the preview build**
 
 ```bash
 git push personal round4-dynamic-motion
@@ -1148,7 +1148,7 @@ git push personal round4-dynamic-motion
 
 Expected: Vercel preview at `astra-united-git-round4-dynamic-motion-mazdaks-projects-dffe9641.vercel.app` builds successfully.
 
-- [ ] **Step 3: Visual QA on the preview** *(note: preview URLs are auth-protected — if I can't reach it headlessly, verify what I can on the local dev server and hand Mazdak the QA list for the preview)*
+- [x] **Step 3: Visual QA on the preview** *(note: preview URLs are auth-protected — if I can't reach it headlessly, verify what I can on the local dev server and hand Mazdak the QA list for the preview)*
 
 Check each item:
 - Hero: poster paints fast, loop fades in and ping-pongs smoothly, no jump at the ends; text remains legible.
@@ -1161,7 +1161,7 @@ Check each item:
 - Inner pages (the-club, teams, join-us, contact, shop): headers and cards reveal on scroll; nothing stays invisible.
 - Mobile width: hero loop uses 960 frames (Network tab), layout intact.
 
-- [ ] **Step 4: Report to Mazdak with the preview URL for approval. STOP — production only after his sign-off.**
+- [x] **Step 4: Report to Mazdak with the preview URL for approval. STOP — production only after his sign-off.**
 
 ---
 
