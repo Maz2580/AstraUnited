@@ -7,33 +7,19 @@ import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
 import { SoccerBall } from "@/src/components/SoccerBall";
 import { heroContent } from "@/src/lib/content/home";
 
-// Three strongest hero photos, pulled from public/images/manifest.json.
+// Temporary stop-motion loop from curated burst photos (Dr Emamifar ball
+// skills on the Darebin pitch) until the team delivers production motion
+// frames. Values come from `node scripts/build-hero-frames.mjs`.
 const heroMedia: HeroSource = {
-  kind: "crossfade",
-  intervalMs: 6000,
-  images: [
-    {
-      src: "/images/kit/astra-kit-ball-1920.webp",
-      alt: "Astra United Academy jersey draped on the corner of the pitch beside the official match ball at the Darebin ground",
-      position: "center 70%",
-      blurDataURL:
-        "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAADwAwCdASoQABgAPu1iqk2ppaQiMAgBMB2JYgCdOUAAhXd8KMmZvxcAANc0QbnWA1e8eb71ZbYLPRtgKeFJOG3r962snakr3n7F2TwlfVFXyug2uWIbf+6UsjPW0qj8Ves/Qn88QAA="
-    },
-    {
-      src: "/images/match/astra-match-aerial-control-1920.webp",
-      alt: "Astra United player demonstrating aerial ball control on the touchline at the Darebin Sports and Ice Centre",
-      position: "center 20%",
-      blurDataURL:
-        "data:image/webp;base64,UklGRnIAAABXRUJQVlA4IGYAAABwAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALy3lD0RzM42AA/sNBPUfSWcutepFcBy6yiESNMgjHMmx/olDKBxr2bDH2YhCb4AXi7l2BRzW9s9iQ/QnXwZdaLwxCaZ4RRD4YwAA="
-    },
-    {
-      src: "/images/ground/astra-ground-wide-sky-1920.webp",
-      alt: "Wide establishing shot of the Astra United Darebin pitch with blue sky, clouds, and floodlights in the background",
-      position: "center 38%",
-      blurDataURL:
-        "data:image/webp;base64,UklGRpQAAABXRUJQVlA4IIgAAABQBACdASoQAB0APu1iqU2ppaOiMAgBMB2JZgCdACHwp9mDYDRqFT96VhYAAP6z4nrT7qYAdQc++QcVOP0fNj8+Y7CcCZ9j5Ag6IhhLBrl2nDa3N30OU8lU/IWd6GZ0yio1pEEepa9E3b2bcJSsn7ApfcljL5J5VMIUaf7PXfCH/VcNY5QlgAAA"
-    }
-  ]
+  kind: "frames",
+  frameCount: 15,
+  fps: 7,
+  poster: "/images/hero-frames/poster-1920.webp",
+  posterMobile: "/images/hero-frames/poster-960.webp",
+  blurDataURL:
+    "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAQCdASoQAAkABABoJQBOgBjcRS4sAP7ys1Ele1Zc799b9j+PlJHHapFDdjiXCtW/rCAYpmVf6Zs0WdNXndBAAAA=",
+  blurDataURLMobile:
+    "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoQABgAPxFysVCsJqSisAgBgCIJQBajUABp1f3o8yqdk8u4AAD+wycrv+1B6fsvGjB/MfxwHqAfx3W3Qb0ZrgOxtfV8iFHdbsi7E/FFHEyaU99K4uXjshYnrvAAAA=="
 };
 
 // Compact stat rail (B) — static, energetic.

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import { useEffect, useState } from "react";
+import { HeroFramesCanvas } from "@/src/components/HeroFramesCanvas";
 
 export type HeroSource =
   | { kind: "image"; src: string; alt: string; blurDataURL?: string }
@@ -11,7 +12,15 @@ export type HeroSource =
       intervalMs: number;
     }
   | { kind: "video"; src: string; poster: string }
-  | { kind: "frames"; framePattern: string; frameCount: number; poster: string };
+  | {
+      kind: "frames";
+      frameCount: number;
+      poster: string;
+      posterMobile?: string;
+      blurDataURL?: string;
+      blurDataURLMobile?: string;
+      fps?: number;
+    };
 
 /**
  * Single boundary for hero background media. Swap `source` to upgrade to the
@@ -66,17 +75,34 @@ export function HeroMedia({ source }: { source: HeroSource }) {
   }
 
   if (source.kind === "frames") {
-    // Round 1: render the poster. A later round swaps in the canvas frame scrubber.
+    // Poster paints immediately (desktop landscape stage / mobile portrait),
+    // then the canvas player fades in over it once every frame is loaded.
     return (
-      <Image
-        src={source.poster}
-        alt=""
-        fill
-        priority
-        aria-hidden="true"
-        sizes="100vw"
-        className="-z-20 object-cover"
-      />
+      <div className="absolute inset-0 -z-20" aria-hidden="true">
+        <Image
+          src={source.poster}
+          alt=""
+          fill
+          priority
+          placeholder={source.blurDataURL ? "blur" : "empty"}
+          blurDataURL={source.blurDataURL}
+          sizes="100vw"
+          className={`object-cover ${source.posterMobile ? "hidden md:block" : ""}`}
+        />
+        {source.posterMobile ? (
+          <Image
+            src={source.posterMobile}
+            alt=""
+            fill
+            priority
+            placeholder={source.blurDataURLMobile ? "blur" : "empty"}
+            blurDataURL={source.blurDataURLMobile}
+            sizes="100vw"
+            className="object-cover md:hidden"
+          />
+        ) : null}
+        <HeroFramesCanvas frameCount={source.frameCount} fps={source.fps} />
+      </div>
     );
   }
 
