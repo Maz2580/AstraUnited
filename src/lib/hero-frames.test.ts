@@ -38,13 +38,13 @@ describe("advanceStepper", () => {
 });
 
 describe("frame sources", () => {
-  it("picks 960 for phones and 1600 for desktop", () => {
+  it("picks 960 for phones and 1280 for desktop", () => {
     expect(frameSetForWidth(390)).toBe(960);
-    expect(frameSetForWidth(1440)).toBe(1600);
+    expect(frameSetForWidth(1440)).toBe(1280);
   });
 
   it("builds 1-based zero-padded paths", () => {
-    expect(frameSrc(0, 1600)).toBe("/images/hero-frames/frame-001-1600.webp");
+    expect(frameSrc(0, 1280)).toBe("/images/hero-frames/frame-001-1280.webp");
     expect(frameSrc(11, 960)).toBe("/images/hero-frames/frame-012-960.webp");
   });
 });

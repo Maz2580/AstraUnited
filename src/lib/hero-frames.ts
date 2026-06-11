@@ -28,10 +28,13 @@ export function pingPongIndex(step: number, frameCount: number): number {
   return m < frameCount ? m : cycle - m;
 }
 
-export type FrameWidth = 960 | 1600;
+// 1280 ("720p video" class) is the sweet spot for the desktop set: at 7fps
+// under the hero's dark overlay it is indistinguishable from 1600 but the
+// grass-heavy webp payload is ~36% smaller.
+export type FrameWidth = 960 | 1280;
 
 export function frameSetForWidth(viewportWidth: number): FrameWidth {
-  return viewportWidth <= 768 ? 960 : 1600;
+  return viewportWidth <= 768 ? 960 : 1280;
 }
 
 export function frameSrc(index: number, width: FrameWidth): string {
