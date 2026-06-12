@@ -9,15 +9,30 @@ import {
   type StepperState
 } from "@/src/lib/hero-frames";
 
-type Props = { frameCount: number; fps?: number };
+type Props = {
+  frameCount: number;
+  fps?: number;
+  basePath?: string;
+  /**
+   * "eager": start loading frames on mount (hero — it IS the first paint).
+   * "near-viewport": wait until the canvas is within ~600px of the viewport
+   * (below-the-fold cards must not compete with first-paint bandwidth).
+   */
+  preload?: "eager" | "near-viewport";
+};
 
 /**
- * Stop-motion canvas player for the hero. Invisible until every frame is
- * loaded, then fades in over the poster and ping-pong loops. On any frame
- * load error, reduced motion, or missing canvas support the poster simply
- * stays — the hero is never blank.
+ * Stop-motion canvas player. Invisible until every frame is loaded, then
+ * fades in over the poster and ping-pong loops. On any frame load error,
+ * reduced motion, or missing canvas support the poster simply stays — the
+ * card is never blank.
  */
-export function HeroFramesCanvas({ frameCount, fps = 7 }: Props) {
+export function HeroFramesCanvas({
+  frameCount,
+  fps = 7,
+  basePath = "/images/hero-frames",
+  preload = "eager"
+}: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ready, setReady] = useState(false);
 
@@ -30,6 +45,7 @@ export function HeroFramesCanvas({ frameCount, fps = 7 }: Props) {
 
     let cancelled = false;
     let started = false;
+    let loadStarted = false;
     let inView = true;
     let raf = 0;
     let last: number | null = null;
@@ -84,18 +100,38 @@ export function HeroFramesCanvas({ frameCount, fps = 7 }: Props) {
       raf = requestAnimationFrame(tick);
     };
 
-    for (let i = 0; i < frameCount; i++) {
-      const img = new Image();
-      img.decoding = "async";
-      img.src = frameSrc(i, size);
-      img.onload = () => {
-        loadedCount += 1;
-        if (loadedCount === frameCount) start();
-      };
-      img.onerror = () => {
-        cancelled = true; // poster stays; never show a broken loop
-      };
-      images.push(img);
+    const beginLoading = () => {
+      if (cancelled || loadStarted) return;
+      loadStarted = true;
+      for (let i = 0; i < frameCount; i++) {
+        const img = new Image();
+        img.decoding = "async";
+        img.src = frameSrc(i, size, basePath);
+        img.onload = () => {
+          loadedCount += 1;
+          if (loadedCount === frameCount) start();
+        };
+        img.onerror = () => {
+          cancelled = true; // poster stays; never show a broken loop
+        };
+        images.push(img);
+      }
+    };
+
+    let preloadObserver: IntersectionObserver | null = null;
+    if (preload === "eager") {
+      beginLoading();
+    } else {
+      preloadObserver = new IntersectionObserver(
+        (entries) => {
+          if (entries.some((e) => e.isIntersecting)) {
+            beginLoading();
+            preloadObserver?.disconnect();
+          }
+        },
+        { rootMargin: "600px 0px" }
+      );
+      preloadObserver.observe(canvas);
     }
 
     const observer = new IntersectionObserver((entries) => {
@@ -108,9 +144,10 @@ export function HeroFramesCanvas({ frameCount, fps = 7 }: Props) {
       cancelled = true;
       cancelAnimationFrame(raf);
       observer.disconnect();
+      preloadObserver?.disconnect();
       window.removeEventListener("resize", resize);
     };
-  }, [frameCount, fps]);
+  }, [frameCount, fps, basePath, preload]);
 
   return (
     <canvas
