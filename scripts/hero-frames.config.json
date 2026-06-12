@@ -1,6 +1,7 @@
 {
   "sourceDir": "Content Copies-20260602T085649Z-3-001/preparing the motion graphic",
   "outDir": "public/images/hero-frames",
+  "subjectX": 0.5,
   "frames": [
     "2/0J6A5974.JPG",
     "2/0J6A5975.JPG",

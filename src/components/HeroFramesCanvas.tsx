@@ -100,13 +100,18 @@ export function HeroFramesCanvas({
       if (scrubContainer) {
         const rect = scrubContainer.getBoundingClientRect();
         const denom = rect.height - window.innerHeight;
-        const progress = denom > 0 ? -rect.top / denom : 0;
-        const index = scrubIndex(progress, frameCount);
-        if (index !== lastDrawnIndex) {
-          drawFrame(index);
-          lastDrawnIndex = index;
+        // Only scrub when the wrapper actually pins (desktop). On phones the
+        // wrapper collapses to viewport height — fall through to the loop so
+        // the hero stays alive there.
+        if (denom > window.innerHeight * 0.5) {
+          const index = scrubIndex(-rect.top / denom, frameCount);
+          if (index !== lastDrawnIndex) {
+            drawFrame(index);
+            lastDrawnIndex = index;
+          }
+          last = null;
+          return;
         }
-        return;
       }
       if (last === null) {
         last = now;

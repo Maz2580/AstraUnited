@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   motion,
   useReducedMotion,
@@ -24,7 +24,7 @@ const heroMedia: HeroSource = {
   poster: "/images/hero-frames/poster-1920.webp",
   posterMobile: "/images/hero-frames/poster-960.webp",
   blurDataURL:
-    "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACwAQCdASoQAAkABABoJQBOgBjcRS4sAP7ys1Ele1Zc799b9j+PlJHHapFDdjiXCtW/rCAYpmVf6Zs0WdNXndBAAAA=",
+    "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAkABABoJQBOgBuka8n5gAD+8rTK71cyipkpvzNiZkcmJV7aexrrF/pma0pZISijB9pSAAAAAA==",
   blurDataURLMobile:
     "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoQABgAPxFysVCsJqSisAgBgCIJQBajUABp1f3o8yqdk8u4AAD+wycrv+1B6fsvGjB/MfxwHqAfx3W3Qb0ZrgOxtfV8iFHdbsi7E/FFHEyaU99K4uXjshYnrvAAAA=="
 };
@@ -116,16 +116,27 @@ function StatPiece({ stat, progress, window, reduce }: StatPieceProps) {
 
 export function HeroIntro() {
   const wrapperRef = useRef<HTMLDivElement>(null);
-  const reduce = useReducedMotion() ?? false;
+  const reducedMotion = useReducedMotion() ?? false;
+  // The pin-and-scrub choreography is a desktop gesture; phones get the
+  // grown hero with everything assembled and the loop playing.
+  const [isDesktop, setIsDesktop] = useState(false);
+  useEffect(() => {
+    const query = window.matchMedia("(min-width: 1024px)");
+    setIsDesktop(query.matches);
+    const listener = (event: MediaQueryListEvent) => setIsDesktop(event.matches);
+    query.addEventListener("change", listener);
+    return () => query.removeEventListener("change", listener);
+  }, []);
+  const reduce = reducedMotion || !isDesktop;
   const { scrollYProgress } = useScroll({
     target: wrapperRef,
     offset: ["start start", "end end"]
   });
 
   const kickerOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.kicker, [0, 1]);
-  const kickerY = useTransform(scrollYProgress, PIECE_WINDOWS.kicker, [16, 0]);
+  const kickerY = useTransform(scrollYProgress, PIECE_WINDOWS.kicker, [-16, 0]);
   const headlineOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.headline, [0, 1]);
-  const headlineY = useTransform(scrollYProgress, PIECE_WINDOWS.headline, [40, 0]);
+  const headlineY = useTransform(scrollYProgress, PIECE_WINDOWS.headline, [-40, 0]);
   const leadOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [0, 1]);
   const leadY = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [36, 0]);
   const ctaOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.ctas, [0, 1]);
@@ -142,10 +153,10 @@ export function HeroIntro() {
     <div
       ref={wrapperRef}
       data-hero-scrub
-      className="relative h-[220svh] bg-astra-ink motion-reduce:h-auto"
+      className="relative h-auto bg-astra-ink lg:h-[220svh] motion-reduce:lg:h-auto"
     >
       <section
-        className="hero-cutline sticky top-0 isolate flex h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white motion-reduce:static motion-reduce:h-auto motion-reduce:min-h-[100svh]"
+        className="hero-cutline relative isolate flex min-h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white lg:sticky lg:top-0 lg:h-[100svh] motion-reduce:lg:static motion-reduce:lg:h-auto"
         aria-label="Astra United FC introduction"
       >
       {/* Background media (decorative) */}
@@ -171,74 +182,82 @@ export function HeroIntro() {
         aria-hidden="true"
       />
 
-      <div className="container-wide relative z-10 grid min-h-[calc(100svh-9rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
-        <div className="max-w-3xl">
+      {/* Poster layout around the CENTRED player: title drops in from the
+          top over the sky band, lead+CTAs rise bottom-left, stats slide in
+          bottom-right — three directions assembling around the subject. */}
+      <div className="container-wide relative z-10 flex min-h-[calc(100svh-13rem)] flex-col">
+        <div className="mx-auto w-full max-w-4xl text-center">
           {/* Kicker — first puzzle piece, arrives on the slightest scroll */}
           <motion.div
             style={reduce ? undefined : { opacity: kickerOpacity, y: kickerY }}
-            className="flex items-center gap-3"
+            className="flex items-center justify-center gap-3"
           >
             <span className="h-px w-8 bg-astra-red" aria-hidden="true" />
             <span className="text-xs font-bold uppercase tracking-[0.18em] text-astra-gold">
               {heroContent.kicker}
             </span>
+            <span className="h-px w-8 bg-astra-red" aria-hidden="true" />
           </motion.div>
 
-          {/* Headline — second piece, right behind the kicker */}
+          {/* Headline — second piece, dropping in over the sky */}
           <motion.h1
             style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
-            className="crest-type mt-5 max-w-3xl text-4xl leading-[0.92] text-white sm:text-6xl lg:text-7xl xl:text-8xl"
+            className="crest-type mx-auto mt-5 text-4xl leading-[0.92] text-white sm:text-6xl lg:text-7xl xl:text-8xl"
           >
             {renderHeadline(heroContent.headline)}
           </motion.h1>
-
-          {/* Lead — first puzzle piece, rises in with scroll */}
-          <motion.p
-            style={reduce ? undefined : { opacity: leadOpacity, y: leadY }}
-            className="mt-7 max-w-prose text-lg leading-8 text-white/75"
-          >
-            {heroContent.lead}
-          </motion.p>
-
-          {/* CTAs — second piece */}
-          <motion.div
-            style={reduce ? undefined : { opacity: ctaOpacity, y: ctaY }}
-            className="mt-9 flex flex-col gap-3 sm:flex-row"
-          >
-            <CtaLink
-              href={heroContent.primaryCta.href}
-              className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
-            >
-              {heroContent.primaryCta.label}
-              <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
-            </CtaLink>
-            <CtaLink
-              href={heroContent.secondaryCta.href}
-              variant="ghost"
-              className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
-            >
-              <Play aria-hidden="true" className="h-4 w-4" />
-              {heroContent.secondaryCta.label}
-            </CtaLink>
-          </motion.div>
         </div>
 
-        {/* Stat rail — the container is a piece too (no empty frame at rest),
-            then its boxes slide in from the right one by one */}
-        <motion.dl
-          style={reduce ? undefined : { opacity: railOpacity, x: railX }}
-          className="mt-2 grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs"
-        >
-          {stats.map((stat, index) => (
-            <StatPiece
-              key={stat.value}
-              stat={stat}
-              progress={scrollYProgress}
-              window={PIECE_WINDOWS.stats[index]}
-              reduce={reduce}
-            />
-          ))}
-        </motion.dl>
+        <div className="mt-auto grid items-end gap-10 pt-10 lg:grid-cols-[1.1fr_0.9fr]">
+          <div className="max-w-xl">
+            {/* Lead — rises in from below, bottom-left */}
+            <motion.p
+              style={reduce ? undefined : { opacity: leadOpacity, y: leadY }}
+              className="max-w-prose text-lg leading-8 text-white/75"
+            >
+              {heroContent.lead}
+            </motion.p>
+
+            {/* CTAs — follow the lead */}
+            <motion.div
+              style={reduce ? undefined : { opacity: ctaOpacity, y: ctaY }}
+              className="mt-7 flex flex-col gap-3 sm:flex-row"
+            >
+              <CtaLink
+                href={heroContent.primaryCta.href}
+                className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
+              >
+                {heroContent.primaryCta.label}
+                <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+              </CtaLink>
+              <CtaLink
+                href={heroContent.secondaryCta.href}
+                variant="ghost"
+                className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
+              >
+                <Play aria-hidden="true" className="h-4 w-4" />
+                {heroContent.secondaryCta.label}
+              </CtaLink>
+            </motion.div>
+          </div>
+
+          {/* Stat rail — the container is a piece too (no empty frame at
+              rest), then its boxes slide in from the right one by one */}
+          <motion.dl
+            style={reduce ? undefined : { opacity: railOpacity, x: railX }}
+            className="grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs"
+          >
+            {stats.map((stat, index) => (
+              <StatPiece
+                key={stat.value}
+                stat={stat}
+                progress={scrollYProgress}
+                window={PIECE_WINDOWS.stats[index]}
+                reduce={reduce}
+              />
+            ))}
+          </motion.dl>
+        </div>
       </div>
 
       {/* Scroll affordance — fades out once the puzzle is assembled */}
