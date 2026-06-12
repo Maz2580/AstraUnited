@@ -35,21 +35,33 @@ const stats = [
   { value: "DISC", label: "Thornbury home ground" }
 ];
 
-// Scroll-progress windows for the puzzle-piece assembly. The kicker and
-// headline land with the page; everything else clicks into place as the
-// user scrolls through the pinned hero (and disassembles when they scroll
-// back). All pieces are settled by ~0.70 so the last stretch of the pin is
-// a clean, fully-assembled frame before the page releases.
+// Scroll-progress windows for the puzzle-piece assembly. The page lands on
+// the photo alone; every piece of content — kicker, headline, lead, CTAs,
+// stat rail — clicks into place as the user scrolls through the pinned hero
+// (and disassembles when they scroll back). All pieces are settled by ~0.79
+// so the last stretch of the pin is a clean, fully-assembled frame before
+// the page releases.
 type Window = [number, number];
-const PIECE_WINDOWS: { lead: Window; ctas: Window; stats: Window[]; affordanceOut: Window } = {
-  lead: [0.06, 0.22],
-  ctas: [0.16, 0.32],
+const PIECE_WINDOWS: {
+  kicker: Window;
+  headline: Window;
+  lead: Window;
+  ctas: Window;
+  rail: Window;
+  stats: Window[];
+  affordanceOut: Window;
+} = {
+  kicker: [0.02, 0.1],
+  headline: [0.04, 0.18],
+  lead: [0.16, 0.3],
+  ctas: [0.26, 0.4],
+  rail: [0.36, 0.46],
   stats: [
-    [0.3, 0.46],
-    [0.42, 0.58],
-    [0.54, 0.7]
+    [0.4, 0.54],
+    [0.5, 0.64],
+    [0.6, 0.74]
   ],
-  affordanceOut: [0.72, 0.85]
+  affordanceOut: [0.78, 0.9]
 };
 
 // Emphasise one word of the headline in gold.
@@ -110,10 +122,16 @@ export function HeroIntro() {
     offset: ["start start", "end end"]
   });
 
+  const kickerOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.kicker, [0, 1]);
+  const kickerY = useTransform(scrollYProgress, PIECE_WINDOWS.kicker, [16, 0]);
+  const headlineOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.headline, [0, 1]);
+  const headlineY = useTransform(scrollYProgress, PIECE_WINDOWS.headline, [40, 0]);
   const leadOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [0, 1]);
   const leadY = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [36, 0]);
   const ctaOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.ctas, [0, 1]);
   const ctaY = useTransform(scrollYProgress, PIECE_WINDOWS.ctas, [36, 0]);
+  const railOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.rail, [0, 1]);
+  const railX = useTransform(scrollYProgress, PIECE_WINDOWS.rail, [56, 0]);
   const affordanceOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.affordanceOut, [1, 0]);
 
   return (
@@ -155,11 +173,9 @@ export function HeroIntro() {
 
       <div className="container-wide relative z-10 grid min-h-[calc(100svh-9rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="max-w-3xl">
-          {/* Kicker — lands with the page */}
+          {/* Kicker — first puzzle piece, arrives on the slightest scroll */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.05, ease: "easeOut" }}
+            style={reduce ? undefined : { opacity: kickerOpacity, y: kickerY }}
             className="flex items-center gap-3"
           >
             <span className="h-px w-8 bg-astra-red" aria-hidden="true" />
@@ -168,11 +184,9 @@ export function HeroIntro() {
             </span>
           </motion.div>
 
-          {/* Headline — lands with the page; the anchor of the hero */}
+          {/* Headline — second piece, right behind the kicker */}
           <motion.h1
-            initial={{ opacity: 0, y: 22 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.12, ease: "easeOut" }}
+            style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
             className="crest-type mt-5 max-w-3xl text-4xl leading-[0.92] text-white sm:text-6xl lg:text-7xl xl:text-8xl"
           >
             {renderHeadline(heroContent.headline)}
@@ -209,8 +223,12 @@ export function HeroIntro() {
           </motion.div>
         </div>
 
-        {/* Stat rail — pieces three to five, sliding in from the right */}
-        <dl className="mt-2 grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs">
+        {/* Stat rail — the container is a piece too (no empty frame at rest),
+            then its boxes slide in from the right one by one */}
+        <motion.dl
+          style={reduce ? undefined : { opacity: railOpacity, x: railX }}
+          className="mt-2 grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs"
+        >
           {stats.map((stat, index) => (
             <StatPiece
               key={stat.value}
@@ -220,7 +238,7 @@ export function HeroIntro() {
               reduce={reduce}
             />
           ))}
-        </dl>
+        </motion.dl>
       </div>
 
       {/* Scroll affordance — fades out once the puzzle is assembled */}
