@@ -1,6 +1,13 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useRef } from "react";
+import {
+  motion,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue
+} from "framer-motion";
 import { ArrowDown, ArrowRight, Play } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
@@ -22,28 +29,27 @@ const heroMedia: HeroSource = {
     "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoQABgAPxFysVCsJqSisAgBgCIJQBajUABp1f3o8yqdk8u4AAD+wycrv+1B6fsvGjB/MfxwHqAfx3W3Qb0ZrgOxtfV8iFHdbsi7E/FFHEyaU99K4uXjshYnrvAAAA=="
 };
 
-// Compact stat rail (B) — static, energetic.
 const stats = [
   { value: "U6–Snr", label: "One clear pathway" },
   { value: "2×", label: "Week structured training" },
   { value: "DISC", label: "Thornbury home ground" }
 ];
 
-// Staggered entrance for the stat rail; each row slides in, then a gold
-// accent line sweeps under its value.
-const railVariants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.08, delayChildren: 0.12 } }
-};
-
-const statVariants = {
-  hidden: { opacity: 0, x: 24 },
-  show: { opacity: 1, x: 0, transition: { duration: 0.45, ease: "easeOut" } }
-};
-
-const sweepVariants = {
-  hidden: { scaleX: 0 },
-  show: { scaleX: 1, transition: { duration: 0.4, delay: 0.15, ease: "easeOut" } }
+// Scroll-progress windows for the puzzle-piece assembly. The kicker and
+// headline land with the page; everything else clicks into place as the
+// user scrolls through the pinned hero (and disassembles when they scroll
+// back). All pieces are settled by ~0.70 so the last stretch of the pin is
+// a clean, fully-assembled frame before the page releases.
+type Window = [number, number];
+const PIECE_WINDOWS: { lead: Window; ctas: Window; stats: Window[]; affordanceOut: Window } = {
+  lead: [0.06, 0.22],
+  ctas: [0.16, 0.32],
+  stats: [
+    [0.3, 0.46],
+    [0.42, 0.58],
+    [0.54, 0.7]
+  ],
+  affordanceOut: [0.72, 0.85]
 };
 
 // Emphasise one word of the headline in gold.
@@ -62,12 +68,64 @@ function renderHeadline(headline: string) {
   );
 }
 
+type StatPieceProps = {
+  stat: (typeof stats)[number];
+  progress: MotionValue<number>;
+  window: Window;
+  reduce: boolean;
+};
+
+/** One stat box sliding in from the right inside its scroll window. */
+function StatPiece({ stat, progress, window, reduce }: StatPieceProps) {
+  const [start, end] = window;
+  const opacity = useTransform(progress, [start, end], [0, 1]);
+  const x = useTransform(progress, [start, end], [56, 0]);
+  const sweep = useTransform(progress, [start + 0.06, end + 0.06], [0, 1]);
+
+  return (
+    <motion.div
+      style={reduce ? undefined : { opacity, x }}
+      className="flex flex-col gap-1 bg-astra-ink/30 px-5 py-5"
+    >
+      <dt className="crest-type text-3xl leading-none text-white lg:text-4xl">
+        <span className="text-astra-gold">{stat.value}</span>
+      </dt>
+      <motion.span
+        style={reduce ? undefined : { scaleX: sweep }}
+        aria-hidden="true"
+        className="block h-px w-10 origin-left bg-astra-gold/70"
+      />
+      <dd className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/60">
+        {stat.label}
+      </dd>
+    </motion.div>
+  );
+}
+
 export function HeroIntro() {
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion() ?? false;
+  const { scrollYProgress } = useScroll({
+    target: wrapperRef,
+    offset: ["start start", "end end"]
+  });
+
+  const leadOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [0, 1]);
+  const leadY = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [36, 0]);
+  const ctaOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.ctas, [0, 1]);
+  const ctaY = useTransform(scrollYProgress, PIECE_WINDOWS.ctas, [36, 0]);
+  const affordanceOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.affordanceOut, [1, 0]);
+
   return (
     // Tall wrapper pins the hero while the user scrolls through it; that
-    // scroll distance drives the stop-motion frames (scrub mode). Reduced
-    // motion collapses the pin so there is no dead scroll.
-    <div data-hero-scrub className="relative h-[200svh] bg-astra-ink motion-reduce:h-auto">
+    // scroll distance drives BOTH the stop-motion frames (scrub mode) and the
+    // puzzle-piece assembly of the content. Reduced motion collapses the pin
+    // and renders everything assembled.
+    <div
+      ref={wrapperRef}
+      data-hero-scrub
+      className="relative h-[220svh] bg-astra-ink motion-reduce:h-auto"
+    >
       <section
         className="hero-cutline sticky top-0 isolate flex h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white motion-reduce:static motion-reduce:h-auto motion-reduce:min-h-[100svh]"
         aria-label="Astra United FC introduction"
@@ -97,7 +155,7 @@ export function HeroIntro() {
 
       <div className="container-wide relative z-10 grid min-h-[calc(100svh-9rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="max-w-3xl">
-          {/* Kicker */}
+          {/* Kicker — lands with the page */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
@@ -110,7 +168,7 @@ export function HeroIntro() {
             </span>
           </motion.div>
 
-          {/* Headline */}
+          {/* Headline — lands with the page; the anchor of the hero */}
           <motion.h1
             initial={{ opacity: 0, y: 22 }}
             animate={{ opacity: 1, y: 0 }}
@@ -120,21 +178,17 @@ export function HeroIntro() {
             {renderHeadline(heroContent.headline)}
           </motion.h1>
 
-          {/* Lead */}
+          {/* Lead — first puzzle piece, rises in with scroll */}
           <motion.p
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            style={reduce ? undefined : { opacity: leadOpacity, y: leadY }}
             className="mt-7 max-w-prose text-lg leading-8 text-white/75"
           >
             {heroContent.lead}
           </motion.p>
 
-          {/* CTAs */}
+          {/* CTAs — second piece */}
           <motion.div
-            initial={{ opacity: 0, y: 18 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.28, ease: "easeOut" }}
+            style={reduce ? undefined : { opacity: ctaOpacity, y: ctaY }}
             className="mt-9 flex flex-col gap-3 sm:flex-row"
           >
             <CtaLink
@@ -155,43 +209,29 @@ export function HeroIntro() {
           </motion.div>
         </div>
 
-        {/* Stat rail (B) — right side on lg, stacked on mobile */}
-        <motion.dl
-          variants={railVariants}
-          initial="hidden"
-          animate="show"
-          className="mt-2 grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs"
-        >
-          {stats.map((stat) => (
-            <motion.div
+        {/* Stat rail — pieces three to five, sliding in from the right */}
+        <dl className="mt-2 grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs">
+          {stats.map((stat, index) => (
+            <StatPiece
               key={stat.value}
-              variants={statVariants}
-              className="flex flex-col gap-1 bg-astra-ink/30 px-5 py-5"
-            >
-              <dt className="crest-type text-3xl leading-none text-white lg:text-4xl">
-                <span className="text-astra-gold">{stat.value}</span>
-              </dt>
-              <motion.span
-                variants={sweepVariants}
-                aria-hidden="true"
-                className="block h-px w-10 origin-left bg-astra-gold/70"
-              />
-              <dd className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/60">
-                {stat.label}
-              </dd>
-            </motion.div>
+              stat={stat}
+              progress={scrollYProgress}
+              window={PIECE_WINDOWS.stats[index]}
+              reduce={reduce}
+            />
           ))}
-        </motion.dl>
+        </dl>
       </div>
 
-      {/* Scroll affordance */}
-        <a
+      {/* Scroll affordance — fades out once the puzzle is assembled */}
+        <motion.a
           href="#club-flow"
+          style={reduce ? undefined : { opacity: affordanceOpacity }}
           className="absolute left-1/2 top-[calc(100svh-3.75rem)] z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-xs font-black uppercase tracking-wide text-white/70 transition hover:text-white"
         >
           Scroll to explore
           <ArrowDown aria-hidden="true" className="h-5 w-5 animate-bounce" />
-        </a>
+        </motion.a>
       </section>
     </div>
   );
