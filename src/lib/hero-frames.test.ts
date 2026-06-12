@@ -3,7 +3,8 @@ import {
   advanceStepper,
   frameSetForWidth,
   frameSrc,
-  pingPongIndex
+  pingPongIndex,
+  scrubIndex
 } from "./hero-frames";
 
 describe("pingPongIndex", () => {
@@ -34,6 +35,23 @@ describe("advanceStepper", () => {
   it("clamps huge deltas so a paused tab cannot cause a catch-up burst", () => {
     const next = advanceStepper({ step: 0, carryMs: 0 }, 10000, 100);
     expect(next.step).toBeLessThanOrEqual(4);
+  });
+});
+
+describe("scrubIndex", () => {
+  it("maps scroll progress onto the frame range", () => {
+    expect(scrubIndex(0, 15)).toBe(0);
+    expect(scrubIndex(0.5, 15)).toBe(7);
+    expect(scrubIndex(1, 15)).toBe(14);
+  });
+
+  it("clamps out-of-range progress", () => {
+    expect(scrubIndex(-0.4, 15)).toBe(0);
+    expect(scrubIndex(1.6, 15)).toBe(14);
+  });
+
+  it("returns 0 for single-frame sets", () => {
+    expect(scrubIndex(0.7, 1)).toBe(0);
   });
 });
 

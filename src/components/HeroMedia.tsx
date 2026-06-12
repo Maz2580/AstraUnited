@@ -20,6 +20,8 @@ export type HeroSource =
       blurDataURL?: string;
       blurDataURLMobile?: string;
       fps?: number;
+      /** Scrub frames with scroll through a [data-hero-scrub] ancestor. */
+      scrub?: boolean;
     };
 
 /**
@@ -101,7 +103,11 @@ export function HeroMedia({ source }: { source: HeroSource }) {
             className="object-cover md:hidden"
           />
         ) : null}
-        <HeroFramesCanvas frameCount={source.frameCount} fps={source.fps} />
+        <HeroFramesCanvas
+          frameCount={source.frameCount}
+          fps={source.fps}
+          mode={source.scrub ? "scrub" : "loop"}
+        />
       </div>
     );
   }

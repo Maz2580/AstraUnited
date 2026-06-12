@@ -10,14 +10,6 @@
   --astra-steel: #9fb5c4;
   --astra-turf: #0f5a46;
   --astra-gold: #f2c94c;
-  --hero-handoff-x: 88%;
-  --hero-handoff-y: 72svh;
-}
-
-@media (min-width: 1024px) {
-  :root {
-    --hero-handoff-x: 88%;
-  }
 }
 
 * {

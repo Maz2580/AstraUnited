@@ -28,6 +28,13 @@ export function pingPongIndex(step: number, frameCount: number): number {
   return m < frameCount ? m : cycle - m;
 }
 
+/** Map a 0..1 scroll progress onto a frame index, clamped at both ends. */
+export function scrubIndex(progress: number, frameCount: number): number {
+  if (frameCount <= 1) return 0;
+  const p = Math.min(1, Math.max(0, progress));
+  return Math.round(p * (frameCount - 1));
+}
+
 // 1280 ("720p video" class) is the sweet spot for the desktop set: at 7fps
 // under the hero's dark overlay it is indistinguishable from 1600 but the
 // grass-heavy webp payload is ~36% smaller.

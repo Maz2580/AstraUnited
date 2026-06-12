@@ -4,7 +4,6 @@ import { motion } from "framer-motion";
 import { ArrowDown, ArrowRight, Play } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
-import { BallShade, SoccerBall } from "@/src/components/SoccerBall";
 import { heroContent } from "@/src/lib/content/home";
 
 // Temporary stop-motion loop from curated burst photos (Dr Emamifar ball
@@ -14,6 +13,7 @@ const heroMedia: HeroSource = {
   kind: "frames",
   frameCount: 15,
   fps: 7,
+  scrub: true,
   poster: "/images/hero-frames/poster-1920.webp",
   posterMobile: "/images/hero-frames/poster-960.webp",
   blurDataURL:
@@ -64,10 +64,14 @@ function renderHeadline(headline: string) {
 
 export function HeroIntro() {
   return (
-    <section
-      className="hero-cutline relative isolate flex min-h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white"
-      aria-label="Astra United FC introduction"
-    >
+    // Tall wrapper pins the hero while the user scrolls through it; that
+    // scroll distance drives the stop-motion frames (scrub mode). Reduced
+    // motion collapses the pin so there is no dead scroll.
+    <div data-hero-scrub className="relative h-[200svh] bg-astra-ink motion-reduce:h-auto">
+      <section
+        className="hero-cutline sticky top-0 isolate flex h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white motion-reduce:static motion-reduce:h-auto motion-reduce:min-h-[100svh]"
+        aria-label="Astra United FC introduction"
+      >
       {/* Background media (decorative) */}
       <HeroMedia source={heroMedia} />
 
@@ -93,20 +97,6 @@ export function HeroIntro() {
 
       <div className="container-wide relative z-10 grid min-h-[calc(100svh-9rem)] items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]">
         <div className="max-w-3xl">
-          {/* Pitch-status pill */}
-          <motion.div
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, ease: "easeOut" }}
-            className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-astra-turf/50 bg-astra-turf/20 px-3.5 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide text-emerald-100 backdrop-blur"
-          >
-            <span className="relative flex h-2 w-2">
-              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75" />
-              <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-            </span>
-            Pitch update · All pitches open
-          </motion.div>
-
           {/* Kicker */}
           <motion.div
             initial={{ opacity: 0, y: 16 }}
@@ -194,37 +184,15 @@ export function HeroIntro() {
         </motion.dl>
       </div>
 
-      {/* Touchline handoff ball (decorative) — gold glow marks the handoff */}
-      <motion.div
-        className="pointer-events-none absolute z-[5] h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
-        style={{
-          left: "var(--hero-handoff-x)",
-          top: "var(--hero-handoff-y)",
-          translateX: "-50%",
-          translateY: "-50%"
-        }}
-        animate={{ y: [-4, 6, -4], rotate: [0, 4, 0] }}
-        transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
-        aria-hidden="true"
-        data-hero-handoff-ball
-      >
-        <span
-          aria-hidden="true"
-          className="absolute inset-[-6px] rounded-full border border-astra-gold/60"
-          style={{ boxShadow: "0 0 24px 6px rgba(242,201,76,0.35)" }}
-        />
-        <SoccerBall className="h-full w-full" label="Football at motion handoff point" />
-        <BallShade />
-      </motion.div>
-
       {/* Scroll affordance */}
-      <a
-        href="#club-flow"
-        className="absolute left-1/2 top-[calc(100svh-3.75rem)] z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-xs font-black uppercase tracking-wide text-white/70 transition hover:text-white"
-      >
-        Scroll to explore
-        <ArrowDown aria-hidden="true" className="h-5 w-5 animate-bounce" />
-      </a>
-    </section>
+        <a
+          href="#club-flow"
+          className="absolute left-1/2 top-[calc(100svh-3.75rem)] z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-xs font-black uppercase tracking-wide text-white/70 transition hover:text-white"
+        >
+          Scroll to explore
+          <ArrowDown aria-hidden="true" className="h-5 w-5 animate-bounce" />
+        </a>
+      </section>
+    </div>
   );
 }

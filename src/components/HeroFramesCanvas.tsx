@@ -6,6 +6,7 @@ import {
   frameSetForWidth,
   frameSrc,
   pingPongIndex,
+  scrubIndex,
   type StepperState
 } from "@/src/lib/hero-frames";
 
@@ -19,6 +20,12 @@ type Props = {
    * (below-the-fold cards must not compete with first-paint bandwidth).
    */
   preload?: "eager" | "near-viewport";
+  /**
+   * "loop": time-driven ping-pong playback.
+   * "scrub": frames follow scroll through the nearest [data-hero-scrub]
+   * ancestor (a pinned section), so the motion is the user's own scrolling.
+   */
+  mode?: "loop" | "scrub";
 };
 
 /**
@@ -31,7 +38,8 @@ export function HeroFramesCanvas({
   frameCount,
   fps = 7,
   basePath = "/images/hero-frames",
-  preload = "eager"
+  preload = "eager",
+  mode = "loop"
 }: Props) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [ready, setReady] = useState(false);
@@ -70,13 +78,34 @@ export function HeroFramesCanvas({
       const dpr = Math.min(window.devicePixelRatio || 1, 2);
       canvas.width = Math.round(canvas.clientWidth * dpr);
       canvas.height = Math.round(canvas.clientHeight * dpr);
-      if (started) drawFrame(pingPongIndex(stepper.step, frameCount));
+      if (started) {
+        drawFrame(
+          scrubContainer ? Math.max(0, lastDrawnIndex) : pingPongIndex(stepper.step, frameCount)
+        );
+      }
     };
+
+    // Scrub mode: the pinned wrapper that defines scroll progress. Falls back
+    // to loop playback if the canvas isn't inside one.
+    const scrubContainer =
+      mode === "scrub" ? canvas.closest<HTMLElement>("[data-hero-scrub]") : null;
+    let lastDrawnIndex = -1;
 
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick);
       if (document.hidden || !inView) {
         last = null; // resume without a catch-up jump
+        return;
+      }
+      if (scrubContainer) {
+        const rect = scrubContainer.getBoundingClientRect();
+        const denom = rect.height - window.innerHeight;
+        const progress = denom > 0 ? -rect.top / denom : 0;
+        const index = scrubIndex(progress, frameCount);
+        if (index !== lastDrawnIndex) {
+          drawFrame(index);
+          lastDrawnIndex = index;
+        }
         return;
       }
       if (last === null) {
