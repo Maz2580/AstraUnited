@@ -4,7 +4,7 @@ import { motion } from "framer-motion";
 import { ArrowDown, ArrowRight, Play } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
-import { SoccerBall } from "@/src/components/SoccerBall";
+import { BallShade, SoccerBall } from "@/src/components/SoccerBall";
 import { heroContent } from "@/src/lib/content/home";
 
 // Temporary stop-motion loop from curated burst photos (Dr Emamifar ball
@@ -194,9 +194,9 @@ export function HeroIntro() {
         </motion.dl>
       </div>
 
-      {/* Touchline handoff ball (decorative) */}
+      {/* Touchline handoff ball (decorative) — gold glow marks the handoff */}
       <motion.div
-        className="pointer-events-none absolute z-[5] h-16 w-16 text-astra-gold sm:h-20 sm:w-20 lg:h-24 lg:w-24"
+        className="pointer-events-none absolute z-[5] h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24"
         style={{
           left: "var(--hero-handoff-x)",
           top: "var(--hero-handoff-y)",
@@ -208,7 +208,13 @@ export function HeroIntro() {
         aria-hidden="true"
         data-hero-handoff-ball
       >
+        <span
+          aria-hidden="true"
+          className="absolute inset-[-6px] rounded-full border border-astra-gold/60"
+          style={{ boxShadow: "0 0 24px 6px rgba(242,201,76,0.35)" }}
+        />
         <SoccerBall className="h-full w-full" label="Football at motion handoff point" />
+        <BallShade />
       </motion.div>
 
       {/* Scroll affordance */}
