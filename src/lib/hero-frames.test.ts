@@ -47,4 +47,13 @@ describe("frame sources", () => {
     expect(frameSrc(0, 1280)).toBe("/images/hero-frames/frame-001-1280.webp");
     expect(frameSrc(11, 960)).toBe("/images/hero-frames/frame-012-960.webp");
   });
+
+  it("accepts a custom base path for other frame sets", () => {
+    expect(frameSrc(0, 1280, "/images/women-frames")).toBe(
+      "/images/women-frames/frame-001-1280.webp"
+    );
+    expect(frameSrc(2, 960, "/images/women-frames")).toBe(
+      "/images/women-frames/frame-003-960.webp"
+    );
+  });
 });

@@ -37,6 +37,10 @@ export function frameSetForWidth(viewportWidth: number): FrameWidth {
   return viewportWidth <= 768 ? 960 : 1280;
 }
 
-export function frameSrc(index: number, width: FrameWidth): string {
-  return `/images/hero-frames/frame-${String(index + 1).padStart(3, "0")}-${width}.webp`;
+export function frameSrc(
+  index: number,
+  width: FrameWidth,
+  basePath = "/images/hero-frames"
+): string {
+  return `${basePath}/frame-${String(index + 1).padStart(3, "0")}-${width}.webp`;
 }
