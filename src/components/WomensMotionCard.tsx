@@ -7,7 +7,7 @@ import { HeroFramesCanvas } from "@/src/components/HeroFramesCanvas";
 const FRAME_COUNT = 16;
 const POSTER = "/images/women-frames/poster-1920.webp";
 const BLUR =
-  "data:image/webp;base64,UklGRk4AAABXRUJQVlA4IEIAAACQAQCdASoQAAsABABoJQAAQiLs6AAA/sum6eaY/l8axyEpHoT9/rQpg++7X98Sw29kVXpWuVJBxImboie/+gQ1sAA=";
+  "data:image/webp;base64,UklGRkQAAABXRUJQVlA4IDgAAADwAQCdASoQAAkABABoJQBOgBukhdXfmAAA/vK0k3VJbmTg1j3eDSOE2K3iLqfsy/E8veicHQAAAA==";
 
 /**
  * Women's First Team card (homepage section 5): hero-style ping-pong
