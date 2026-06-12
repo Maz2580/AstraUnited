@@ -18,6 +18,7 @@ import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
 import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
+import { WomensMotionCard } from "@/src/components/WomensMotionCard";
 import { newsPreview, upcomingMoments } from "@/src/lib/site-data";
 import { welcome, whyAstra } from "@/src/lib/content/home";
 
@@ -34,12 +35,6 @@ const photos = {
     alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
     blurDataURL:
       "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoQAAsAA4BaJYgAAv+5vRNYAAD+voAKXwDNy2IhEEynnmVSeUn0lKdwz3awb6C8nEReoy/qU7ZZOAAA"
-  },
-  womens: {
-    src: "/images/womens/astra-womens-portrait-ball-1280.webp",
-    alt: "Astra United female player holding the match ball confidently on the DISC Darebin pitch",
-    blurDataURL:
-      "data:image/webp;base64,UklGRoQAAABXRUJQVlA4IHgAAADQAwCdASoQABgAPu1iqU2ppaOiMAgBMB2JQAALlZyxfS0o3E0CIHAA/u7XAaCOaox+MDB08XmRHNQmAPXsiyGg2WPsQ57hK/NCKRAjt9q3wdhD8+4QshiRXb/IWg+3+BVULRVdiDxyRqMSH/AZuTwKLlvt2ZzYQAA="
   },
   news: {
     src: "/images/community/astra-community-team-photo-1280.webp",
@@ -239,16 +234,7 @@ export default function Home() {
               </div>
             </div>
             <PopCard className="card-dark overflow-hidden">
-              <Image
-                src={photos.womens.src}
-                alt={photos.womens.alt}
-                width={1280}
-                height={1920}
-                placeholder="blur"
-                blurDataURL={photos.womens.blurDataURL}
-                className="h-[460px] w-full object-cover object-[center_22%]"
-                sizes="(min-width: 1024px) 45vw, 100vw"
-              />
+              <WomensMotionCard />
               <div className="border-t border-white/10 p-5 text-white">
                 <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Women's First Team</p>
                 <p className="mt-2 text-sm leading-6 text-white/72">A growing women's program at Darebin International Sports Centre.</p>

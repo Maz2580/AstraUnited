@@ -112,10 +112,21 @@ async function buildStage(buffer, meta, outWidth, outHeight, quality, outPath) {
     .toFile(outPath);
 }
 
-/** Plain cover crop — used when the source framing survives a straight crop. */
-async function buildCover(buffer, outWidth, outHeight, quality, outPath) {
+// Vertical centre (0..1) of the fixed cover-crop band. Stop-motion frames
+// MUST share one crop region — per-frame smart cropping ("attention") makes
+// the background jitter between frames like a shaking camera.
+const COVER_Y = config.coverY ?? 0.5;
+
+/** Fixed-band cover crop — used when the source framing survives a straight crop. */
+async function buildCover(buffer, meta, outWidth, outHeight, quality, outPath) {
+  const bandHeight = Math.round(meta.width * (outHeight / outWidth));
+  const top = Math.max(
+    0,
+    Math.min(meta.height - bandHeight, Math.round(meta.height * COVER_Y - bandHeight / 2))
+  );
   await sharp(buffer)
-    .resize(outWidth, outHeight, { fit: "cover", position: "attention" })
+    .extract({ left: 0, top, width: meta.width, height: bandHeight })
+    .resize(outWidth, outHeight)
     .webp({ quality })
     .toFile(outPath);
 }
@@ -125,7 +136,7 @@ async function processFrame(file, index) {
   const n = String(index + 1).padStart(3, "0");
   const outPath = path.join(outDir, `frame-${n}-${STAGE.width}.webp`);
   if (MODE === "cover") {
-    await buildCover(buffer, STAGE.width, STAGE.height, STAGE.quality, outPath);
+    await buildCover(buffer, meta, STAGE.width, STAGE.height, STAGE.quality, outPath);
   } else {
     await buildStage(buffer, meta, STAGE.width, STAGE.height, STAGE.quality, outPath);
   }
@@ -145,7 +156,7 @@ async function buildPosters(file) {
   const desktopPath = path.join(outDir, "poster-1920.webp");
   if (MODE === "cover") {
     const scale = 1920 / STAGE.width;
-    await buildCover(buffer, 1920, Math.round(STAGE.height * scale), 55, desktopPath);
+    await buildCover(buffer, meta, 1920, Math.round(STAGE.height * scale), 55, desktopPath);
   } else {
     await buildStage(buffer, meta, 1920, 1080, 55, desktopPath);
   }
