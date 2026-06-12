@@ -2,7 +2,7 @@
 
 import { ReactNode, useEffect, useRef, useState } from "react";
 import Lenis from "lenis";
-import { SoccerBall } from "@/src/components/SoccerBall";
+import { BallShade, SoccerBall } from "@/src/components/SoccerBall";
 import {
   buildPolyline,
   pointAtProgress,
@@ -48,6 +48,7 @@ export function Touchline({ children }: TouchlineProps) {
   const basePathRef = useRef<SVGPathElement>(null);
   const progressPathRef = useRef<SVGPathElement>(null);
   const ballRef = useRef<HTMLDivElement>(null);
+  const spinnerRef = useRef<HTMLDivElement>(null);
 
   const polyRef = useRef<Point[]>([]);
   const pathLenRef = useRef(0);
@@ -169,7 +170,10 @@ export function Touchline({ children }: TouchlineProps) {
         prevYRef.current = cy;
 
         if (ballRef.current) {
-          ballRef.current.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%) rotate(${rotationRef.current}deg)`;
+          ballRef.current.style.transform = `translate3d(${cx}px, ${cy}px, 0) translate(-50%, -50%)`;
+        }
+        if (spinnerRef.current) {
+          spinnerRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
         }
 
         if (progressPathRef.current) {
@@ -247,11 +251,13 @@ export function Touchline({ children }: TouchlineProps) {
           <div
             ref={ballRef}
             aria-hidden="true"
-            className="pointer-events-none absolute left-0 top-0 z-10 text-white drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]"
+            className="pointer-events-none absolute left-0 top-0 z-10 drop-shadow-[0_6px_14px_rgba(0,0,0,0.55)]"
             style={{ width: BALL_SIZE, height: BALL_SIZE, willChange: "transform" }}
           >
-            <span className="absolute inset-[-5px] rounded-full border border-astra-gold/50" />
-            <SoccerBall className="h-full w-full" strokeWidth={1.4} />
+            <div ref={spinnerRef} className="absolute inset-0" style={{ willChange: "transform" }}>
+              <SoccerBall className="h-full w-full" />
+            </div>
+            <BallShade />
           </div>
         </>
       )}
