@@ -91,54 +91,10 @@ svg {
   padding: 5rem 1.25rem;
 }
 
-.section-band::before,
-.section-band::after {
-  pointer-events: none;
-}
-
 @media (min-width: 768px) {
   .section-band {
     min-height: 82svh;
     padding: 7rem 2rem;
-  }
-}
-
-@media (min-width: 1280px) {
-  .section-band::before,
-  .section-band::after {
-    position: absolute;
-    top: 4.5rem;
-    bottom: 4.5rem;
-    z-index: 0;
-    width: min(13vw, 190px);
-    content: "";
-    opacity: 0.28;
-    background:
-      repeating-linear-gradient(
-        0deg,
-        transparent 0 30px,
-        rgba(0, 28, 42, 0.08) 30px 31px,
-        transparent 31px 62px
-      ),
-      linear-gradient(90deg, rgba(200, 25, 22, 0.14), transparent 52%);
-  }
-
-  .section-band::before {
-    left: max(1.5rem, calc((100vw - 1180px) / 2 - 230px));
-    border-left: 1px solid rgba(200, 25, 22, 0.16);
-  }
-
-  .section-band::after {
-    right: max(1.5rem, calc((100vw - 1180px) / 2 - 230px));
-    border-right: 1px solid rgba(242, 201, 76, 0.18);
-    background:
-      repeating-linear-gradient(
-        0deg,
-        transparent 0 30px,
-        rgba(0, 28, 42, 0.08) 30px 31px,
-        transparent 31px 62px
-      ),
-      linear-gradient(270deg, rgba(242, 201, 76, 0.16), transparent 52%);
   }
 }
 
