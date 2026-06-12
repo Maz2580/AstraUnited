@@ -240,10 +240,10 @@ export const pages: MarketingPage[] = [
     intro:
       "Astra's pathway supports boys, girls, youth players, U23s, and senior squads - a clear route from first touch to first team.",
     hero: {
-      src: "/images/academy/astra-academy-dribble-duel-1920.webp",
-      alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
+      src: "/images/academy/astra-academy-youth-training-1920.webp",
+      alt: "Astra United juniors playing a small-sided training match between mini goals on the Darebin pitch",
       blurDataURL:
-        "data:image/webp;base64,UklGRkYAAABXRUJQVlA4IDoAAADwAQCdASoQAAsABABoJYgAAujepy+boAAA/qZ9FMOnd0YmL4PqBfvyeQt9ry32LYI2xMSvoaNQiAAA"
+        "data:image/webp;base64,UklGRlQAAABXRUJQVlA4IEgAAACwAQCdASoQAAsABABoJagAAubJvYSYAP6Rv3r8r1oqJkbuqTQQUc8+QzWTqElaiZDoOOSvLLtlu4BZ8VzR3vVc7r98ALmAQAA="
     },
     blocks: [
       {
