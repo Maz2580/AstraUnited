@@ -290,7 +290,7 @@ export default function Home() {
         </FlowReveal>
 
         {/* 7 — Sponsors */}
-        <FlowReveal className="section-band band-deep text-white">
+        <FlowReveal className="section-band band-fog text-white">
           <div data-touchline-node className="container-wide">
             <SectionHeader
               eyebrow="Sponsors"
@@ -315,7 +315,7 @@ export default function Home() {
         </FlowReveal>
 
         {/* 8 — Join / contact CTA */}
-        <FlowReveal className="section-band band-fog">
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <SectionHeader
               eyebrow="Join Astra"

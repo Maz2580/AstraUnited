@@ -46,7 +46,7 @@ export function ContactBlock({ email, phone, welfare, socials, address, mapEmbed
                 href={s.href}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:text-white"
+                className="flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
               >
                 {Icon ? <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" /> : <span className="font-black text-astra-gold">X</span>}
                 {s.handle}

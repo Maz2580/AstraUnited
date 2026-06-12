@@ -22,13 +22,17 @@ export default function MarketingPage({ params }: PageProps) {
   const page = getPageBySlug(params.slug);
   if (!page) notFound();
 
+  // BlockRenderer alternates fog/deep from fog at index 0, so the closing CTA
+  // band must take the opposite of the last block to keep the alternation.
+  const ctaBand = page.blocks.length % 2 === 0 ? "band-fog" : "band-deep";
+
   return (
     <main id="main-content" className="bg-astra-ink">
       <PageHero eyebrow={page.eyebrow} title={page.title} intro={page.intro} hero={page.hero} />
       {page.blocks.map((block, index) => (
         <BlockRenderer key={index} block={block} index={index} />
       ))}
-      <section className="section-band band-deep">
+      <section className={`section-band ${ctaBand}`}>
         <div className="container-wide flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-sm font-black uppercase tracking-normal text-astra-gold">Next step</p>

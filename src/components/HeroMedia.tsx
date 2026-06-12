@@ -86,7 +86,7 @@ export function HeroMedia({ source }: { source: HeroSource }) {
           priority
           placeholder={source.blurDataURL ? "blur" : "empty"}
           blurDataURL={source.blurDataURL}
-          sizes="100vw"
+          sizes={source.posterMobile ? "(min-width: 768px) 100vw, 1px" : "100vw"}
           className={`object-cover ${source.posterMobile ? "hidden md:block" : ""}`}
         />
         {source.posterMobile ? (
@@ -97,7 +97,7 @@ export function HeroMedia({ source }: { source: HeroSource }) {
             priority
             placeholder={source.blurDataURLMobile ? "blur" : "empty"}
             blurDataURL={source.blurDataURLMobile}
-            sizes="100vw"
+            sizes="(max-width: 767px) 100vw, 1px"
             className="object-cover md:hidden"
           />
         ) : null}
