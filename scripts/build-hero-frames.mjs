@@ -1,7 +1,7 @@
-// Build the hero stop-motion frame set from curated burst photos.
-// Usage: node scripts/build-hero-frames.mjs
-// Reads scripts/hero-frames.config.json; outputs webp frames + posters and
-// prints { frameCount, blurDataURL, blurDataURLMobile } to paste into HeroIntro.
+// Build a stop-motion frame set from curated burst photos.
+// Usage: node scripts/build-hero-frames.mjs [path/to/config.json]
+// Defaults to scripts/hero-frames.config.json; outputs webp frames + posters
+// and prints { frameCount, blurDataURL, blurDataURLMobile } for the consumer.
 //
 // The source bursts are PORTRAIT (camera held vertically). Desktop frames are
 // built as a 1280x720 landscape "stage": the photo blurred+darkened fills the
@@ -13,17 +13,21 @@ import fs from "node:fs";
 import path from "node:path";
 import sharp from "sharp";
 
-const config = JSON.parse(
-  fs.readFileSync("scripts/hero-frames.config.json", "utf8")
-);
+const configPath = process.argv[2] ?? "scripts/hero-frames.config.json";
+const config = JSON.parse(fs.readFileSync(configPath, "utf8"));
 const { sourceDir, outDir, frames } = config;
 
 // Where the subject strip's centre sits on the landscape stage (0..1).
-// 0.62 keeps him right-of-centre so the hero headline owns the left.
-const SUBJECT_X = 0.62;
+// Hero default 0.62 keeps the subject right-of-centre so the headline owns
+// the left; other sets override via config.
+const SUBJECT_X = config.subjectX ?? 0.62;
 
-const STAGE = { width: 1280, height: 720, quality: 50 }; // desktop, landscape
-const PORTRAIT = { width: 960, quality: 48 }; // mobile, native portrait
+const STAGE = { width: 1280, height: 720, quality: 50, ...config.stage }; // desktop
+const PORTRAIT = { width: 960, quality: 48, ...config.portrait }; // mobile
+// "stage": composite the portrait strip onto a dark brand stage (hero look).
+// "cover": plain cover-crop of the source to the stage box (for sets whose
+// subject framing survives a straight crop).
+const MODE = config.mode ?? "stage";
 
 fs.mkdirSync(outDir, { recursive: true });
 
@@ -108,21 +112,27 @@ async function buildStage(buffer, meta, outWidth, outHeight, quality, outPath) {
     .toFile(outPath);
 }
 
+/** Plain cover crop — used when the source framing survives a straight crop. */
+async function buildCover(buffer, outWidth, outHeight, quality, outPath) {
+  await sharp(buffer)
+    .resize(outWidth, outHeight, { fit: "cover", position: "attention" })
+    .webp({ quality })
+    .toFile(outPath);
+}
+
 async function processFrame(file, index) {
   const { buffer, meta } = await rotatedInput(file);
   const n = String(index + 1).padStart(3, "0");
-  await buildStage(
-    buffer,
-    meta,
-    STAGE.width,
-    STAGE.height,
-    STAGE.quality,
-    path.join(outDir, `frame-${n}-1280.webp`)
-  );
+  const outPath = path.join(outDir, `frame-${n}-${STAGE.width}.webp`);
+  if (MODE === "cover") {
+    await buildCover(buffer, STAGE.width, STAGE.height, STAGE.quality, outPath);
+  } else {
+    await buildStage(buffer, meta, STAGE.width, STAGE.height, STAGE.quality, outPath);
+  }
   await sharp(buffer)
     .resize({ width: PORTRAIT.width })
     .webp({ quality: PORTRAIT.quality })
-    .toFile(path.join(outDir, `frame-${n}-960.webp`));
+    .toFile(path.join(outDir, `frame-${n}-${PORTRAIT.width}.webp`));
 }
 
 async function blurFor(filePath) {
@@ -133,9 +143,17 @@ async function blurFor(filePath) {
 async function buildPosters(file) {
   const { buffer, meta } = await rotatedInput(file);
   const desktopPath = path.join(outDir, "poster-1920.webp");
-  await buildStage(buffer, meta, 1920, 1080, 55, desktopPath);
-  const mobilePath = path.join(outDir, "poster-960.webp");
-  await sharp(buffer).resize({ width: 960 }).webp({ quality: 55 }).toFile(mobilePath);
+  if (MODE === "cover") {
+    const scale = 1920 / STAGE.width;
+    await buildCover(buffer, 1920, Math.round(STAGE.height * scale), 55, desktopPath);
+  } else {
+    await buildStage(buffer, meta, 1920, 1080, 55, desktopPath);
+  }
+  const mobilePath = path.join(outDir, `poster-${PORTRAIT.width}.webp`);
+  await sharp(buffer)
+    .resize({ width: PORTRAIT.width })
+    .webp({ quality: 55 })
+    .toFile(mobilePath);
   return {
     blurDataURL: await blurFor(desktopPath),
     blurDataURLMobile: await blurFor(mobilePath)
