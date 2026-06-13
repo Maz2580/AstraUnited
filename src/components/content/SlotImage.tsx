@@ -7,7 +7,7 @@ type Props = {
   width: number;
   height: number;
   sizes: string;
-  className: string;
+  className?: string;
 };
 
 export async function SlotImage({ slot, width, height, sizes, className }: Props) {

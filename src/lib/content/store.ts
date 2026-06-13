@@ -1,3 +1,4 @@
+import { cache } from "react";
 import { unstable_cache } from "next/cache";
 import { put } from "@vercel/blob";
 import {
@@ -48,8 +49,11 @@ function settledRaw(result: PromiseSettledResult<string | null>): string | null 
   return null;
 }
 
-/** Cached read of all club content. Fail-soft: any error -> empty content. */
-export const getClubContent = unstable_cache(
+// Two cache layers: unstable_cache persists across requests (60s + tag bust);
+// React cache() dedupes within a single request, so the 5-7 server components
+// that read content on one page resolve to ONE underlying fetch even on a cold
+// cache, instead of racing to populate it.
+const loadClubContent = unstable_cache(
   async (): Promise<ClubContent> => {
     try {
       const [notices, events, photos] = await Promise.allSettled([
@@ -70,6 +74,9 @@ export const getClubContent = unstable_cache(
   ["club-content"],
   { revalidate: 60, tags: ["club-content"] }
 );
+
+/** Request-deduped, cross-request-cached read of all club content. */
+export const getClubContent = cache(loadClubContent);
 
 async function writeJson(pathname: string, data: unknown): Promise<void> {
   await put(pathname, JSON.stringify(data, null, 2), {
