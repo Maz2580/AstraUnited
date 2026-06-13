@@ -30,3 +30,8 @@ scripts/_*.py
 scripts/_*.txt
 scripts/_*.jpg
 resume.md
+
+# Claude Code local config + scratch screenshots
+.claude/
+/t*.PNG
+/verify-*.png

@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { revalidatePath, revalidateTag } from "next/cache";
 import sharp from "sharp";
 import {
@@ -12,6 +13,7 @@ import {
 import { PHOTO_SLOTS } from "@/src/lib/content/photo-slots";
 import type { EventPost, Notice } from "@/src/lib/content/types";
 import type { ActionState } from "./shared";
+import { ADMIN_COOKIE, adminToken, isAdmin, passwordMatches } from "./auth";
 
 const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 // Mirrors the ctaHref allowlist in types.ts / SpotlightCard (kept local to the
@@ -28,6 +30,31 @@ function assertConfigured() {
   if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID) {
     throw new Error("Storage write access isn't configured in this environment.");
   }
+}
+
+// Gate every mutation on a valid admin session — defence in depth so a direct
+// POST to an action without the cookie is rejected, not just the page render.
+function requireAdmin() {
+  if (!isAdmin()) throw new Error("Please sign in to the admin first.");
+}
+
+export async function login(_prev: ActionState, form: FormData): Promise<ActionState> {
+  const token = adminToken();
+  if (!token) return fail("Admin password isn't configured on the server yet.");
+  if (!passwordMatches(String(form.get("password") ?? ""))) return fail("Incorrect password.");
+  cookies().set(ADMIN_COOKIE, token, {
+    httpOnly: true,
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+    path: "/",
+    maxAge: 60 * 60 * 24 * 30
+  });
+  return { ok: true };
+}
+
+export async function logout(): Promise<void> {
+  cookies().delete(ADMIN_COOKIE);
+  revalidatePath("/admin", "layout");
 }
 
 const str = (form: FormData, key: string) => String(form.get(key) ?? "").trim();
@@ -52,6 +79,7 @@ async function processUpload(file: File): Promise<Buffer> {
 
 export async function createNotice(_prev: ActionState, form: FormData): Promise<ActionState> {
   try {
+    requireAdmin();
     assertConfigured();
     const title = str(form, "title");
     const message = str(form, "message");
@@ -75,6 +103,7 @@ export async function createNotice(_prev: ActionState, form: FormData): Promise<
 }
 
 export async function endNotice(form: FormData): Promise<void> {
+  requireAdmin();
   assertConfigured();
   const id = str(form, "id");
   const { notices } = await getClubContent();
@@ -83,6 +112,7 @@ export async function endNotice(form: FormData): Promise<void> {
 }
 
 export async function deleteNotice(form: FormData): Promise<void> {
+  requireAdmin();
   assertConfigured();
   const id = str(form, "id");
   const { notices } = await getClubContent();
@@ -92,6 +122,7 @@ export async function deleteNotice(form: FormData): Promise<void> {
 
 export async function createEvent(_prev: ActionState, form: FormData): Promise<ActionState> {
   try {
+    requireAdmin();
     assertConfigured();
     const headline = str(form, "headline");
     const body = str(form, "body");
@@ -127,6 +158,7 @@ export async function createEvent(_prev: ActionState, form: FormData): Promise<A
 }
 
 export async function endEvent(form: FormData): Promise<void> {
+  requireAdmin();
   assertConfigured();
   const id = str(form, "id");
   const { events } = await getClubContent();
@@ -136,6 +168,7 @@ export async function endEvent(form: FormData): Promise<void> {
 
 export async function uploadSlotPhoto(_prev: ActionState, form: FormData): Promise<ActionState> {
   try {
+    requireAdmin();
     assertConfigured();
     const slot = str(form, "slot");
     if (!PHOTO_SLOTS.some((s) => s.key === slot)) return fail(`Unknown photo slot: ${slot}`);
@@ -153,6 +186,7 @@ export async function uploadSlotPhoto(_prev: ActionState, form: FormData): Promi
 }
 
 export async function restoreSlotPhoto(form: FormData): Promise<void> {
+  requireAdmin();
   assertConfigured();
   const slot = str(form, "slot");
   const { photoOverrides } = await getClubContent();
