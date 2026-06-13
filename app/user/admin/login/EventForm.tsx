@@ -42,10 +42,12 @@ export function EventForm() {
   const [previewUrl, setPreviewUrl] = useState("");
   const [fileError, setFileError] = useState<string | null>(null);
 
+  // This effect's cleanup solely owns object-URL revocation: it fires with the
+  // previous url whenever previewUrl changes (and on unmount), so callers just
+  // setPreviewUrl and never revoke manually.
   useEffect(() => {
-    return () => {
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-    };
+    if (!previewUrl) return;
+    return () => URL.revokeObjectURL(previewUrl);
   }, [previewUrl]);
 
   useEffect(() => {
@@ -57,8 +59,7 @@ export function EventForm() {
       setCtaHref("");
       setFrom("");
       setUntil("");
-      if (previewUrl) URL.revokeObjectURL(previewUrl);
-      setPreviewUrl("");
+      setPreviewUrl(""); // effect cleanup revokes the old url
       setFileError(null);
       router.refresh();
     }
@@ -68,7 +69,7 @@ export function EventForm() {
   function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
     setFileError(null);
-    if (previewUrl) URL.revokeObjectURL(previewUrl);
+    // No manual revoke here — changing previewUrl triggers the effect cleanup.
     if (!file) {
       setPreviewUrl("");
       return;
