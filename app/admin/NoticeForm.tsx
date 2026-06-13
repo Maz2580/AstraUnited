@@ -34,7 +34,7 @@ export function NoticeForm() {
   const [until, setUntil] = useState("");
 
   useEffect(() => {
-    if (state.ok) {
+    if (state?.ok) {
       formRef.current?.reset();
       setFrom("");
       setUntil("");
@@ -74,7 +74,7 @@ export function NoticeForm() {
           <input type="hidden" name="activeUntil" value={toISO(until)} />
         </label>
       </div>
-      {state.error ? <p className="text-sm font-semibold text-astra-red">{state.error}</p> : null}
+      {state?.error ? <p className="text-sm font-semibold text-astra-red">{state.error}</p> : null}
       <SubmitButton />
     </form>
   );

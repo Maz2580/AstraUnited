@@ -5,6 +5,7 @@ import { useFormState, useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createEvent } from "./actions";
 import { IDLE_STATE } from "./shared";
+import { downscaleImage } from "./downscale";
 import { SpotlightCard } from "@/src/components/content/SpotlightCard";
 import type { EventPost } from "@/src/lib/content/types";
 
@@ -15,15 +16,15 @@ const TRANSPARENT = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAAL
 // datetime-local has no timezone; convert to UTC ISO on the client.
 const toISO = (local: string) => (local ? new Date(local).toISOString() : "");
 
-function SubmitButton() {
+function SubmitButton({ disabled, busyLabel }: { disabled?: boolean; busyLabel?: string }) {
   const { pending } = useFormStatus();
   return (
     <button
       type="submit"
-      disabled={pending}
+      disabled={pending || disabled}
       className="btn btn-primary btn-sweep inline-flex items-center justify-center gap-2 rounded bg-astra-red px-5 py-3 text-sm font-black uppercase tracking-wide text-white disabled:opacity-60"
     >
-      {pending ? "Publishing…" : "Publish event post"}
+      {pending ? "Publishing…" : busyLabel ?? "Publish event post"}
     </button>
   );
 }
@@ -41,6 +42,7 @@ export function EventForm() {
   const [until, setUntil] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
   const [fileError, setFileError] = useState<string | null>(null);
+  const [compressing, setCompressing] = useState(false);
 
   // This effect's cleanup solely owns object-URL revocation: it fires with the
   // previous url whenever previewUrl changes (and on unmount), so callers just
@@ -51,7 +53,7 @@ export function EventForm() {
   }, [previewUrl]);
 
   useEffect(() => {
-    if (state.ok) {
+    if (state?.ok) {
       formRef.current?.reset();
       setHeadline("");
       setBody("");
@@ -66,8 +68,9 @@ export function EventForm() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, router]);
 
-  function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+  async function onFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const input = e.target;
+    const file = input.files?.[0];
     setFileError(null);
     // No manual revoke here — changing previewUrl triggers the effect cleanup.
     if (!file) {
@@ -77,17 +80,34 @@ export function EventForm() {
     if (!file.type.startsWith("image/")) {
       setFileError("Please choose an image file.");
       setPreviewUrl("");
-      e.target.value = "";
+      input.value = "";
       return;
     }
     if (file.size > MAX_BYTES) {
       setFileError("Image is larger than 10 MB.");
       setPreviewUrl("");
-      e.target.value = "";
+      input.value = "";
       return;
     }
-    setPreviewUrl(URL.createObjectURL(file));
+    // Shrink in the browser and swap the small webp back into the input, so the
+    // normal form submit sends a tiny body (well under Vercel's 4.5 MB limit).
+    setCompressing(true);
+    try {
+      const optimized = await downscaleImage(file);
+      const dt = new DataTransfer();
+      dt.items.add(optimized);
+      input.files = dt.files;
+      setPreviewUrl(URL.createObjectURL(optimized));
+    } catch {
+      setPreviewUrl(URL.createObjectURL(file)); // keep original; server validates
+    } finally {
+      setCompressing(false);
+    }
   }
+
+  // state is undefined only if the action POST failed at the platform level
+  // (e.g. a 413) — guard so the admin shows a message instead of crashing.
+  const errorMsg = state ? state.error : "Something interrupted the upload — please try a smaller image.";
 
   const previewEvent: EventPost = {
     id: "preview",
@@ -145,8 +165,8 @@ export function EventForm() {
           </label>
         </div>
         {fileError ? <p className="text-sm font-semibold text-astra-red">{fileError}</p> : null}
-        {state.error ? <p className="text-sm font-semibold text-astra-red">{state.error}</p> : null}
-        <SubmitButton />
+        {errorMsg ? <p className="text-sm font-semibold text-astra-red">{errorMsg}</p> : null}
+        <SubmitButton disabled={compressing} busyLabel={compressing ? "Optimising image…" : undefined} />
       </form>
 
       <div>

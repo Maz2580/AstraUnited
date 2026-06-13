@@ -24,7 +24,7 @@ export function LoginForm() {
   const router = useRouter();
 
   useEffect(() => {
-    if (state.ok) router.refresh();
+    if (state?.ok) router.refresh();
   }, [state, router]);
 
   return (
@@ -43,7 +43,7 @@ export function LoginForm() {
             className="w-full rounded border border-white/15 bg-white/5 px-3 py-2 text-sm text-white"
           />
         </label>
-        {state.error ? <p className="text-sm font-semibold text-astra-red">{state.error}</p> : null}
+        {state?.error ? <p className="text-sm font-semibold text-astra-red">{state.error}</p> : null}
         <SubmitButton />
       </form>
     </main>
