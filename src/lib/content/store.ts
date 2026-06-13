@@ -1,6 +1,6 @@
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
-import { put } from "@vercel/blob";
+import { put, list, del } from "@vercel/blob";
 import {
   parseEvents,
   parseNotices,
@@ -18,47 +18,46 @@ export type ClubContent = {
 
 const EMPTY: ClubContent = { notices: [], events: [], photoOverrides: {} };
 
-const PATHS = {
-  notices: "content/notices.json",
-  events: "content/events.json",
-  photos: "content/photo-overrides.json"
+// Each content type is stored as IMMUTABLE, versioned JSON under its own prefix.
+// Every edit writes a brand-new file (addRandomSuffix) and prunes the old ones;
+// a URL's bytes never change, so the Blob CDN can never serve a stale copy of an
+// edited file. (Overwriting one fixed file is the trap: the CDN caches by
+// pathname and ignores query strings, so an overwrite reads back stale for up to
+// its TTL — which resurrected deleted notices on the next read-modify-write.)
+const PREFIXES = {
+  notices: "content/notices/",
+  events: "content/events/",
+  photos: "content/photo-overrides/"
 } as const;
 
-// The store is PUBLIC: reads are plain CDN fetches, no auth anywhere.
-// Base URL is public information (it's in every served image URL anyway);
-// env override exists for store migration without a code change.
-const BLOB_BASE =
-  process.env.BLOB_PUBLIC_BASE_URL ?? "https://6yywru0gnpljts2r.public.blob.vercel-storage.com";
-
-// no-store on the inner fetch makes unstable_cache the SINGLE cache layer:
-// when an admin action calls revalidateTag("club-content"), the wrapper re-runs
-// and hits the origin immediately (no second 60s Data-Cache window to wait out).
-// `bust` appends a unique query string so the Blob CDN edge can't serve a stale
-// copy either — used by the write path, which must read the very latest before
-// it modifies-and-writes back (otherwise concurrent/rapid edits clobber).
-// null = file doesn't exist yet (nothing published).
-async function fetchJson(pathname: string, bust = false): Promise<string | null> {
-  const url = bust ? `${BLOB_BASE}/${pathname}?t=${Date.now()}` : `${BLOB_BASE}/${pathname}`;
-  const res = await fetch(url, { cache: "no-store" });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`blob fetch ${res.status} for ${pathname}`);
+// Resolve and fetch the newest version under a prefix. list() is the
+// strongly-consistent metadata API (read-after-write), so it always sees the
+// file a just-completed put() created; the file it points at is immutable, so
+// fetching it can't be stale. null = nothing published yet.
+async function readLatest(prefix: string): Promise<string | null> {
+  const { blobs } = await list({ prefix, limit: 1000 });
+  if (blobs.length === 0) return null;
+  const newest = blobs.reduce((a, b) => (b.uploadedAt > a.uploadedAt ? b : a));
+  const res = await fetch(newest.url, { cache: "no-store" });
+  if (res.status === 404) return null; // pruned mid-read; treat as empty
+  if (!res.ok) throw new Error(`blob fetch ${res.status} for ${newest.pathname}`);
   return res.text();
 }
 
-// allSettled (not all): a transient failure on one file shouldn't hide the
-// other two. A rejected file falls back to its own empty default + logs which.
+// allSettled (not all): a transient failure on one type shouldn't hide the
+// other two. A rejected type falls back to its own empty default + logs which.
 function settledRaw(result: PromiseSettledResult<string | null>): string | null {
   if (result.status === "fulfilled") return result.value;
   console.error("[content] partial read failed:", result.reason);
   return null;
 }
 
-async function readAll(bust: boolean): Promise<ClubContent> {
+async function readAll(): Promise<ClubContent> {
   try {
     const [notices, events, photos] = await Promise.allSettled([
-      fetchJson(PATHS.notices, bust),
-      fetchJson(PATHS.events, bust),
-      fetchJson(PATHS.photos, bust)
+      readLatest(PREFIXES.notices),
+      readLatest(PREFIXES.events),
+      readLatest(PREFIXES.photos)
     ]);
     return {
       notices: parseNotices(settledRaw(notices) ?? "[]"),
@@ -71,11 +70,11 @@ async function readAll(bust: boolean): Promise<ClubContent> {
   }
 }
 
-// Two cache layers: unstable_cache persists across requests (60s + tag bust);
-// React cache() dedupes within a single request, so the 5-7 server components
-// that read content on one page resolve to ONE underlying fetch even on a cold
-// cache, instead of racing to populate it.
-const loadClubContent = unstable_cache(() => readAll(false), ["club-content"], {
+// Two cache layers for display: unstable_cache persists across requests (60s +
+// tag bust on every admin write); React cache() dedupes within a single request,
+// so the 5-7 server components that read content on one page resolve to ONE
+// underlying read even on a cold cache.
+const loadClubContent = unstable_cache(() => readAll(), ["club-content"], {
   revalidate: 60,
   tags: ["club-content"]
 });
@@ -84,32 +83,39 @@ const loadClubContent = unstable_cache(() => readAll(false), ["club-content"], {
 export const getClubContent = cache(loadClubContent);
 
 /**
- * Uncached, CDN-busting read for the admin WRITE path only. A write action does
- * read-modify-write; it must see the latest array, never a stale unstable_cache
- * entry or a 60s-old CDN edge copy — otherwise a second quick edit overwrites
- * the first. Never use this for page rendering (it skips all caching on purpose).
+ * Uncached read for the admin WRITE path only. A write action does read-modify-
+ * write; it must start from the latest committed state, never a 60s-old
+ * unstable_cache entry. readLatest() resolves the newest version via the
+ * strongly-consistent list() API, so this is always current.
  */
-export const getClubContentForWrite = () => readAll(true);
+export const getClubContentForWrite = () => readAll();
 
-async function writeJson(pathname: string, data: unknown): Promise<void> {
-  await put(pathname, JSON.stringify(data, null, 2), {
+// Write a new immutable version, then prune older versions of the same type.
+// Pruning is best-effort: a failed delete just leaves an extra file behind, and
+// readLatest() still picks the newest, so correctness never depends on it.
+async function writeVersion(prefix: string, data: unknown): Promise<void> {
+  const before = await list({ prefix, limit: 1000 });
+  const written = await put(`${prefix}data.json`, JSON.stringify(data, null, 2), {
     access: "public",
-    addRandomSuffix: false,
-    allowOverwrite: true,
-    contentType: "application/json",
-    // These tiny control files are overwritten on every edit and must read back
-    // fresh — both for the admin's display refresh and for the next read-modify-
-    // write. unstable_cache (60s) already absorbs public read load, so the Blob
-    // copy itself stays uncached at the edge. Images keep their long cache.
-    cacheControlMaxAge: 0
+    addRandomSuffix: true, // immutable unique URL — never overwrite
+    contentType: "application/json"
   });
+  const stale = before.blobs.filter((b) => b.url !== written.url).map((b) => b.url);
+  if (stale.length) {
+    try {
+      await del(stale);
+    } catch (error) {
+      console.error("[content] pruning old versions failed (harmless):", error);
+    }
+  }
 }
 
-export const writeNotices = (n: Notice[]) => writeJson(PATHS.notices, n);
-export const writeEvents = (e: EventPost[]) => writeJson(PATHS.events, e);
-export const writePhotoOverrides = (p: PhotoOverrides) => writeJson(PATHS.photos, p);
+export const writeNotices = (n: Notice[]) => writeVersion(PREFIXES.notices, n);
+export const writeEvents = (e: EventPost[]) => writeVersion(PREFIXES.events, e);
+export const writePhotoOverrides = (p: PhotoOverrides) => writeVersion(PREFIXES.photos, p);
 
-/** Upload a processed image buffer; returns its public URL. */
+/** Upload a processed image buffer; returns its public URL. Image filenames are
+ *  already unique (uuid / slot+timestamp), so these stay long-cached. */
 export async function uploadImage(pathname: string, body: Buffer): Promise<string> {
   const blob = await put(pathname, body, {
     access: "public",
