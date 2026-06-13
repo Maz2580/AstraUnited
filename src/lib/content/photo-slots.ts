@@ -9,7 +9,7 @@ export type PhotoSlot = {
 // Defaults duplicated from app/page.tsx + site-data heroes ON PURPOSE: the
 // registry is the single list the admin sees; the pages keep working even if
 // a slot is removed here. src/alt/blurDataURL are copied verbatim.
-export const PHOTO_SLOTS: PhotoSlot[] = [
+export const PHOTO_SLOTS = [
   {
     key: "home-welcome",
     label: "Homepage — Welcome section photo",
@@ -120,7 +120,7 @@ export const PHOTO_SLOTS: PhotoSlot[] = [
         "data:image/webp;base64,UklGRlIAAABXRUJQVlA4IEYAAADQAQCdASoQAAsABABoJZAAAuTwLVg8MAD+2+r5XKqoDqH7LCRtylnH9Qt9/v/Is3f8I/MoV315TuwN/+kHc+SiN5W9akQA"
     }
   }
-];
+] as const satisfies readonly PhotoSlot[];
 
 export type SlotKey = (typeof PHOTO_SLOTS)[number]["key"];
 
@@ -133,7 +133,10 @@ export type ResolvedPhoto = {
 
 export function resolvePhoto(key: SlotKey, overrides: PhotoOverrides): ResolvedPhoto {
   const slot = PHOTO_SLOTS.find((s) => s.key === key);
-  if (!slot) return { src: "", alt: "", isOverride: false };
+  if (!slot) {
+    console.error(`[photo-slots] unknown slot key: "${key}"`);
+    return { src: "", alt: "", isOverride: false };
+  }
   const override = overrides[key];
   if (override?.url) {
     // alt stays from the registry; uploads have no blur placeholder.
