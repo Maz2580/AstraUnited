@@ -437,8 +437,11 @@ const BLOB_BASE =
   process.env.BLOB_PUBLIC_BASE_URL ?? "https://6yywru0gnpljts2r.public.blob.vercel-storage.com";
 
 /** null = file doesn't exist yet (nothing published). */
+// no-store on the inner fetch makes unstable_cache the SINGLE cache layer:
+// when an admin action calls revalidateTag("club-content"), the wrapper re-runs
+// and hits the origin immediately (no second 60s Data-Cache window to wait out).
 async function fetchJson(pathname: string): Promise<string | null> {
-  const res = await fetch(`${BLOB_BASE}/${pathname}`, { next: { revalidate: 60 } });
+  const res = await fetch(`${BLOB_BASE}/${pathname}`, { cache: "no-store" });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`blob fetch ${res.status}`);
   return res.text();
