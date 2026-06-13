@@ -6,6 +6,8 @@ import { NoticeForm } from "./NoticeForm";
 import { ConfirmDeleteButton } from "./ConfirmDeleteButton";
 import { EventForm } from "./EventForm";
 import { endNotice, endEvent } from "./actions";
+import { PhotoSlotCard } from "./PhotoSlotCard";
+import { PHOTO_SLOTS, resolvePhoto } from "@/src/lib/content/photo-slots";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -40,7 +42,7 @@ const TABS = [
 
 export default async function AdminPage({ searchParams }: Props) {
   const tab = searchParams?.tab === "events" || searchParams?.tab === "photos" ? searchParams.tab : "notices";
-  const { notices, events } = await getClubContent();
+  const { notices, events, photoOverrides } = await getClubContent();
   const hasWriteConfig = Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 
   return (
@@ -145,7 +147,21 @@ export default async function AdminPage({ searchParams }: Props) {
               </div>
             </div>
           ) : null}
-          {tab === "photos" ? <p className="text-sm text-white/55">Photos — set up in the next step.</p> : null}
+          {tab === "photos" ? (
+            <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+              {PHOTO_SLOTS.map((s) => {
+                const resolved = resolvePhoto(s.key, photoOverrides);
+                return (
+                  <PhotoSlotCard
+                    key={s.key}
+                    slot={{ key: s.key, label: s.label }}
+                    currentUrl={resolved.src}
+                    isOverride={resolved.isOverride}
+                  />
+                );
+              })}
+            </div>
+          ) : null}
         </div>
       </div>
     </main>
