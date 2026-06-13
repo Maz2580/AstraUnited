@@ -842,6 +842,17 @@ git commit -m "feat: photo slots resolve admin overrides across homepage and pag
 **Files:**
 - Create: `app/user/admin/login/page.tsx`, `app/user/admin/login/actions.ts`, `app/user/admin/login/NoticeForm.tsx`
 
+**DESIGN UPDATE (applied during execution):** Next.js redacts *thrown* server-action
+error messages in production, so input-heavy actions (`createNotice`, `createEvent`,
+`uploadSlotPhoto`) instead use the `useFormState` signature `(_prev: ActionState,
+form) => Promise<ActionState>` and RETURN `{ ok, error }` — surfacing validation
+messages reliably. Pure-mutation actions (`endNotice`, `deleteNotice`, `endEvent`,
+`restoreSlotPhoto`) stay `(form) => Promise<void>` used as inline `<form action>`.
+`createEvent` validates `ctaHref` (http(s)/relative only) BEFORE uploading the image
+(no orphan blobs, no feed-collapse). Also: local dev has no write token, so admin
+write happy-paths are verified on the Vercel preview (Task 11), not localhost. The
+authoritative code is in the executing dispatch; the block below is the original sketch.
+
 - [ ] **Step 8.1: Create `app/user/admin/login/actions.ts`**
 
 ```ts
