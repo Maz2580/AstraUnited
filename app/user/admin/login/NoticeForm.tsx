@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { useRouter } from "next/navigation";
 import { createNotice } from "./actions";
@@ -22,14 +22,22 @@ function SubmitButton() {
   );
 }
 
+// datetime-local has no timezone; the browser knows the admin's local zone, so
+// convert to UTC ISO on the client (the server can't infer the zone). Empty -> "".
+const toISO = (local: string) => (local ? new Date(local).toISOString() : "");
+
 export function NoticeForm() {
   const [state, formAction] = useFormState(createNotice, IDLE_STATE);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
+  const [from, setFrom] = useState("");
+  const [until, setUntil] = useState("");
 
   useEffect(() => {
     if (state.ok) {
       formRef.current?.reset();
+      setFrom("");
+      setUntil("");
       router.refresh();
     }
   }, [state, router]);
@@ -57,11 +65,13 @@ export function NoticeForm() {
       <div className="grid gap-4 sm:grid-cols-2">
         <label className="grid gap-1.5">
           <span className={labelCls}>Show from (optional)</span>
-          <input type="datetime-local" name="activeFrom" className={inputCls} />
+          <input type="datetime-local" value={from} onChange={(e) => setFrom(e.target.value)} className={inputCls} />
+          <input type="hidden" name="activeFrom" value={toISO(from)} />
         </label>
         <label className="grid gap-1.5">
           <span className={labelCls}>Hide after (optional — auto-expiry)</span>
-          <input type="datetime-local" name="activeUntil" className={inputCls} />
+          <input type="datetime-local" value={until} onChange={(e) => setUntil(e.target.value)} className={inputCls} />
+          <input type="hidden" name="activeUntil" value={toISO(until)} />
         </label>
       </div>
       {state.error ? <p className="text-sm font-semibold text-astra-red">{state.error}</p> : null}

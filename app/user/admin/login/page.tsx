@@ -3,7 +3,8 @@ import Link from "next/link";
 import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
 import { NoticeForm } from "./NoticeForm";
-import { deleteNotice, endNotice } from "./actions";
+import { ConfirmDeleteButton } from "./ConfirmDeleteButton";
+import { endNotice } from "./actions";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -25,6 +26,10 @@ const STATUS_CLS: Record<string, string> = {
   Scheduled: "text-white/60",
   Expired: "text-white/35"
 };
+
+// Times are stored as UTC ISO; show the club's local (Melbourne) wall time.
+const fmt = (iso: string) =>
+  new Date(iso).toLocaleString("en-AU", { timeZone: "Australia/Melbourne", dateStyle: "medium", timeStyle: "short" });
 
 const TABS = [
   { key: "notices", label: "Notices" },
@@ -81,9 +86,9 @@ export default async function AdminPage({ searchParams }: Props) {
                       <h3 className="crest-type mt-2 text-2xl text-white">{n.title}</h3>
                       <p className="mt-2 text-sm text-white/72">{n.message}</p>
                       <p className="mt-3 text-xs text-white/45">
-                        {n.activeFrom ? `From ${new Date(n.activeFrom).toLocaleString()}` : "From now"}
+                        {n.activeFrom ? `From ${fmt(n.activeFrom)}` : "From now"}
                         {" · "}
-                        {n.activeUntil ? `until ${new Date(n.activeUntil).toLocaleString()}` : "no end"}
+                        {n.activeUntil ? `until ${fmt(n.activeUntil)}` : "no end"}
                       </p>
                       <div className="mt-4 flex gap-3">
                         {status !== "Expired" ? (
@@ -94,12 +99,7 @@ export default async function AdminPage({ searchParams }: Props) {
                             </button>
                           </form>
                         ) : null}
-                        <form action={deleteNotice}>
-                          <input type="hidden" name="id" value={n.id} />
-                          <button type="submit" className="rounded border border-astra-red/40 px-3 py-1.5 text-xs font-bold text-astra-red transition hover:border-astra-red hover:text-white">
-                            Delete
-                          </button>
-                        </form>
+                        <ConfirmDeleteButton id={n.id} />
                       </div>
                     </div>
                   );
