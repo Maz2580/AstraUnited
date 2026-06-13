@@ -1,6 +1,14 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [
+      { protocol: "https", hostname: "*.public.blob.vercel-storage.com" }
+    ]
+  },
+  experimental: {
+    serverActions: { bodySizeLimit: "12mb" }
+  }
 };
 
 export default nextConfig;
