@@ -21,6 +21,7 @@ import { FounderFeature } from "@/src/components/FounderFeature";
 import { WomensMotionCard } from "@/src/components/WomensMotionCard";
 import { newsPreview, upcomingMoments } from "@/src/lib/site-data";
 import { welcome, whyAstra } from "@/src/lib/content/home";
+import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 
 // In-page photos pulled from public/images/manifest.json (-1280.webp variants).
 const photos = {
@@ -288,6 +289,9 @@ export default function Home() {
             </div>
           </div>
         </FlowReveal>
+
+        {/* 6.5 — Club Spotlight (admin event posts; absent when none live) */}
+        <SpotlightSection />
 
         {/* 7 — Sponsors */}
         <FlowReveal className="section-band band-fog text-white">
