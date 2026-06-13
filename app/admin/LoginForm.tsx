@@ -28,7 +28,7 @@ export function LoginForm() {
   }, [state, router]);
 
   return (
-    <main className="grid min-h-screen place-items-center bg-astra-ink px-5 py-16 text-white">
+    <main className="grid min-h-screen place-items-center bg-astra-ink px-5 pb-16 pt-32 text-white">
       <form action={formAction} className="card-dark grid w-full max-w-sm gap-4 p-7">
         <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-gold">Astra United</p>
         <h1 className="crest-type text-3xl text-white">Club admin</h1>

@@ -50,7 +50,7 @@ export default async function AdminPage({ searchParams }: Props) {
   const hasWriteConfig = Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 
   return (
-    <main className="min-h-screen bg-astra-ink px-5 py-16 text-white">
+    <main className="min-h-screen bg-astra-ink px-5 pb-16 pt-32 text-white">
       <div className="container-wide">
         <div className="flex items-start justify-between gap-4">
           <div>

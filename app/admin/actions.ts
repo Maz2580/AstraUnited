@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath, revalidateTag } from "next/cache";
 import sharp from "sharp";
 import {
-  getClubContent,
+  getClubContentForWrite,
   uploadImage,
   writeEvents,
   writeNotices,
@@ -93,7 +93,7 @@ export async function createNotice(_prev: ActionState, form: FormData): Promise<
       activeUntil: isoOrUndefined(form, "activeUntil"),
       createdAt: new Date().toISOString()
     };
-    const { notices } = await getClubContent();
+    const { notices } = await getClubContentForWrite();
     await writeNotices([notice, ...notices]);
     refresh();
     return { ok: true };
@@ -106,7 +106,7 @@ export async function endNotice(form: FormData): Promise<void> {
   requireAdmin();
   assertConfigured();
   const id = str(form, "id");
-  const { notices } = await getClubContent();
+  const { notices } = await getClubContentForWrite();
   await writeNotices(notices.map((n) => (n.id === id ? { ...n, activeUntil: new Date().toISOString() } : n)));
   refresh();
 }
@@ -115,7 +115,7 @@ export async function deleteNotice(form: FormData): Promise<void> {
   requireAdmin();
   assertConfigured();
   const id = str(form, "id");
-  const { notices } = await getClubContent();
+  const { notices } = await getClubContentForWrite();
   await writeNotices(notices.filter((n) => n.id !== id));
   refresh();
 }
@@ -148,7 +148,7 @@ export async function createEvent(_prev: ActionState, form: FormData): Promise<A
       activeUntil: isoOrUndefined(form, "activeUntil"),
       createdAt: new Date().toISOString()
     };
-    const { events } = await getClubContent();
+    const { events } = await getClubContentForWrite();
     await writeEvents([event, ...events]);
     refresh();
     return { ok: true };
@@ -161,7 +161,7 @@ export async function endEvent(form: FormData): Promise<void> {
   requireAdmin();
   assertConfigured();
   const id = str(form, "id");
-  const { events } = await getClubContent();
+  const { events } = await getClubContentForWrite();
   await writeEvents(events.map((e) => (e.id === id ? { ...e, activeUntil: new Date().toISOString() } : e)));
   refresh();
 }
@@ -176,7 +176,7 @@ export async function uploadSlotPhoto(_prev: ActionState, form: FormData): Promi
     if (!(file instanceof File) || file.size === 0) return fail("Choose an image first.");
     const processed = await processUpload(file);
     const url = await uploadImage(`photos/${slot}-${Date.now()}.webp`, processed);
-    const { photoOverrides } = await getClubContent();
+    const { photoOverrides } = await getClubContentForWrite();
     await writePhotoOverrides({ ...photoOverrides, [slot]: { url, updatedAt: new Date().toISOString() } });
     refresh();
     return { ok: true };
@@ -189,7 +189,7 @@ export async function restoreSlotPhoto(form: FormData): Promise<void> {
   requireAdmin();
   assertConfigured();
   const slot = str(form, "slot");
-  const { photoOverrides } = await getClubContent();
+  const { photoOverrides } = await getClubContentForWrite();
   const { [slot]: _removed, ...rest } = photoOverrides;
   await writePhotoOverrides(rest);
   refresh();
