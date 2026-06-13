@@ -44,14 +44,17 @@ Modified: next.config.mjs, app/layout.tsx, app/page.tsx, app/[slug]/page.tsx,
 
 ### Task 0: One-time Blob store setup (NEEDS MAZDAK — do first, don't block on it)
 
-**This is the only manual step.** Ask Mazdak (or do together):
-1. Vercel dashboard → **Storage** → **Create Database → Blob** → name it `astra-content` → access **must be PUBLIC** (a Private store has no public URLs at all — every read would need authenticated functions; our content is public-site content). Mazdak's first attempt (2026-06-13) created a **Private** store — it must be deleted/replaced with a Public one.
-2. **Connect** the store to the `astra-united` project (Production + Preview). On Vercel this wires auth via **OIDC** and adds `BLOB_STORE_ID` (note: NOT necessarily `BLOB_READ_WRITE_TOKEN`) to the env.
-3. For the local dev server: open the store's Quickstart → `.env.local` tab → copy the `BLOB_READ_WRITE_TOKEN=vercel_blob_rw_...` line into `S:\sash work\Astra united\.env.local`. Keep this token (the dashboard banner suggests revoking unused tokens — ours IS used, locally). `.env.local` is gitignored — verify with `git check-ignore .env.local`.
+**STATUS: DONE 2026-06-13.** Mazdak created the **PUBLIC** Blob store `astra-content`
+(first attempt was Private — deleted and recreated; a private store has no public URLs).
+- Public base URL: `https://6yywru0gnpljts2r.public.blob.vercel-storage.com` (verified live: 404 on a missing path)
+- Store ID: `store_6yYwRU0gnpLjts2R`; connected to `astra-united` (Production + Preview) via **OIDC** — deployed envs get `BLOB_STORE_ID` and the SDK authenticates automatically; `BLOB_READ_WRITE_TOKEN` may NOT exist as an env var.
+- `.env.local` created (gitignored, verified) with `BLOB_PUBLIC_BASE_URL`. 
 
-- [ ] **Step 0.1:** Confirm `.env.local` contains `BLOB_READ_WRITE_TOKEN` and `git check-ignore .env.local` prints the path (it is ignored).
+**Auth model that follows:**
+- **Reads**: plain CDN fetches of the public URLs — no token, no SDK auth, anywhere.
+- **Writes** (admin actions): OIDC on Vercel (automatic). Locally they need `BLOB_READ_WRITE_TOKEN` in `.env.local` (dashboard → store → Quickstart → `.env.local` tab); if the new UI exposes no token, test admin writes on the **preview deployment** instead of the local dev server.
 
-All read paths are built fail-soft, so Tasks 1–7 can be implemented and committed before the token exists; admin writes (Task 8+) need it for live testing.
+- [x] **Step 0.1:** Store public + connected; `.env.local` in place and gitignored.
 
 ---
 
@@ -403,7 +406,7 @@ No unit tests here (it's all I/O glue around the tested parsers); verified live 
 
 ```ts
 import { unstable_cache } from "next/cache";
-import { list, put } from "@vercel/blob";
+import { put } from "@vercel/blob";
 import {
   parseEvents,
   parseNotices,
@@ -427,8 +430,16 @@ const PATHS = {
   photos: "content/photo-overrides.json"
 } as const;
 
-async function fetchJson(url: string): Promise<string> {
-  const res = await fetch(url, { next: { revalidate: 60 } });
+// The store is PUBLIC: reads are plain CDN fetches, no auth anywhere.
+// Base URL is public information (it's in every served image URL anyway);
+// env override exists for store migration without a code change.
+const BLOB_BASE =
+  process.env.BLOB_PUBLIC_BASE_URL ?? "https://6yywru0gnpljts2r.public.blob.vercel-storage.com";
+
+/** null = file doesn't exist yet (nothing published). */
+async function fetchJson(pathname: string): Promise<string | null> {
+  const res = await fetch(`${BLOB_BASE}/${pathname}`, { next: { revalidate: 60 } });
+  if (res.status === 404) return null;
   if (!res.ok) throw new Error(`blob fetch ${res.status}`);
   return res.text();
 }
@@ -436,21 +447,16 @@ async function fetchJson(url: string): Promise<string> {
 /** Cached read of all club content. Fail-soft: any error -> empty content. */
 export const getClubContent = unstable_cache(
   async (): Promise<ClubContent> => {
-    // Local dev auths with BLOB_READ_WRITE_TOKEN; on Vercel the SDK uses OIDC
-    // (BLOB_STORE_ID is present instead). Either signals "storage configured".
-    if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID) return EMPTY;
     try {
-      const { blobs } = await list({ prefix: "content/" });
-      const find = (p: string) => blobs.find((b) => b.pathname === p)?.url;
       const [noticesRaw, eventsRaw, photosRaw] = await Promise.all([
-        find(PATHS.notices) ? fetchJson(find(PATHS.notices)!) : "[]",
-        find(PATHS.events) ? fetchJson(find(PATHS.events)!) : "[]",
-        find(PATHS.photos) ? fetchJson(find(PATHS.photos)!) : "{}"
+        fetchJson(PATHS.notices),
+        fetchJson(PATHS.events),
+        fetchJson(PATHS.photos)
       ]);
       return {
-        notices: parseNotices(noticesRaw),
-        events: parseEvents(eventsRaw),
-        photoOverrides: parsePhotoOverrides(photosRaw)
+        notices: parseNotices(noticesRaw ?? "[]"),
+        events: parseEvents(eventsRaw ?? "[]"),
+        photoOverrides: parsePhotoOverrides(photosRaw ?? "{}")
       };
     } catch (error) {
       console.error("[content] read failed, rendering without club content:", error);
