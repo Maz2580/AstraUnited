@@ -31,4 +31,30 @@ describe("content parsing", () => {
     );
     expect(parsed["home-welcome"].url).toContain("blob.vercel-storage.com");
   });
+
+  const event = (overrides: Record<string, unknown> = {}) => ({
+    id: "e1",
+    image: "https://x.public.blob.vercel-storage.com/events/e1.webp",
+    headline: "Mother's Day Special",
+    body: "20% off all academy registrations this weekend.",
+    createdAt: "2026-06-13T05:00:00.000Z",
+    ...overrides
+  });
+
+  it("parses a valid event post with a relative ctaHref", () => {
+    const parsed = parseEvents(JSON.stringify([event({ ctaLabel: "Register", ctaHref: "/join-us" })]));
+    expect(parsed).toHaveLength(1);
+    expect(parsed[0].ctaHref).toBe("/join-us");
+  });
+
+  it("accepts an https ctaHref and no ctaHref at all", () => {
+    expect(parseEvents(JSON.stringify([event({ ctaHref: "https://register.example.com" })]))).toHaveLength(1);
+    expect(parseEvents(JSON.stringify([event()]))).toHaveLength(1);
+  });
+
+  it("rejects dangerous ctaHref schemes (feed falls back to empty)", () => {
+    expect(parseEvents(JSON.stringify([event({ ctaHref: "javascript:alert(1)" })]))).toEqual([]);
+    expect(parseEvents(JSON.stringify([event({ ctaHref: "data:text/html,<script>" })]))).toEqual([]);
+    expect(parseEvents(JSON.stringify([event({ ctaHref: "//evil.com" })]))).toEqual([]);
+  });
 });

@@ -17,11 +17,16 @@ export const eventPostSchema = z.object({
   headline: z.string().min(1),
   body: z.string().min(1),
   ctaLabel: z.string().optional(),
-  // Kept permissive on read so one bad value never collapses the whole feed.
-  // This is the only field that becomes an href in the DOM — the renderer
-  // (SpotlightCard) MUST drop non-http(s)/non-relative values to block
-  // javascript:/data: hrefs.
-  ctaHref: z.string().optional(),
+  // The only field that becomes an href in the DOM. Allowlist http(s):// URLs
+  // or a leading-slash relative path; reject javascript:/data:/protocol-relative
+  // (//evil.com) at parse time. The admin action validates against this schema
+  // before storing, so bad input is rejected at the form rather than silently
+  // collapsing the whole events feed on read; SpotlightCard re-checks at render
+  // as defence in depth.
+  ctaHref: z
+    .string()
+    .regex(/^(https?:\/\/|\/(?!\/))/, "ctaHref must be a relative path (/...) or an http(s):// URL")
+    .optional(),
   activeFrom: z.string().optional(),
   activeUntil: z.string().optional(),
   createdAt: z.string()
