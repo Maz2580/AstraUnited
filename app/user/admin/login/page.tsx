@@ -4,7 +4,8 @@ import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
 import { NoticeForm } from "./NoticeForm";
 import { ConfirmDeleteButton } from "./ConfirmDeleteButton";
-import { endNotice } from "./actions";
+import { EventForm } from "./EventForm";
+import { endNotice, endEvent } from "./actions";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
@@ -39,7 +40,7 @@ const TABS = [
 
 export default async function AdminPage({ searchParams }: Props) {
   const tab = searchParams?.tab === "events" || searchParams?.tab === "photos" ? searchParams.tab : "notices";
-  const { notices } = await getClubContent();
+  const { notices, events } = await getClubContent();
   const hasWriteConfig = Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 
   return (
@@ -108,7 +109,42 @@ export default async function AdminPage({ searchParams }: Props) {
             </div>
           ) : null}
 
-          {tab === "events" ? <p className="text-sm text-white/55">Event posts — set up in the next step.</p> : null}
+          {tab === "events" ? (
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+              <EventForm />
+              <div className="grid gap-3">
+                {events.length === 0 ? <p className="text-sm text-white/55">No event posts yet.</p> : null}
+                {events.map((ev) => {
+                  const status = statusOf(ev);
+                  return (
+                    <div key={ev.id} className="card-dark flex gap-4 p-5">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={ev.image} alt="" className="h-20 w-24 shrink-0 rounded object-cover" />
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center justify-between gap-3">
+                          <h3 className="crest-type truncate text-xl text-white">{ev.headline}</h3>
+                          <span className={`shrink-0 text-xs font-bold ${STATUS_CLS[status]}`}>{status}</span>
+                        </div>
+                        <p className="mt-1 text-xs text-white/45">
+                          {ev.activeFrom ? `From ${fmt(ev.activeFrom)}` : "From now"}
+                          {" · "}
+                          {ev.activeUntil ? `until ${fmt(ev.activeUntil)}` : "no end"}
+                        </p>
+                        {status !== "Expired" ? (
+                          <form action={endEvent} className="mt-3">
+                            <input type="hidden" name="id" value={ev.id} />
+                            <button type="submit" className="rounded border border-white/15 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:text-white">
+                              End now
+                            </button>
+                          </form>
+                        ) : null}
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : null}
           {tab === "photos" ? <p className="text-sm text-white/55">Photos — set up in the next step.</p> : null}
         </div>
       </div>

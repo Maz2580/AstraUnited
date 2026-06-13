@@ -10,12 +10,17 @@ function isSafeHref(href: string): boolean {
   return /^(https?:\/\/|\/(?!\/))/.test(href);
 }
 
-export function SpotlightCard({ event }: { event: EventPost }) {
+export function SpotlightCard({ event, unoptimized = false }: { event: EventPost; unoptimized?: boolean }) {
   const showCta = Boolean(event.ctaLabel && event.ctaHref && isSafeHref(event.ctaHref));
   return (
     <article className="card-dark grid overflow-hidden md:grid-cols-[1fr_1.1fr]">
       <div className="relative min-h-[260px]">
-        <Image src={event.image} alt={event.headline} fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
+        {unoptimized ? (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={event.image} alt={event.headline} className="absolute inset-0 h-full w-full object-cover" />
+        ) : (
+          <Image src={event.image} alt={event.headline} fill sizes="(min-width: 768px) 45vw, 100vw" className="object-cover" />
+        )}
       </div>
       <div className="p-7 sm:p-9">
         <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-gold">Club spotlight</p>
