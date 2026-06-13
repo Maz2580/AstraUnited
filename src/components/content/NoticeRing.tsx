@@ -49,6 +49,7 @@ export function NoticeRing({ notices }: { notices: Notice[] }) {
     };
   }, [open]);
 
+  const newest = notices[0]; // the pill always previews the newest notice
   const current = notices[Math.min(index, notices.length - 1)];
   const step = useCallback(
     (d: number) => setIndex((i) => (i + d + notices.length) % notices.length),
@@ -70,7 +71,7 @@ export function NoticeRing({ notices }: { notices: Notice[] }) {
           <Megaphone aria-hidden="true" className="h-6 w-6 text-astra-gold" />
         </span>
         <span className="max-w-[16rem] truncate rounded-full border border-white/12 bg-astra-ink/90 px-3 py-1.5 text-xs font-bold text-white/85">
-          {notices[0].title}
+          {newest.title}
         </span>
       </button>
 
