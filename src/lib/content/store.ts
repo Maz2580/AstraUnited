@@ -36,23 +36,31 @@ const BLOB_BASE =
 async function fetchJson(pathname: string): Promise<string | null> {
   const res = await fetch(`${BLOB_BASE}/${pathname}`, { cache: "no-store" });
   if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`blob fetch ${res.status}`);
+  if (!res.ok) throw new Error(`blob fetch ${res.status} for ${pathname}`);
   return res.text();
+}
+
+// allSettled (not all): a transient failure on one file shouldn't hide the
+// other two. A rejected file falls back to its own empty default + logs which.
+function settledRaw(result: PromiseSettledResult<string | null>): string | null {
+  if (result.status === "fulfilled") return result.value;
+  console.error("[content] partial read failed:", result.reason);
+  return null;
 }
 
 /** Cached read of all club content. Fail-soft: any error -> empty content. */
 export const getClubContent = unstable_cache(
   async (): Promise<ClubContent> => {
     try {
-      const [noticesRaw, eventsRaw, photosRaw] = await Promise.all([
+      const [notices, events, photos] = await Promise.allSettled([
         fetchJson(PATHS.notices),
         fetchJson(PATHS.events),
         fetchJson(PATHS.photos)
       ]);
       return {
-        notices: parseNotices(noticesRaw ?? "[]"),
-        events: parseEvents(eventsRaw ?? "[]"),
-        photoOverrides: parsePhotoOverrides(photosRaw ?? "{}")
+        notices: parseNotices(settledRaw(notices) ?? "[]"),
+        events: parseEvents(settledRaw(events) ?? "[]"),
+        photoOverrides: parsePhotoOverrides(settledRaw(photos) ?? "{}")
       };
     } catch (error) {
       console.error("[content] read failed, rendering without club content:", error);
