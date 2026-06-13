@@ -2,20 +2,19 @@ import Image from "next/image";
 import { Reveal } from "@/src/components/Reveal";
 import type { PageHero as PageHeroData } from "@/src/lib/site-data";
 
-type Props = { eyebrow: string; title: string; intro: string; hero: PageHeroData };
+type Props = { eyebrow: string; title: string; intro: string; hero: PageHeroData; overrideSrc?: string };
 
-export function PageHero({ eyebrow, title, intro, hero }: Props) {
+export function PageHero({ eyebrow, title, intro, hero, overrideSrc }: Props) {
   return (
     <section className="relative isolate flex min-h-[60svh] items-end overflow-hidden px-5 pb-16 pt-32 text-white">
       <Image
-        src={hero.src}
+        src={overrideSrc ?? hero.src}
         alt=""
         fill
         priority
-        placeholder="blur"
-        blurDataURL={hero.blurDataURL}
         sizes="100vw"
         className="-z-20 object-cover"
+        {...(overrideSrc ? {} : { placeholder: "blur" as const, blurDataURL: hero.blurDataURL })}
       />
       <div className="absolute inset-0 -z-10 bg-gradient-to-t from-astra-ink via-astra-ink/80 to-astra-ink/55" aria-hidden="true" />
       <div className="absolute inset-y-0 left-0 -z-10 w-2/5 skew-x-[-18deg] bg-astra-red/15 blur-2xl" aria-hidden="true" />

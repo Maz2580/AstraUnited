@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 import {
   ArrowRight,
   CalendarDays,
@@ -22,28 +21,9 @@ import { WomensMotionCard } from "@/src/components/WomensMotionCard";
 import { newsPreview, upcomingMoments } from "@/src/lib/site-data";
 import { welcome, whyAstra } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
+import { SlotImage } from "@/src/components/content/SlotImage";
+import type { SlotKey } from "@/src/lib/content/photo-slots";
 
-// In-page photos pulled from public/images/manifest.json (-1280.webp variants).
-const photos = {
-  welcome: {
-    src: "/images/academy/astra-academy-training-wide-1280.webp",
-    alt: "Astra United youth academy players in training bibs during a drill session on the DISC Darebin pitch",
-    blurDataURL:
-      "data:image/webp;base64,UklGRloAAABXRUJQVlA4IE4AAADQAQCdASoQAAsAA4BaJbAAAxZbZ/GZAAD+1z/ZYKqmtnVc6okA+qCnDfoYAtrg2zI4XIaE2KYUl2ZAO/KqM+alyLiJIxqwefcpOOsovAA="
-  },
-  academy: {
-    src: "/images/academy/astra-academy-dribble-duel-1280.webp",
-    alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
-    blurDataURL:
-      "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoQAAsAA4BaJYgAAv+5vRNYAAD+voAKXwDNy2IhEEynnmVSeUn0lKdwz3awb6C8nEReoy/qU7ZZOAAA"
-  },
-  news: {
-    src: "/images/community/astra-community-team-photo-1280.webp",
-    alt: "Astra United FC youth squad and coaching staff posing for a team photo at the Darebin ground",
-    blurDataURL:
-      "data:image/webp;base64,UklGRmAAAABXRUJQVlA4IFQAAADwAQCdASoQAAsAA4BaJaAC7AEO51NfsyAA/uhR8gOKYM+H/sHOAha6twOxn++SjZ011xmUaPcrFeIDsIUFYFIA3e9Pz9z6rxA4narSxexzNwWSAAA="
-  }
-};
 
 const sponsorTiers = [
   {
@@ -61,33 +41,24 @@ const sponsorTiers = [
 ];
 
 // Image-forward academy cards (photos from public/images/manifest.json).
-const academyCards = [
+const academyCards: { age: string; title: string; copy: string; slot: SlotKey }[] = [
   {
     age: "U6-U8",
     title: "Mini-Kickers",
     copy: "Fun-based football foundations, confidence on the ball, and first friendships in the game.",
-    src: "/images/academy/astra-academy-mini-kickers-1280.webp",
-    alt: "Young Astra United Academy players in navy kit and Academy bibs with their coaches during a Mini-Kickers session at Darebin",
-    blurDataURL:
-      "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAADQAQCdASoQAAsAA4BaJbAAAhtn5084gAD+zezGkLAu1xBrykDOkTySbYuCC4ne6i0bTM/ToTRP7AFbfDayLKbGGuvZEFWIn2UTcr6zkt7iP5ZE+siu60gA"
+    slot: "home-academy-mini"
   },
   {
     age: "U9-U12",
     title: "Junior Academy",
     copy: "Small-sided training, technical repetition, and age-appropriate tactical awareness.",
-    src: "/images/academy/astra-academy-dribble-duel-1280.webp",
-    alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
-    blurDataURL:
-      "data:image/webp;base64,UklGRkwAAABXRUJQVlA4IEAAAADQAQCdASoQAAsAA4BaJYgAAv+5vRNYAAD+voAKXwDNy2IhEEynnmVSeUn0lKdwz3awb6C8nEReoy/qU7ZZOAAA"
+    slot: "home-academy-junior"
   },
   {
     age: "U13-U18",
     title: "Youth Development",
     copy: "A stronger bridge to 11-a-side football, game intelligence, and senior progression.",
-    src: "/images/academy/astra-academy-youth-training-1280.webp",
-    alt: "Astra United youth players in kit and bibs training in a small-sided session with coaches on the Darebin pitch",
-    blurDataURL:
-      "data:image/webp;base64,UklGRlwAAABXRUJQVlA4IFAAAAAwAgCdASoQAAsAA4BaJagAAug2DgKfvetyAAD+xgfUyNK1w/lKOAgtvSCzlOqE+Hx4eWtZ3HVEdEyE3fivfit5t5StKNB36j998NH3YYAAAA=="
+    slot: "home-academy-youth"
   }
 ];
 
@@ -136,16 +107,7 @@ export default function Home() {
             <div>
               <SectionHeader eyebrow={welcome.eyebrow} title={welcome.title} copy={welcome.copy} inverse />
               <PopCard className="card-dark mt-8 overflow-hidden">
-                <Image
-                  src={photos.welcome.src}
-                  alt={photos.welcome.alt}
-                  width={1280}
-                  height={853}
-                  placeholder="blur"
-                  blurDataURL={photos.welcome.blurDataURL}
-                  className="h-[360px] w-full object-cover"
-                  sizes="(min-width: 1024px) 45vw, 100vw"
-                />
+                <SlotImage slot="home-welcome" width={1280} height={853} sizes="(min-width: 1024px) 45vw, 100vw" className="h-[360px] w-full object-cover" />
                 <div className="border-t border-white/10 p-5 text-white">
                   <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Academy training</p>
                   <p className="mt-2 text-sm leading-6 text-white/72">Academy training at Darebin International Sports Centre.</p>
@@ -179,16 +141,7 @@ export default function Home() {
             <div className="mt-10 grid gap-5 md:grid-cols-3">
               {academyCards.map((stage, index) => (
                 <PopCard key={stage.age} className="card-dark overflow-hidden" delay={index * 0.06}>
-                  <Image
-                    src={stage.src}
-                    alt={stage.alt}
-                    width={1280}
-                    height={853}
-                    placeholder="blur"
-                    blurDataURL={stage.blurDataURL}
-                    className="h-44 w-full object-cover"
-                    sizes="(min-width: 768px) 33vw, 100vw"
-                  />
+                  <SlotImage slot={stage.slot} width={1280} height={853} sizes="(min-width: 768px) 33vw, 100vw" className="h-44 w-full object-cover" />
                   <div className="p-6">
                     <p className="crest-type text-2xl text-astra-gold">{stage.age}</p>
                     <h3 className="mt-2 text-xl font-black text-white">{stage.title}</h3>
@@ -266,16 +219,7 @@ export default function Home() {
                 </div>
               </div>
               <PopCard className="card-dark overflow-hidden">
-                <Image
-                  src={photos.news.src}
-                  alt={photos.news.alt}
-                  width={1280}
-                  height={853}
-                  placeholder="blur"
-                  blurDataURL={photos.news.blurDataURL}
-                  className="h-[300px] w-full object-cover"
-                  sizes="(min-width: 1024px) 40vw, 100vw"
-                />
+                <SlotImage slot="home-news" width={1280} height={853} sizes="(min-width: 1024px) 40vw, 100vw" className="h-[300px] w-full object-cover" />
                 <div className="grid gap-px bg-white/10 sm:grid-cols-3">
                   {upcomingMoments.map((moment) => (
                     <div key={moment.title} className="bg-astra-ink p-4 text-white">

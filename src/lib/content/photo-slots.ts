@@ -144,3 +144,8 @@ export function resolvePhoto(key: SlotKey, overrides: PhotoOverrides): ResolvedP
   }
   return { ...slot.default, isOverride: false };
 }
+
+/** Runtime check that a dynamic string is a known slot key (for `hero-${slug}`). */
+export function isSlotKey(key: string): key is SlotKey {
+  return PHOTO_SLOTS.some((s) => s.key === key);
+}

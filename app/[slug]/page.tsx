@@ -5,6 +5,8 @@ import { CtaLink } from "@/src/components/CtaLink";
 import { PageHero } from "@/src/components/blocks/PageHero";
 import { BlockRenderer } from "@/src/components/blocks/BlockRenderer";
 import { getPageBySlug, pages } from "@/src/lib/site-data";
+import { getClubContent } from "@/src/lib/content/store";
+import { resolvePhoto, isSlotKey } from "@/src/lib/content/photo-slots";
 
 type PageProps = { params: { slug: string } };
 
@@ -18,9 +20,14 @@ export function generateMetadata({ params }: PageProps): Metadata {
   return { title: page.navLabel, description: page.intro };
 }
 
-export default function MarketingPage({ params }: PageProps) {
+export default async function MarketingPage({ params }: PageProps) {
   const page = getPageBySlug(params.slug);
   if (!page) notFound();
+
+  const { photoOverrides } = await getClubContent();
+  const heroKey = `hero-${page.slug}`;
+  const heroOverride = isSlotKey(heroKey) ? resolvePhoto(heroKey, photoOverrides) : null;
+  const heroOverrideSrc = heroOverride?.isOverride ? heroOverride.src : undefined;
 
   // BlockRenderer alternates fog/deep from fog at index 0, so the closing CTA
   // band must take the opposite of the last block to keep the alternation.
@@ -28,7 +35,7 @@ export default function MarketingPage({ params }: PageProps) {
 
   return (
     <main id="main-content" className="bg-astra-ink">
-      <PageHero eyebrow={page.eyebrow} title={page.title} intro={page.intro} hero={page.hero} />
+      <PageHero eyebrow={page.eyebrow} title={page.title} intro={page.intro} hero={page.hero} overrideSrc={heroOverrideSrc} />
       {page.blocks.map((block, index) => (
         <BlockRenderer key={index} block={block} index={index} />
       ))}
