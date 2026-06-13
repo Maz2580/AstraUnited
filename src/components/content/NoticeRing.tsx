@@ -18,6 +18,7 @@ export function NoticeRing({ notices }: { notices: Notice[] }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const closeRef = useRef<HTMLButtonElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const hasUrgent = notices.some((n) => n.kind === "urgent");
 
   useEffect(() => {
@@ -41,7 +42,11 @@ export function NoticeRing({ notices }: { notices: Notice[] }) {
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
+    // Cleanup runs when the dialog closes — restore focus to the ring trigger.
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      triggerRef.current?.focus();
+    };
   }, [open]);
 
   const current = notices[Math.min(index, notices.length - 1)];
@@ -53,6 +58,7 @@ export function NoticeRing({ notices }: { notices: Notice[] }) {
   return (
     <>
       <button
+        ref={triggerRef}
         type="button"
         onClick={() => { setIndex(0); setOpen(true); }}
         className="fixed bottom-5 left-5 z-50 flex items-center gap-3"
