@@ -45,8 +45,9 @@ Modified: next.config.mjs, app/layout.tsx, app/page.tsx, app/[slug]/page.tsx,
 ### Task 0: One-time Blob store setup (NEEDS MAZDAK — do first, don't block on it)
 
 **This is the only manual step.** Ask Mazdak (or do together):
-1. Vercel dashboard → the `astra-united` project → **Storage** tab → **Create Database → Blob** → name it `astra-content` → **Connect** to the project (this auto-adds `BLOB_READ_WRITE_TOKEN` to the project's env for all environments).
-2. Copy the token (Storage → store → `.env.local` snippet) into `S:\sash work\Astra united\.env.local` as `BLOB_READ_WRITE_TOKEN=vercel_blob_rw_...` so the local dev server can write too. `.env.local` is gitignored — verify with `git check-ignore .env.local`.
+1. Vercel dashboard → **Storage** → **Create Database → Blob** → name it `astra-content` → access **must be PUBLIC** (a Private store has no public URLs at all — every read would need authenticated functions; our content is public-site content). Mazdak's first attempt (2026-06-13) created a **Private** store — it must be deleted/replaced with a Public one.
+2. **Connect** the store to the `astra-united` project (Production + Preview). On Vercel this wires auth via **OIDC** and adds `BLOB_STORE_ID` (note: NOT necessarily `BLOB_READ_WRITE_TOKEN`) to the env.
+3. For the local dev server: open the store's Quickstart → `.env.local` tab → copy the `BLOB_READ_WRITE_TOKEN=vercel_blob_rw_...` line into `S:\sash work\Astra united\.env.local`. Keep this token (the dashboard banner suggests revoking unused tokens — ours IS used, locally). `.env.local` is gitignored — verify with `git check-ignore .env.local`.
 
 - [ ] **Step 0.1:** Confirm `.env.local` contains `BLOB_READ_WRITE_TOKEN` and `git check-ignore .env.local` prints the path (it is ignored).
 
@@ -435,7 +436,9 @@ async function fetchJson(url: string): Promise<string> {
 /** Cached read of all club content. Fail-soft: any error -> empty content. */
 export const getClubContent = unstable_cache(
   async (): Promise<ClubContent> => {
-    if (!process.env.BLOB_READ_WRITE_TOKEN) return EMPTY;
+    // Local dev auths with BLOB_READ_WRITE_TOKEN; on Vercel the SDK uses OIDC
+    // (BLOB_STORE_ID is present instead). Either signals "storage configured".
+    if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID) return EMPTY;
     try {
       const { blobs } = await list({ prefix: "content/" });
       const find = (p: string) => blobs.find((b) => b.pathname === p)?.url;
@@ -847,8 +850,9 @@ function refresh() {
 }
 
 function requireToken() {
-  if (!process.env.BLOB_READ_WRITE_TOKEN) {
-    throw new Error("Blob storage is not configured (BLOB_READ_WRITE_TOKEN missing).");
+  // Token locally, OIDC (BLOB_STORE_ID) on Vercel — either works for the SDK.
+  if (!process.env.BLOB_READ_WRITE_TOKEN && !process.env.BLOB_STORE_ID) {
+    throw new Error("Blob storage is not configured (no BLOB_READ_WRITE_TOKEN or BLOB_STORE_ID).");
   }
 }
 
