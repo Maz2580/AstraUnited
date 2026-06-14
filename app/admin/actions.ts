@@ -20,6 +20,24 @@ const MAX_UPLOAD_BYTES = 10 * 1024 * 1024;
 // action so a bad link is rejected at the form, before any image upload).
 const SAFE_HREF = /^(https?:\/\/|\/(?!\/))/;
 
+// Coerce a friendly link into a known-safe shape rather than rejecting it:
+//   "/teams"            -> "/teams"            (already a relative path)
+//   "https://x.com/a"   -> unchanged          (already absolute http(s))
+//   "instagram.com/abc" -> "https://instagram.com/abc"   (bare domain)
+//   "join-us"           -> "/join-us"          (treated as an internal path)
+// Anything with another scheme (javascript:, mailto:, data:) or a protocol-
+// relative "//host" returns null so the caller rejects it. Returns null for
+// empty input (meaning: no button link).
+function normalizeHref(raw: string): string | null {
+  const v = raw.trim();
+  if (!v) return null;
+  if (/^https?:\/\//i.test(v)) return v;
+  if (/^\/(?!\/)/.test(v)) return v;
+  if (v.startsWith("//") || /^[a-z][a-z0-9+.-]*:/i.test(v)) return null; // unsafe scheme
+  if (/^[\w-]+(\.[\w-]+)+/.test(v)) return `https://${v}`; // looks like a domain
+  return `/${v.replace(/^\/+/, "")}`; // otherwise an internal path
+}
+
 function refresh() {
   revalidateTag("club-content");
   revalidatePath("/", "layout"); // every page can show the ring / photos
@@ -128,9 +146,10 @@ export async function createEvent(_prev: ActionState, form: FormData): Promise<A
     const body = str(form, "body");
     if (!headline || !body) return fail("Headline and text are required.");
     const ctaLabel = str(form, "ctaLabel") || undefined;
-    const ctaHref = str(form, "ctaHref") || undefined;
-    if (ctaHref && !SAFE_HREF.test(ctaHref)) {
-      return fail("Link must be a relative path (/...) or an http(s):// URL.");
+    const ctaHrefRaw = str(form, "ctaHref");
+    const ctaHref = normalizeHref(ctaHrefRaw) ?? undefined;
+    if (ctaHrefRaw && (!ctaHref || !SAFE_HREF.test(ctaHref))) {
+      return fail("That button link doesn't look valid. Use a page like /join-us or a full https:// address.");
     }
     const file = form.get("image");
     if (!(file instanceof File) || file.size === 0) return fail("An image is required.");

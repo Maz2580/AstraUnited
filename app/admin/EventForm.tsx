@@ -150,6 +150,7 @@ export function EventForm() {
           <label className="grid gap-1.5">
             <span className={labelCls}>Button link (optional)</span>
             <input name="ctaHref" value={ctaHref} onChange={(e) => setCtaHref(e.target.value)} className={inputCls} placeholder="/join-us" />
+            <span className="text-xs text-white/40">A page on this site (e.g. /join-us) or a full web address (e.g. https://instagram.com/…)</span>
           </label>
         </div>
         <div className="grid gap-4 sm:grid-cols-2">
