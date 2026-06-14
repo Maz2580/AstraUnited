@@ -150,6 +150,34 @@ export async function createNotice(_prev: ActionState, form: FormData): Promise<
   }
 }
 
+export async function updateNotice(_prev: ActionState, form: FormData): Promise<ActionState> {
+  try {
+    requireAdmin();
+    assertConfigured();
+    const id = str(form, "id");
+    if (!id) return fail("Missing notice id.");
+    const { notices } = await getClubContentForWrite();
+    const existing = notices.find((n) => n.id === id);
+    if (!existing) return fail("That notice no longer exists — it may have been deleted.");
+    const title = str(form, "title");
+    const message = str(form, "message");
+    if (!title || !message) return fail("Title and message are required.");
+    const updated: Notice = {
+      ...existing, // keeps id + createdAt (and so the notice's position)
+      title,
+      message,
+      kind: str(form, "kind") === "urgent" ? "urgent" : "info",
+      activeFrom: isoOrUndefined(form, "activeFrom"),
+      activeUntil: isoOrUndefined(form, "activeUntil")
+    };
+    await writeNotices(notices.map((n) => (n.id === id ? updated : n)));
+    refresh();
+    return { ok: true };
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : "Could not save the changes.");
+  }
+}
+
 export async function endNotice(form: FormData): Promise<void> {
   requireAdmin();
   assertConfigured();

@@ -47,6 +47,8 @@ export default async function AdminPage({ searchParams }: Props) {
 
   const tab = searchParams?.tab === "events" || searchParams?.tab === "photos" ? searchParams.tab : "notices";
   const { notices, events, photoOverrides } = await getClubContent();
+  const editingNotice =
+    tab === "notices" && searchParams?.edit ? notices.find((n) => n.id === searchParams.edit) : undefined;
   const editingEvent =
     tab === "events" && searchParams?.edit ? events.find((e) => e.id === searchParams.edit) : undefined;
   const hasWriteConfig = Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
@@ -88,7 +90,7 @@ export default async function AdminPage({ searchParams }: Props) {
         <div className="mt-8">
           {tab === "notices" ? (
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-              <NoticeForm />
+              <NoticeForm key={editingNotice?.id ?? "new"} initial={editingNotice} />
               <div className="grid gap-3">
                 {notices.length === 0 ? <p className="text-sm text-white/55">No notices yet.</p> : null}
                 {notices.map((n) => {
@@ -108,7 +110,13 @@ export default async function AdminPage({ searchParams }: Props) {
                         {" · "}
                         {n.activeUntil ? `until ${fmt(n.activeUntil)}` : "no end"}
                       </p>
-                      <div className="mt-4 flex gap-3">
+                      <div className="mt-4 flex flex-wrap gap-3">
+                        <Link
+                          href={`?tab=notices&edit=${n.id}`}
+                          className="rounded border border-white/15 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:text-white"
+                        >
+                          Edit
+                        </Link>
                         {status !== "Expired" ? (
                           <form action={endNotice}>
                             <input type="hidden" name="id" value={n.id} />
