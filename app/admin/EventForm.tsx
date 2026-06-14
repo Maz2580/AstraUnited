@@ -23,6 +23,20 @@ const LINK_PRESETS: { label: string; href: string }[] = [
   { label: "The Club", href: "/the-club" },
   { label: "Sponsors", href: "/sponsors" }
 ];
+
+// Where the post appears on the homepage (matches the placement enum in types).
+const PLACEMENTS: { value: string; label: string }[] = [
+  { value: "top", label: "Top — under the hero (default)" },
+  { value: "mid", label: "Middle — after the academy section" },
+  { value: "after-news", label: "After News & media" },
+  { value: "before-join", label: "Bottom — before the Join section" }
+];
+
+// Defaults for the optional design panel — close to the standard Spotlight look.
+const DEFAULT_BG = "#0b1722";
+const DEFAULT_TEXT = "#f8fbfd";
+const DEFAULT_HEADLINE = 36;
+const DEFAULT_BODY = 15;
 const TRANSPARENT = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 // datetime-local has no timezone; convert to UTC ISO on the client.
 const toISO = (local: string) => (local ? new Date(local).toISOString() : "");
@@ -52,6 +66,13 @@ export function EventForm() {
   const [linkChoice, setLinkChoice] = useState(""); // "", a preset href, or "custom"
   const [from, setFrom] = useState("");
   const [until, setUntil] = useState("");
+  const [placement, setPlacement] = useState("top");
+  const [customise, setCustomise] = useState(false);
+  const [bgColor, setBgColor] = useState(DEFAULT_BG);
+  const [textColor, setTextColor] = useState(DEFAULT_TEXT);
+  const [headlineSize, setHeadlineSize] = useState(DEFAULT_HEADLINE);
+  const [bodySize, setBodySize] = useState(DEFAULT_BODY);
+  const [align, setAlign] = useState<"left" | "center" | "right">("left");
   const [previewUrl, setPreviewUrl] = useState("");
   const [fileError, setFileError] = useState<string | null>(null);
   const [compressing, setCompressing] = useState(false);
@@ -74,6 +95,13 @@ export function EventForm() {
       setLinkChoice("");
       setFrom("");
       setUntil("");
+      setPlacement("top");
+      setCustomise(false);
+      setBgColor(DEFAULT_BG);
+      setTextColor(DEFAULT_TEXT);
+      setHeadlineSize(DEFAULT_HEADLINE);
+      setBodySize(DEFAULT_BODY);
+      setAlign("left");
       setPreviewUrl(""); // effect cleanup revokes the old url
       setFileError(null);
       router.refresh();
@@ -132,6 +160,7 @@ export function EventForm() {
     body: body || "Your event text will appear here…",
     ctaLabel: ctaLabel || undefined,
     ctaHref: effectiveHref || undefined,
+    style: customise ? { bg: bgColor, text: textColor, headlineSize, bodySize, align } : undefined,
     createdAt: ""
   };
 
@@ -189,6 +218,66 @@ export function EventForm() {
         ) : null}
         <input type="hidden" name="ctaHref" value={effectiveHref} />
         <p className="text-xs text-white/40">The button only appears when you give it both text and a destination.</p>
+
+        <label className="grid gap-1.5">
+          <span className={labelCls}>Where it appears</span>
+          <select
+            name="placement"
+            value={placement}
+            onChange={(e) => setPlacement(e.target.value)}
+            className={`${inputCls} [&>option]:bg-astra-ink [&>option]:text-white`}
+          >
+            {PLACEMENTS.map((p) => (
+              <option key={p.value} value={p.value}>
+                {p.label}
+              </option>
+            ))}
+          </select>
+        </label>
+
+        <div className="rounded border border-white/12 p-4">
+          <label className="flex items-center gap-2 text-sm font-semibold text-white/85">
+            <input type="checkbox" name="customise" checked={customise} onChange={(e) => setCustomise(e.target.checked)} />
+            Customise design (colours, sizes, alignment)
+          </label>
+          {customise ? (
+            <div className="mt-4 grid gap-4">
+              <div className="grid gap-4 sm:grid-cols-2">
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Background colour</span>
+                  <input type="color" name="bgColor" value={bgColor} onChange={(e) => setBgColor(e.target.value)} className="h-9 w-full rounded border border-white/15 bg-white/5" />
+                </label>
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Text colour</span>
+                  <input type="color" name="textColor" value={textColor} onChange={(e) => setTextColor(e.target.value)} className="h-9 w-full rounded border border-white/15 bg-white/5" />
+                </label>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Headline size (px)</span>
+                  <input type="number" name="headlineSize" min={12} max={120} value={headlineSize} onChange={(e) => setHeadlineSize(Number(e.target.value))} className={inputCls} />
+                </label>
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Text size (px)</span>
+                  <input type="number" name="bodySize" min={10} max={48} value={bodySize} onChange={(e) => setBodySize(Number(e.target.value))} className={inputCls} />
+                </label>
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Alignment</span>
+                  <select
+                    name="align"
+                    value={align}
+                    onChange={(e) => setAlign(e.target.value as "left" | "center" | "right")}
+                    className={`${inputCls} [&>option]:bg-astra-ink [&>option]:text-white`}
+                  >
+                    <option value="left">Left</option>
+                    <option value="center">Centre</option>
+                    <option value="right">Right</option>
+                  </select>
+                </label>
+              </div>
+            </div>
+          ) : null}
+        </div>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5">
             <span className={labelCls}>Show from (optional)</span>

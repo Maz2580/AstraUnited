@@ -76,8 +76,8 @@ export default function Home() {
       <HeroIntro />
       <BrandMarquee />
       <Touchline>
-        {/* Club Spotlight — admin event posts, high up under the hero; absent when none live */}
-        <SpotlightSection />
+        {/* Club Spotlight (top) — admin event posts under the hero; absent when none live */}
+        <SpotlightSection placement="top" />
 
         {/* 1 — Live pitch status + next moment */}
         <FlowReveal className="section-band band-fog">
@@ -164,6 +164,9 @@ export default function Home() {
           </div>
         </FlowReveal>
 
+        {/* Club Spotlight (mid) */}
+        <SpotlightSection placement="mid" />
+
         {/* 4 — Founder feature */}
         <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide">
@@ -237,6 +240,9 @@ export default function Home() {
           </div>
         </FlowReveal>
 
+        {/* Club Spotlight (after news) */}
+        <SpotlightSection placement="after-news" />
+
         {/* 7 — Sponsors */}
         <FlowReveal className="section-band band-fog text-white">
           <div data-touchline-node className="container-wide">
@@ -261,6 +267,9 @@ export default function Home() {
             </CtaLink>
           </div>
         </FlowReveal>
+
+        {/* Club Spotlight (before join) */}
+        <SpotlightSection placement="before-join" />
 
         {/* 8 — Join / contact CTA */}
         <FlowReveal className="section-band band-deep">

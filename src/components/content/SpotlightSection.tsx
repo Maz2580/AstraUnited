@@ -1,11 +1,15 @@
 import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
+import type { Placement } from "@/src/lib/content/types";
 import { SpotlightCard } from "./SpotlightCard";
 
-export async function SpotlightSection() {
+// Renders the live event posts assigned to one placement slot. The homepage
+// mounts this at several positions; each instance is absent when no live post
+// targets its slot, so the page is unchanged when nothing is published.
+export async function SpotlightSection({ placement = "top" }: { placement?: Placement }) {
   const { events } = await getClubContent();
   const live = events
-    .filter((e) => isLive(e, new Date()))
+    .filter((e) => isLive(e, new Date()) && (e.placement ?? "top") === placement)
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   if (live.length === 0) return null;
 

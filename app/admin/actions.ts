@@ -12,7 +12,7 @@ import {
   writePhotoOverrides
 } from "@/src/lib/content/store";
 import { PHOTO_SLOTS } from "@/src/lib/content/photo-slots";
-import type { EventPost, Notice } from "@/src/lib/content/types";
+import type { EventPost, EventStyle, Notice, Placement } from "@/src/lib/content/types";
 import type { ActionState } from "./shared";
 import { ADMIN_COOKIE, adminToken, isAdmin, passwordMatches } from "./auth";
 
@@ -87,6 +87,30 @@ function isoOrUndefined(form: FormData, key: string): string | undefined {
 }
 
 const fail = (error: string): ActionState => ({ ok: false, error });
+
+const HEX_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+const hexOrUndefined = (v: string) => (HEX_COLOR.test(v) ? v : undefined);
+const PLACEMENTS = new Set<Placement>(["top", "mid", "after-news", "before-join"]);
+const placementOf = (v: string): Placement => (PLACEMENTS.has(v as Placement) ? (v as Placement) : "top");
+const alignOf = (v: string): "left" | "center" | "right" => (v === "center" || v === "right" ? v : "left");
+function clampSize(v: string, min: number, max: number): number | undefined {
+  const n = Number(v);
+  if (!Number.isFinite(n)) return undefined;
+  return Math.min(max, Math.max(min, Math.round(n)));
+}
+
+// Build a style object only when the admin opted in; bad colours/sizes drop to
+// undefined so the post falls back to the default look for that field.
+function readStyle(form: FormData): EventStyle | undefined {
+  if (str(form, "customise") !== "on") return undefined;
+  return {
+    bg: hexOrUndefined(str(form, "bgColor")),
+    text: hexOrUndefined(str(form, "textColor")),
+    headlineSize: clampSize(str(form, "headlineSize"), 12, 120),
+    bodySize: clampSize(str(form, "bodySize"), 10, 48),
+    align: alignOf(str(form, "align"))
+  };
+}
 
 /** Shared image processing: webp, max 1920w, EXIF stripped (sharp drops it). */
 async function processUpload(file: File): Promise<Buffer> {
@@ -164,6 +188,8 @@ export async function createEvent(_prev: ActionState, form: FormData): Promise<A
       body,
       ctaLabel,
       ctaHref,
+      placement: placementOf(str(form, "placement")),
+      style: readStyle(form),
       activeFrom: isoOrUndefined(form, "activeFrom"),
       activeUntil: isoOrUndefined(form, "activeUntil"),
       createdAt: new Date().toISOString()

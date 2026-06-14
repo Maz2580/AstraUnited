@@ -11,6 +11,23 @@ export const noticeSchema = z.object({
 });
 export type Notice = z.infer<typeof noticeSchema>;
 
+// Per-post design overrides. Colours are strict hex so a stray value can never
+// inject CSS; sizes are bounded. All optional — a post without a style renders
+// with the default Spotlight look.
+const HEX_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
+export const eventStyleSchema = z.object({
+  bg: z.string().regex(HEX_COLOR).optional(),
+  text: z.string().regex(HEX_COLOR).optional(),
+  headlineSize: z.number().min(12).max(120).optional(),
+  bodySize: z.number().min(10).max(48).optional(),
+  align: z.enum(["left", "center", "right"]).optional()
+});
+export type EventStyle = z.infer<typeof eventStyleSchema>;
+
+// Where a post shows on the homepage. "top" (under the hero) is the default.
+export const placementSchema = z.enum(["top", "mid", "after-news", "before-join"]);
+export type Placement = z.infer<typeof placementSchema>;
+
 export const eventPostSchema = z.object({
   id: z.string().min(1),
   image: z.string().url(),
@@ -27,6 +44,8 @@ export const eventPostSchema = z.object({
     .string()
     .regex(/^(https?:\/\/|\/(?!\/))/, "ctaHref must be a relative path (/...) or an http(s):// URL")
     .optional(),
+  placement: placementSchema.optional(),
+  style: eventStyleSchema.optional(),
   activeFrom: z.string().optional(),
   activeUntil: z.string().optional(),
   createdAt: z.string()
