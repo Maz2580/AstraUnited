@@ -20,7 +20,10 @@ export const eventStyleSchema = z.object({
   text: z.string().regex(HEX_COLOR).optional(),
   headlineSize: z.number().min(12).max(120).optional(),
   bodySize: z.number().min(10).max(48).optional(),
-  align: z.enum(["left", "center", "right"]).optional()
+  align: z.enum(["left", "center", "right"]).optional(),
+  imageSide: z.enum(["left", "right", "top"]).optional(),
+  imageFit: z.enum(["cover", "contain"]).optional(),
+  size: z.enum(["sm", "md", "lg"]).optional()
 });
 export type EventStyle = z.infer<typeof eventStyleSchema>;
 

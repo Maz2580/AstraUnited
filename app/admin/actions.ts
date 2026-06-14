@@ -93,6 +93,8 @@ const hexOrUndefined = (v: string) => (HEX_COLOR.test(v) ? v : undefined);
 const PLACEMENTS = new Set<Placement>(["top", "mid", "after-news", "before-join"]);
 const placementOf = (v: string): Placement => (PLACEMENTS.has(v as Placement) ? (v as Placement) : "top");
 const alignOf = (v: string): "left" | "center" | "right" => (v === "center" || v === "right" ? v : "left");
+const imageSideOf = (v: string): "left" | "right" | "top" => (v === "right" || v === "top" ? v : "left");
+const sizeOf = (v: string): "sm" | "md" | "lg" => (v === "sm" || v === "md" ? v : "lg");
 function clampSize(v: string, min: number, max: number): number | undefined {
   const n = Number(v);
   if (!Number.isFinite(n)) return undefined;
@@ -108,7 +110,10 @@ function readStyle(form: FormData): EventStyle | undefined {
     text: hexOrUndefined(str(form, "textColor")),
     headlineSize: clampSize(str(form, "headlineSize"), 12, 120),
     bodySize: clampSize(str(form, "bodySize"), 10, 48),
-    align: alignOf(str(form, "align"))
+    align: alignOf(str(form, "align")),
+    imageSide: imageSideOf(str(form, "imageSide")),
+    imageFit: str(form, "imageFit") === "contain" ? "contain" : "cover",
+    size: sizeOf(str(form, "size"))
   };
 }
 
@@ -200,6 +205,58 @@ export async function createEvent(_prev: ActionState, form: FormData): Promise<A
     return { ok: true };
   } catch (err) {
     return fail(err instanceof Error ? err.message : "Could not publish the event.");
+  }
+}
+
+export async function updateEvent(_prev: ActionState, form: FormData): Promise<ActionState> {
+  try {
+    requireAdmin();
+    assertConfigured();
+    const id = str(form, "id");
+    if (!id) return fail("Missing post id.");
+    const { events } = await getClubContentForWrite();
+    const existing = events.find((e) => e.id === id);
+    if (!existing) return fail("That post no longer exists — it may have been deleted.");
+    const headline = str(form, "headline");
+    const body = str(form, "body");
+    if (!headline || !body) return fail("Headline and text are required.");
+    const ctaLabel = str(form, "ctaLabel") || undefined;
+    const ctaHrefRaw = str(form, "ctaHref");
+    const ctaHref = normalizeHref(ctaHrefRaw) ?? undefined;
+    if (ctaHrefRaw && (!ctaHref || !SAFE_HREF.test(ctaHref))) {
+      return fail("That button link doesn't look valid. Use a page like /join-us or a full https:// address.");
+    }
+    // Replace the image only if a new one was chosen; otherwise keep the current.
+    let image = existing.image;
+    const file = form.get("image");
+    if (file instanceof File && file.size > 0) {
+      const processed = await processUpload(file);
+      image = await uploadImage(`events/${id}-${Date.now()}.webp`, processed);
+      if (existing.image && existing.image !== image) {
+        try {
+          await deleteImage(existing.image);
+        } catch (err) {
+          console.error("[content] old event image delete failed (harmless):", err);
+        }
+      }
+    }
+    const updated: EventPost = {
+      ...existing, // keeps id + createdAt (and so the post's position)
+      image,
+      headline,
+      body,
+      ctaLabel,
+      ctaHref,
+      placement: placementOf(str(form, "placement")),
+      style: readStyle(form),
+      activeFrom: isoOrUndefined(form, "activeFrom"),
+      activeUntil: isoOrUndefined(form, "activeUntil")
+    };
+    await writeEvents(events.map((e) => (e.id === id ? updated : e)));
+    refresh();
+    return { ok: true };
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : "Could not save the changes.");
   }
 }
 

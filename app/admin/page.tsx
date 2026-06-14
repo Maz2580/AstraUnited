@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   robots: { index: false, follow: false }
 };
 
-type Props = { searchParams?: { tab?: string } };
+type Props = { searchParams?: { tab?: string; edit?: string } };
 
 function statusOf(item: { activeFrom?: string; activeUntil?: string }): "Live" | "Scheduled" | "Expired" {
   const now = new Date();
@@ -47,6 +47,8 @@ export default async function AdminPage({ searchParams }: Props) {
 
   const tab = searchParams?.tab === "events" || searchParams?.tab === "photos" ? searchParams.tab : "notices";
   const { notices, events, photoOverrides } = await getClubContent();
+  const editingEvent =
+    tab === "events" && searchParams?.edit ? events.find((e) => e.id === searchParams.edit) : undefined;
   const hasWriteConfig = Boolean(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
 
   return (
@@ -126,7 +128,7 @@ export default async function AdminPage({ searchParams }: Props) {
 
           {tab === "events" ? (
             <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-              <EventForm />
+              <EventForm key={editingEvent?.id ?? "new"} initial={editingEvent} />
               <div className="grid gap-3">
                 {events.length === 0 ? <p className="text-sm text-white/55">No event posts yet.</p> : null}
                 {events.map((ev) => {
@@ -145,7 +147,13 @@ export default async function AdminPage({ searchParams }: Props) {
                           {" · "}
                           {ev.activeUntil ? `until ${fmt(ev.activeUntil)}` : "no end"}
                         </p>
-                        <div className="mt-3 flex gap-3">
+                        <div className="mt-3 flex flex-wrap gap-3">
+                          <Link
+                            href={`?tab=events&edit=${ev.id}`}
+                            className="rounded border border-white/15 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:text-white"
+                          >
+                            Edit
+                          </Link>
                           {status !== "Expired" ? (
                             <form action={endEvent}>
                               <input type="hidden" name="id" value={ev.id} />

@@ -2,14 +2,16 @@
 
 import { useEffect, useRef, useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
+import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { createEvent } from "./actions";
+import { createEvent, updateEvent } from "./actions";
 import { IDLE_STATE } from "./shared";
 import { downscaleImage } from "./downscale";
 import { SpotlightCard } from "@/src/components/content/SpotlightCard";
 import type { EventPost } from "@/src/lib/content/types";
 
 const inputCls = "w-full rounded border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40";
+const selectCls = `${inputCls} [&>option]:bg-astra-ink [&>option]:text-white`;
 const labelCls = "text-xs font-bold uppercase tracking-wide text-white/60";
 const MAX_BYTES = 10 * 1024 * 1024;
 
@@ -33,15 +35,42 @@ const PLACEMENTS: { value: string; label: string }[] = [
 ];
 
 // Defaults for the optional design panel — close to the standard Spotlight look.
-const DEFAULT_BG = "#0b1722";
+const DEFAULT_BG = "#101a23";
 const DEFAULT_TEXT = "#f8fbfd";
 const DEFAULT_HEADLINE = 36;
 const DEFAULT_BODY = 15;
 const TRANSPARENT = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
+
 // datetime-local has no timezone; convert to UTC ISO on the client.
 const toISO = (local: string) => (local ? new Date(local).toISOString() : "");
 
-function SubmitButton({ disabled, busyLabel }: { disabled?: boolean; busyLabel?: string }) {
+// UTC ISO -> the value a datetime-local input wants (the admin's local wall time).
+function toLocalInput(iso?: string): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T${pad(d.getHours())}:${pad(d.getMinutes())}`;
+}
+
+// Map a stored ctaHref back to the dropdown state (preset vs custom).
+function deriveLink(href?: string): { choice: string; custom: string } {
+  if (!href) return { choice: "", custom: "" };
+  if (LINK_PRESETS.some((p) => p.href === href)) return { choice: href, custom: "" };
+  return { choice: "custom", custom: href };
+}
+
+function SubmitButton({
+  idleLabel,
+  pendingLabel,
+  disabled,
+  busyLabel
+}: {
+  idleLabel: string;
+  pendingLabel: string;
+  disabled?: boolean;
+  busyLabel?: string;
+}) {
   const { pending } = useFormStatus();
   return (
     <button
@@ -49,63 +78,76 @@ function SubmitButton({ disabled, busyLabel }: { disabled?: boolean; busyLabel?:
       disabled={pending || disabled}
       className="btn btn-primary btn-sweep inline-flex items-center justify-center gap-2 rounded bg-astra-red px-5 py-3 text-sm font-black uppercase tracking-wide text-white disabled:opacity-60"
     >
-      {pending ? "Publishing…" : busyLabel ?? "Publish event post"}
+      {pending ? pendingLabel : busyLabel ?? idleLabel}
     </button>
   );
 }
 
-export function EventForm() {
-  const [state, formAction] = useFormState(createEvent, IDLE_STATE);
+export function EventForm({ initial }: { initial?: EventPost }) {
+  const isEdit = Boolean(initial);
+  const [state, formAction] = useFormState(isEdit ? updateEvent : createEvent, IDLE_STATE);
   const formRef = useRef<HTMLFormElement>(null);
   const router = useRouter();
 
-  const [headline, setHeadline] = useState("");
-  const [body, setBody] = useState("");
-  const [ctaLabel, setCtaLabel] = useState("");
-  const [ctaHref, setCtaHref] = useState(""); // holds the custom link text
-  const [linkChoice, setLinkChoice] = useState(""); // "", a preset href, or "custom"
-  const [from, setFrom] = useState("");
-  const [until, setUntil] = useState("");
-  const [placement, setPlacement] = useState("top");
-  const [customise, setCustomise] = useState(false);
-  const [bgColor, setBgColor] = useState(DEFAULT_BG);
-  const [textColor, setTextColor] = useState(DEFAULT_TEXT);
-  const [headlineSize, setHeadlineSize] = useState(DEFAULT_HEADLINE);
-  const [bodySize, setBodySize] = useState(DEFAULT_BODY);
-  const [align, setAlign] = useState<"left" | "center" | "right">("left");
-  const [previewUrl, setPreviewUrl] = useState("");
+  const initialLink = deriveLink(initial?.ctaHref);
+  const [headline, setHeadline] = useState(initial?.headline ?? "");
+  const [body, setBody] = useState(initial?.body ?? "");
+  const [ctaLabel, setCtaLabel] = useState(initial?.ctaLabel ?? "");
+  const [ctaHref, setCtaHref] = useState(initialLink.custom); // holds the custom link text
+  const [linkChoice, setLinkChoice] = useState(initialLink.choice); // "", a preset href, or "custom"
+  const [from, setFrom] = useState(toLocalInput(initial?.activeFrom));
+  const [until, setUntil] = useState(toLocalInput(initial?.activeUntil));
+  const [placement, setPlacement] = useState<string>(initial?.placement ?? "top");
+  const [customise, setCustomise] = useState(Boolean(initial?.style));
+  const [bgColor, setBgColor] = useState(initial?.style?.bg ?? DEFAULT_BG);
+  const [textColor, setTextColor] = useState(initial?.style?.text ?? DEFAULT_TEXT);
+  const [headlineSize, setHeadlineSize] = useState(initial?.style?.headlineSize ?? DEFAULT_HEADLINE);
+  const [bodySize, setBodySize] = useState(initial?.style?.bodySize ?? DEFAULT_BODY);
+  const [align, setAlign] = useState<"left" | "center" | "right">(initial?.style?.align ?? "left");
+  const [imageSide, setImageSide] = useState<"left" | "right" | "top">(initial?.style?.imageSide ?? "left");
+  const [imageFit, setImageFit] = useState<"cover" | "contain">(initial?.style?.imageFit ?? "cover");
+  const [size, setSize] = useState<"sm" | "md" | "lg">(initial?.style?.size ?? "lg");
+  const [previewUrl, setPreviewUrl] = useState(initial?.image ?? "");
   const [fileError, setFileError] = useState<string | null>(null);
   const [compressing, setCompressing] = useState(false);
 
   // This effect's cleanup solely owns object-URL revocation: it fires with the
-  // previous url whenever previewUrl changes (and on unmount), so callers just
-  // setPreviewUrl and never revoke manually.
+  // previous url whenever previewUrl changes (and on unmount). Revoking a normal
+  // https url (the existing image in edit mode) is a harmless no-op.
   useEffect(() => {
-    if (!previewUrl) return;
+    if (!previewUrl || !previewUrl.startsWith("blob:")) return;
     return () => URL.revokeObjectURL(previewUrl);
   }, [previewUrl]);
 
   useEffect(() => {
-    if (state?.ok) {
-      formRef.current?.reset();
-      setHeadline("");
-      setBody("");
-      setCtaLabel("");
-      setCtaHref("");
-      setLinkChoice("");
-      setFrom("");
-      setUntil("");
-      setPlacement("top");
-      setCustomise(false);
-      setBgColor(DEFAULT_BG);
-      setTextColor(DEFAULT_TEXT);
-      setHeadlineSize(DEFAULT_HEADLINE);
-      setBodySize(DEFAULT_BODY);
-      setAlign("left");
-      setPreviewUrl(""); // effect cleanup revokes the old url
-      setFileError(null);
+    if (!state?.ok) return;
+    if (isEdit) {
+      router.push("/admin?tab=events"); // leave edit mode, back to the list
       router.refresh();
+      return;
     }
+    // Create: clear the form for the next post.
+    formRef.current?.reset();
+    setHeadline("");
+    setBody("");
+    setCtaLabel("");
+    setCtaHref("");
+    setLinkChoice("");
+    setFrom("");
+    setUntil("");
+    setPlacement("top");
+    setCustomise(false);
+    setBgColor(DEFAULT_BG);
+    setTextColor(DEFAULT_TEXT);
+    setHeadlineSize(DEFAULT_HEADLINE);
+    setBodySize(DEFAULT_BODY);
+    setAlign("left");
+    setImageSide("left");
+    setImageFit("cover");
+    setSize("lg");
+    setPreviewUrl("");
+    setFileError(null);
+    router.refresh();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state, router]);
 
@@ -113,20 +155,20 @@ export function EventForm() {
     const input = e.target;
     const file = input.files?.[0];
     setFileError(null);
-    // No manual revoke here — changing previewUrl triggers the effect cleanup.
     if (!file) {
-      setPreviewUrl("");
+      // In edit mode, clearing the picker keeps the existing image.
+      setPreviewUrl(initial?.image ?? "");
       return;
     }
     if (!file.type.startsWith("image/")) {
       setFileError("Please choose an image file.");
-      setPreviewUrl("");
+      setPreviewUrl(initial?.image ?? "");
       input.value = "";
       return;
     }
     if (file.size > MAX_BYTES) {
       setFileError("Image is larger than 10 MB.");
-      setPreviewUrl("");
+      setPreviewUrl(initial?.image ?? "");
       input.value = "";
       return;
     }
@@ -160,24 +202,33 @@ export function EventForm() {
     body: body || "Your event text will appear here…",
     ctaLabel: ctaLabel || undefined,
     ctaHref: effectiveHref || undefined,
-    style: customise ? { bg: bgColor, text: textColor, headlineSize, bodySize, align } : undefined,
+    style: customise ? { bg: bgColor, text: textColor, headlineSize, bodySize, align, imageSide, imageFit, size } : undefined,
     createdAt: ""
   };
 
   return (
     <div className="grid gap-6">
       <form ref={formRef} action={formAction} className="card-dark grid gap-4 p-6">
-        <h2 className="crest-type text-2xl text-white">New event post</h2>
+        <div className="flex items-center justify-between gap-3">
+          <h2 className="crest-type text-2xl text-white">{isEdit ? "Edit event post" : "New event post"}</h2>
+          {isEdit ? (
+            <Link href="/admin?tab=events" className="text-xs font-bold text-white/55 underline-offset-2 hover:text-white hover:underline">
+              Cancel
+            </Link>
+          ) : null}
+        </div>
+        {isEdit ? <input type="hidden" name="id" value={initial!.id} /> : null}
         <label className="grid gap-1.5">
           <span className={labelCls}>Image</span>
           <input
             type="file"
             name="image"
             accept="image/*"
-            required
+            required={!isEdit}
             onChange={onFileChange}
             className="text-sm text-white/80 file:mr-3 file:rounded file:border-0 file:bg-white/10 file:px-3 file:py-2 file:text-white"
           />
+          {isEdit ? <span className="text-xs text-white/40">Leave empty to keep the current image.</span> : null}
         </label>
         <label className="grid gap-1.5">
           <span className={labelCls}>Headline</span>
@@ -194,11 +245,7 @@ export function EventForm() {
           </label>
           <label className="grid gap-1.5">
             <span className={labelCls}>Button goes to</span>
-            <select
-              value={linkChoice}
-              onChange={(e) => setLinkChoice(e.target.value)}
-              className={`${inputCls} [&>option]:bg-astra-ink [&>option]:text-white`}
-            >
+            <select value={linkChoice} onChange={(e) => setLinkChoice(e.target.value)} className={selectCls}>
               <option value="">No button</option>
               {LINK_PRESETS.map((p) => (
                 <option key={p.href} value={p.href}>
@@ -221,12 +268,7 @@ export function EventForm() {
 
         <label className="grid gap-1.5">
           <span className={labelCls}>Where it appears</span>
-          <select
-            name="placement"
-            value={placement}
-            onChange={(e) => setPlacement(e.target.value)}
-            className={`${inputCls} [&>option]:bg-astra-ink [&>option]:text-white`}
-          >
+          <select name="placement" value={placement} onChange={(e) => setPlacement(e.target.value)} className={selectCls}>
             {PLACEMENTS.map((p) => (
               <option key={p.value} value={p.value}>
                 {p.label}
@@ -238,7 +280,7 @@ export function EventForm() {
         <div className="rounded border border-white/12 p-4">
           <label className="flex items-center gap-2 text-sm font-semibold text-white/85">
             <input type="checkbox" name="customise" checked={customise} onChange={(e) => setCustomise(e.target.checked)} />
-            Customise design (colours, sizes, alignment)
+            Customise design (colours, sizes, image &amp; box)
           </label>
           {customise ? (
             <div className="mt-4 grid gap-4">
@@ -262,16 +304,36 @@ export function EventForm() {
                   <input type="number" name="bodySize" min={10} max={48} value={bodySize} onChange={(e) => setBodySize(Number(e.target.value))} className={inputCls} />
                 </label>
                 <label className="grid gap-1.5">
-                  <span className={labelCls}>Alignment</span>
-                  <select
-                    name="align"
-                    value={align}
-                    onChange={(e) => setAlign(e.target.value as "left" | "center" | "right")}
-                    className={`${inputCls} [&>option]:bg-astra-ink [&>option]:text-white`}
-                  >
+                  <span className={labelCls}>Text alignment</span>
+                  <select name="align" value={align} onChange={(e) => setAlign(e.target.value as "left" | "center" | "right")} className={selectCls}>
                     <option value="left">Left</option>
                     <option value="center">Centre</option>
                     <option value="right">Right</option>
+                  </select>
+                </label>
+              </div>
+              <div className="grid gap-4 sm:grid-cols-3">
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Image position</span>
+                  <select name="imageSide" value={imageSide} onChange={(e) => setImageSide(e.target.value as "left" | "right" | "top")} className={selectCls}>
+                    <option value="left">Left</option>
+                    <option value="right">Right</option>
+                    <option value="top">Top</option>
+                  </select>
+                </label>
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Image fit</span>
+                  <select name="imageFit" value={imageFit} onChange={(e) => setImageFit(e.target.value as "cover" | "contain")} className={selectCls}>
+                    <option value="cover">Fill the space (crop)</option>
+                    <option value="contain">Show whole image</option>
+                  </select>
+                </label>
+                <label className="grid gap-1.5">
+                  <span className={labelCls}>Box width</span>
+                  <select name="size" value={size} onChange={(e) => setSize(e.target.value as "sm" | "md" | "lg")} className={selectCls}>
+                    <option value="lg">Full width</option>
+                    <option value="md">Medium</option>
+                    <option value="sm">Compact</option>
                   </select>
                 </label>
               </div>
@@ -292,7 +354,12 @@ export function EventForm() {
         </div>
         {fileError ? <p className="text-sm font-semibold text-astra-red">{fileError}</p> : null}
         {errorMsg ? <p className="text-sm font-semibold text-astra-red">{errorMsg}</p> : null}
-        <SubmitButton disabled={compressing} busyLabel={compressing ? "Optimising image…" : undefined} />
+        <SubmitButton
+          idleLabel={isEdit ? "Save changes" : "Publish event post"}
+          pendingLabel={isEdit ? "Saving…" : "Publishing…"}
+          disabled={compressing}
+          busyLabel={compressing ? "Optimising image…" : undefined}
+        />
       </form>
 
       <div>
