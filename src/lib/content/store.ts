@@ -124,3 +124,8 @@ export async function uploadImage(pathname: string, body: Buffer): Promise<strin
   });
   return blob.url;
 }
+
+/** Delete an uploaded image by its blob URL (cleanup when a post is removed). */
+export async function deleteImage(url: string): Promise<void> {
+  await del(url);
+}

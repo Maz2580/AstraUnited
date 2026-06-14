@@ -10,7 +10,7 @@ export async function SpotlightSection() {
   if (live.length === 0) return null;
 
   return (
-    <section className="section-band band-deep border-y border-astra-gold/25">
+    <section className="section-band band-deep">
       <div data-touchline-node className="container-wide">
         {live.length === 1 ? (
           <SpotlightCard event={live[0]} />

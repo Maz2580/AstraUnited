@@ -5,7 +5,7 @@ import { isLive } from "@/src/lib/content/expiry";
 import { NoticeForm } from "./NoticeForm";
 import { ConfirmDeleteButton } from "./ConfirmDeleteButton";
 import { EventForm } from "./EventForm";
-import { endNotice, endEvent, logout } from "./actions";
+import { endNotice, endEvent, deleteEvent, deleteNotice, logout } from "./actions";
 import { PhotoSlotCard } from "./PhotoSlotCard";
 import { PHOTO_SLOTS, resolvePhoto } from "@/src/lib/content/photo-slots";
 import { isAdmin } from "./auth";
@@ -115,7 +115,7 @@ export default async function AdminPage({ searchParams }: Props) {
                             </button>
                           </form>
                         ) : null}
-                        <ConfirmDeleteButton id={n.id} />
+                        <ConfirmDeleteButton id={n.id} action={deleteNotice} noun="notice" />
                       </div>
                     </div>
                   );
@@ -145,14 +145,17 @@ export default async function AdminPage({ searchParams }: Props) {
                           {" · "}
                           {ev.activeUntil ? `until ${fmt(ev.activeUntil)}` : "no end"}
                         </p>
-                        {status !== "Expired" ? (
-                          <form action={endEvent} className="mt-3">
-                            <input type="hidden" name="id" value={ev.id} />
-                            <button type="submit" className="rounded border border-white/15 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:text-white">
-                              End now
-                            </button>
-                          </form>
-                        ) : null}
+                        <div className="mt-3 flex gap-3">
+                          {status !== "Expired" ? (
+                            <form action={endEvent}>
+                              <input type="hidden" name="id" value={ev.id} />
+                              <button type="submit" className="rounded border border-white/15 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:text-white">
+                                End now
+                              </button>
+                            </form>
+                          ) : null}
+                          <ConfirmDeleteButton id={ev.id} action={deleteEvent} noun="post" />
+                        </div>
                       </div>
                     </div>
                   );

@@ -165,7 +165,11 @@ export function EventForm() {
           </label>
           <label className="grid gap-1.5">
             <span className={labelCls}>Button goes to</span>
-            <select value={linkChoice} onChange={(e) => setLinkChoice(e.target.value)} className={inputCls}>
+            <select
+              value={linkChoice}
+              onChange={(e) => setLinkChoice(e.target.value)}
+              className={`${inputCls} [&>option]:bg-astra-ink [&>option]:text-white`}
+            >
               <option value="">No button</option>
               {LINK_PRESETS.map((p) => (
                 <option key={p.href} value={p.href}>

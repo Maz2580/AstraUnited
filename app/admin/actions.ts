@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 import { revalidatePath, revalidateTag } from "next/cache";
 import sharp from "sharp";
 import {
+  deleteImage,
   getClubContentForWrite,
   uploadImage,
   writeEvents,
@@ -182,6 +183,23 @@ export async function endEvent(form: FormData): Promise<void> {
   const id = str(form, "id");
   const { events } = await getClubContentForWrite();
   await writeEvents(events.map((e) => (e.id === id ? { ...e, activeUntil: new Date().toISOString() } : e)));
+  refresh();
+}
+
+export async function deleteEvent(form: FormData): Promise<void> {
+  requireAdmin();
+  assertConfigured();
+  const id = str(form, "id");
+  const { events } = await getClubContentForWrite();
+  const target = events.find((e) => e.id === id);
+  await writeEvents(events.filter((e) => e.id !== id));
+  if (target?.image) {
+    try {
+      await deleteImage(target.image); // free the blob; harmless if it fails
+    } catch (err) {
+      console.error("[content] event image delete failed (harmless):", err);
+    }
+  }
   refresh();
 }
 

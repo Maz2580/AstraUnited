@@ -1,13 +1,21 @@
 "use client";
 
-import { deleteNotice } from "./actions";
-
-export function ConfirmDeleteButton({ id }: { id: string }) {
+// Reused for notices and event posts: the caller passes the matching server
+// action and a noun for the confirm prompt.
+export function ConfirmDeleteButton({
+  id,
+  action,
+  noun = "item"
+}: {
+  id: string;
+  action: (formData: FormData) => void | Promise<void>;
+  noun?: string;
+}) {
   return (
     <form
-      action={deleteNotice}
+      action={action}
       onSubmit={(e) => {
-        if (!confirm("Delete this notice? This can't be undone.")) e.preventDefault();
+        if (!confirm(`Delete this ${noun}? This can't be undone.`)) e.preventDefault();
       }}
     >
       <input type="hidden" name="id" value={id} />
