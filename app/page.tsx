@@ -76,6 +76,9 @@ export default function Home() {
       <HeroIntro />
       <BrandMarquee />
       <Touchline>
+        {/* Club Spotlight — admin event posts, high up under the hero; absent when none live */}
+        <SpotlightSection />
+
         {/* 1 — Live pitch status + next moment */}
         <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
@@ -233,9 +236,6 @@ export default function Home() {
             </div>
           </div>
         </FlowReveal>
-
-        {/* 6.5 — Club Spotlight (admin event posts; absent when none live) */}
-        <SpotlightSection />
 
         {/* 7 — Sponsors */}
         <FlowReveal className="section-band band-fog text-white">

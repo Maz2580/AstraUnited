@@ -12,6 +12,17 @@ import type { EventPost } from "@/src/lib/content/types";
 const inputCls = "w-full rounded border border-white/15 bg-white/5 px-3 py-2 text-sm text-white placeholder:text-white/40";
 const labelCls = "text-xs font-bold uppercase tracking-wide text-white/60";
 const MAX_BYTES = 10 * 1024 * 1024;
+
+// The club's real pages, so the admin picks a destination instead of typing a
+// path. "Join Us / Register" is the registration page (/join-us).
+const LINK_PRESETS: { label: string; href: string }[] = [
+  { label: "Join Us / Register", href: "/join-us" },
+  { label: "Contact the club", href: "/contact" },
+  { label: "Teams", href: "/teams" },
+  { label: "News & media", href: "/news-media" },
+  { label: "The Club", href: "/the-club" },
+  { label: "Sponsors", href: "/sponsors" }
+];
 const TRANSPARENT = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7";
 // datetime-local has no timezone; convert to UTC ISO on the client.
 const toISO = (local: string) => (local ? new Date(local).toISOString() : "");
@@ -37,7 +48,8 @@ export function EventForm() {
   const [headline, setHeadline] = useState("");
   const [body, setBody] = useState("");
   const [ctaLabel, setCtaLabel] = useState("");
-  const [ctaHref, setCtaHref] = useState("");
+  const [ctaHref, setCtaHref] = useState(""); // holds the custom link text
+  const [linkChoice, setLinkChoice] = useState(""); // "", a preset href, or "custom"
   const [from, setFrom] = useState("");
   const [until, setUntil] = useState("");
   const [previewUrl, setPreviewUrl] = useState("");
@@ -59,6 +71,7 @@ export function EventForm() {
       setBody("");
       setCtaLabel("");
       setCtaHref("");
+      setLinkChoice("");
       setFrom("");
       setUntil("");
       setPreviewUrl(""); // effect cleanup revokes the old url
@@ -109,13 +122,16 @@ export function EventForm() {
   // (e.g. a 413) — guard so the admin shows a message instead of crashing.
   const errorMsg = state ? state.error : "Something interrupted the upload — please try a smaller image.";
 
+  // Where the button points: a chosen preset, the custom text, or nothing.
+  const effectiveHref = linkChoice === "custom" ? ctaHref.trim() : linkChoice;
+
   const previewEvent: EventPost = {
     id: "preview",
     image: previewUrl || TRANSPARENT,
     headline: headline || "Your headline",
     body: body || "Your event text will appear here…",
     ctaLabel: ctaLabel || undefined,
-    ctaHref: ctaHref || undefined,
+    ctaHref: effectiveHref || undefined,
     createdAt: ""
   };
 
@@ -144,15 +160,31 @@ export function EventForm() {
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5">
-            <span className={labelCls}>Button label (optional)</span>
+            <span className={labelCls}>Button text</span>
             <input name="ctaLabel" value={ctaLabel} onChange={(e) => setCtaLabel(e.target.value)} className={inputCls} placeholder="Register now" />
           </label>
           <label className="grid gap-1.5">
-            <span className={labelCls}>Button link (optional)</span>
-            <input name="ctaHref" value={ctaHref} onChange={(e) => setCtaHref(e.target.value)} className={inputCls} placeholder="/join-us" />
-            <span className="text-xs text-white/40">A page on this site (e.g. /join-us) or a full web address (e.g. https://instagram.com/…)</span>
+            <span className={labelCls}>Button goes to</span>
+            <select value={linkChoice} onChange={(e) => setLinkChoice(e.target.value)} className={inputCls}>
+              <option value="">No button</option>
+              {LINK_PRESETS.map((p) => (
+                <option key={p.href} value={p.href}>
+                  {p.label}
+                </option>
+              ))}
+              <option value="custom">Custom link…</option>
+            </select>
           </label>
         </div>
+        {linkChoice === "custom" ? (
+          <label className="grid gap-1.5">
+            <span className={labelCls}>Custom link</span>
+            <input value={ctaHref} onChange={(e) => setCtaHref(e.target.value)} className={inputCls} placeholder="https://instagram.com/…" />
+            <span className="text-xs text-white/40">A page path like /news-media, or a full https:// web address.</span>
+          </label>
+        ) : null}
+        <input type="hidden" name="ctaHref" value={effectiveHref} />
+        <p className="text-xs text-white/40">The button only appears when you give it both text and a destination.</p>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5">
             <span className={labelCls}>Show from (optional)</span>
