@@ -89,6 +89,36 @@ const trialPillars = [
   { label: "Character", copy: "Work rate, respect, team-first attitude." }
 ];
 
+// Club Essentials quick-links matrix (Revised content spec §5): routes parents,
+// senior players, and fans straight to their destination. Rendered as full-width
+// navy bars (t6) — gold title · description · red CTA.
+const clubEssentials: { title: string; copy: string; cta: string; href: string }[] = [
+  {
+    title: "Our Teams",
+    copy: "From Under 6s to First Team squads, explore our comprehensive Astra FC team rosters.",
+    cta: "Explore Squads",
+    href: "/teams"
+  },
+  {
+    title: "Astra Academy",
+    copy: "Specialist football coaching programmes engineered for elite youth player development.",
+    cta: "Academy Programs",
+    href: "/teams"
+  },
+  {
+    title: "Fixtures & Results",
+    copy: "Stay up to date with the latest league fixtures, results, and upcoming kick-off times.",
+    cta: "Match Centre",
+    href: "/news-media"
+  },
+  {
+    title: "Join the Club",
+    copy: "Comprehensive information on youth football trials, club membership fees, and registration.",
+    cta: "Trial Information",
+    href: "/join-us"
+  }
+];
+
 export default function Home() {
   return (
     <main id="main-content">
@@ -192,8 +222,44 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 2 — Live pitch status + next moment */}
+        {/* 2 — Club Essentials (Revised content spec §5): a quick-links matrix
+            that routes each persona to their destination. Full-width navy bars
+            on a near-black band — gold title, description, red CTA (t6). */}
         <FlowReveal className="section-band band-deep">
+          <div className="container-wide">
+            <div data-touchline-node>
+              <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                <span className="text-astra-red">Club</span> Essentials
+              </h2>
+              <p className="mt-3 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
+                Quick links to everything you need
+              </p>
+            </div>
+            <div className="mt-10 flex flex-col gap-4">
+              {clubEssentials.map((item, index) => (
+                <PopCard
+                  key={item.title}
+                  delay={index * 0.05}
+                  className="overflow-hidden rounded-2xl bg-[#0c2a4a] ring-1 ring-white/10"
+                >
+                  <div className="grid items-center gap-4 p-5 sm:gap-6 sm:p-6 lg:grid-cols-[0.85fr_1.6fr_auto] lg:gap-8">
+                    <p className="crest-type text-2xl text-astra-gold">{item.title}</p>
+                    <p className="text-sm leading-6 text-white/80 sm:text-base">{item.copy}</p>
+                    <CtaLink
+                      href={item.href}
+                      className="w-full justify-center px-5 py-3 text-sm font-black uppercase tracking-wide lg:w-auto"
+                    >
+                      {item.cta}
+                    </CtaLink>
+                  </div>
+                </PopCard>
+              ))}
+            </div>
+          </div>
+        </FlowReveal>
+
+        {/* 3 — Live pitch status + next moment */}
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
             <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
@@ -217,9 +283,9 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 3 — Why families choose Astra (Revised content spec §6). Welcome now
+        {/* 4 — Why families choose Astra (Revised content spec §6). Welcome now
             lives in its own band above; this section keeps the reasons grid. */}
-        <FlowReveal className="section-band band-fog">
+        <FlowReveal className="section-band band-deep">
           <div className="container-wide">
             <div data-touchline-node>
               <SectionHeader
@@ -245,15 +311,15 @@ export default function Home() {
         {/* Club Spotlight (mid) */}
         <SpotlightSection placement="mid" />
 
-        {/* 4 — Founder feature */}
-        <FlowReveal className="section-band band-deep">
+        {/* 5 — Founder feature */}
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide">
             <FounderFeature />
           </div>
         </FlowReveal>
 
-        {/* 5 — Senior & Women's teams */}
-        <FlowReveal className="section-band band-fog">
+        {/* 6 — Senior & Women's teams */}
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <SectionHeader
@@ -281,8 +347,8 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 6 — News & media */}
-        <FlowReveal className="section-band band-deep">
+        {/* 7 — News & media */}
+        <FlowReveal className="section-band band-fog">
           <div className="container-wide">
             <div data-touchline-node className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
@@ -321,8 +387,8 @@ export default function Home() {
         {/* Club Spotlight (after news) */}
         <SpotlightSection placement="after-news" />
 
-        {/* 7 — Sponsors */}
-        <FlowReveal className="section-band band-fog text-white">
+        {/* 8 — Sponsors */}
+        <FlowReveal className="section-band band-deep text-white">
           <div data-touchline-node className="container-wide">
             <SectionHeader
               eyebrow="Sponsors"
@@ -349,8 +415,8 @@ export default function Home() {
         {/* Club Spotlight (before join) */}
         <SpotlightSection placement="before-join" />
 
-        {/* 8 — Join / contact CTA */}
-        <FlowReveal className="section-band band-deep">
+        {/* 9 — Join / contact CTA */}
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <SectionHeader
               eyebrow="Join Astra"
