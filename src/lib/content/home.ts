@@ -9,11 +9,16 @@ export const heroContent = {
   secondaryCta: { label: "View match-day fixtures", href: "/teams" }
 };
 
+// "Welcome to Astra Football Club" — the first standalone section after the
+// hero motion (Revised content spec §3). The big headline is rendered in JSX so
+// "United" can carry the red accent; this object holds the subheadline + the two
+// intro paragraphs verbatim from the team's revised copy.
 export const welcome = {
-  eyebrow: "Welcome",
-  title: "Excellence in local football and player development.",
-  copy:
-    "Astra United FC is a growing, community-focused club where talent is nurtured from the grassroots up. Whether you are looking for a Youth Academy with qualified coaching or competitive senior football, Astra offers a pathway for every player - proudly embracing Melbourne's multicultural football culture."
+  subhead: "Excellence in Local Football and Player Development",
+  intro: [
+    "Welcome to Astra Football Club, a premier community-focused football club for players, coaches, and supporters. We are dedicated to fostering a professional environment where talent is meticulously nurtured from the grassroots up.",
+    "Whether you are looking for an elite Youth Academy with professional, highly qualified coaching or a competitive senior football team, Astra FC offers a distinct pathway for every player. Our mission is to combine technical excellence with a strong community spirit, ensuring every member of the Astra family can reach their full potential on the pitch. As a standout Melbourne soccer club, we proudly embrace the city's vibrant multicultural football culture and community values across all local Melbourne suburbs."
+  ]
 };
 
 export const whyAstra = [

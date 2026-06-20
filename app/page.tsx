@@ -79,6 +79,48 @@ export default function Home() {
         {/* Club Spotlight (top) — admin event posts under the hero; absent when none live */}
         <SpotlightSection placement="top" />
 
+        {/* 0 — Welcome to Astra United (Revised content spec §3): the first
+            standalone section after the hero motion. Big crest headline with the
+            red "United" accent, gold subheadline, the two intro paragraphs, and
+            the academy training photo — matching the team's t3 example. */}
+        <FlowReveal className="section-band band-deep">
+          <div
+            data-touchline-node
+            className="container-wide grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
+          >
+            <div>
+              <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                Welcome to Astra <span className="text-astra-red">United</span> Football Club
+              </h2>
+              <p className="mt-4 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
+                {welcome.subhead}
+              </p>
+              <div className="mt-6 space-y-4">
+                {welcome.intro.map((para) => (
+                  <p key={para} className="max-w-2xl text-base leading-7 text-white/75">
+                    {para}
+                  </p>
+                ))}
+              </div>
+            </div>
+            <PopCard className="card-dark overflow-hidden" delay={0.06}>
+              <SlotImage
+                slot="home-welcome"
+                width={1280}
+                height={853}
+                sizes="(min-width: 1024px) 42vw, 100vw"
+                className="h-[380px] w-full object-cover"
+              />
+              <div className="border-t border-white/10 p-5 text-white">
+                <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Academy training</p>
+                <p className="mt-2 text-sm leading-6 text-white/72">
+                  Academy training at Darebin International Sports Centre.
+                </p>
+              </div>
+            </PopCard>
+          </div>
+        </FlowReveal>
+
         {/* 1 — Live pitch status + next moment */}
         <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
@@ -104,20 +146,19 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 2 — Welcome / why Astra */}
+        {/* 2 — Why families choose Astra (Revised content spec §6). Welcome now
+            lives in its own band above; this section keeps the reasons grid. */}
         <FlowReveal className="section-band band-deep">
-          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.95fr_1.05fr] lg:items-center">
-            <div>
-              <SectionHeader eyebrow={welcome.eyebrow} title={welcome.title} copy={welcome.copy} inverse />
-              <PopCard className="card-dark mt-8 overflow-hidden">
-                <SlotImage slot="home-welcome" width={1280} height={853} sizes="(min-width: 1024px) 45vw, 100vw" className="h-[360px] w-full object-cover" />
-                <div className="border-t border-white/10 p-5 text-white">
-                  <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Academy training</p>
-                  <p className="mt-2 text-sm leading-6 text-white/72">Academy training at Darebin International Sports Centre.</p>
-                </div>
-              </PopCard>
+          <div className="container-wide">
+            <div data-touchline-node>
+              <SectionHeader
+                eyebrow="Why Astra"
+                title="Why families choose Astra."
+                copy="Clear, easy-to-scan reasons to back the decision to join — qualified coaching, a safe and inclusive environment, and a structured pathway from the Youth Academy to senior football."
+                inverse
+              />
             </div>
-            <div className="grid gap-4 sm:grid-cols-2">
+            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {whyAstra.map((reason, index) => (
                 <PopCard key={reason} className="card-dark flex items-start gap-3 p-5" delay={index * 0.04}>
                   <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-astra-red/15">
