@@ -40,29 +40,48 @@ const sponsorTiers = [
   }
 ];
 
-// Image-forward academy cards (photos from public/images/manifest.json).
-const academyCards: { age: string; title: string; copy: string; slot: SlotKey }[] = [
+// The five "Our Programs" tiers (Revised content spec §4) — a tailored pathway
+// from Future Stars through the performance and girls streams. Photos resolve
+// from the photo-slots registry; every card links through to the squads page.
+const programCards: { age: string; title: string; copy: string; slot: SlotKey; href: string }[] = [
   {
-    age: "U6-U8",
-    title: "Mini-Kickers",
-    copy: "Fun-based football foundations, confidence on the ball, and first friendships in the game.",
-    slot: "home-academy-mini"
+    age: "Ages 3-5",
+    title: "Astra Future Stars",
+    copy: "An energetic, fun introduction to local football — building fundamental motor skills, confidence, and early coordination through play-based activities.",
+    slot: "home-academy-mini",
+    href: "/teams"
   },
   {
-    age: "U9-U12",
-    title: "Junior Academy",
-    copy: "Small-sided training, technical repetition, and age-appropriate tactical awareness.",
-    slot: "home-academy-junior"
+    age: "U5-U7",
+    title: "Astra Foundation Hub",
+    copy: "Fostering a genuine passion for the game: initial technical development, basic ball mastery, and understanding teamwork in a supportive environment.",
+    slot: "home-academy-junior",
+    href: "/teams"
   },
   {
-    age: "U13-U18",
-    title: "Youth Development",
-    copy: "A stronger bridge to 11-a-side football, game intelligence, and senior progression.",
-    slot: "home-academy-youth"
+    age: "U8-U13",
+    title: "Astra Youth Academy",
+    copy: "Our core elite youth tier. Under professional coaching, players refine tactical awareness, positional play, and advanced technical skills for competitive fixtures.",
+    slot: "home-academy-youth",
+    href: "/teams"
+  },
+  {
+    age: "U8-U16",
+    title: "Next-Gen Performance Groups",
+    copy: "For advanced, high-performance players: high-intensity tactical training and accelerated development streams to prepare for senior trials and representative honours.",
+    slot: "home-program-performance",
+    href: "/teams"
+  },
+  {
+    age: "Ages 9-13",
+    title: "Astra Evolution Girls Program",
+    copy: "A premier, dedicated stream driving girls' football development — specialised coaching to empower female athletes and cultivate the next generation of leaders.",
+    slot: "home-program-girls",
+    href: "/teams"
   }
 ];
 
-// The four assessment pillars (from Join Us / Trials content).
+// The four development pillars shown as a strip beneath the program cards.
 const trialPillars = [
   { label: "Technical", copy: "Ball control and passing range." },
   { label: "Tactical", copy: "Game understanding and positioning." },
@@ -121,8 +140,60 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 1 — Live pitch status + next moment */}
+        {/* 1 — Our Programs (Revised content spec §4): sits directly after the
+            Welcome band. Headline with the red "Our" accent + subhead, then the
+            five program cards in a 3-on-top / 2-centred-below grid (t4). */}
         <FlowReveal className="section-band band-fog">
+          <div className="container-wide">
+            <div data-touchline-node>
+              <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                <span className="text-astra-red">Our</span> Programs
+              </h2>
+              <p className="mt-3 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
+                A tailored pathway for every player
+              </p>
+            </div>
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
+              {programCards.map((program, index) => (
+                <PopCard
+                  key={program.title}
+                  delay={index * 0.05}
+                  className={`card-dark overflow-hidden lg:col-span-2${index === 3 ? " lg:col-start-2" : ""}`}
+                >
+                  <Link href={program.href} className="card-link group block h-full">
+                    <SlotImage
+                      slot={program.slot}
+                      width={1280}
+                      height={853}
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="h-44 w-full object-cover"
+                    />
+                    <div className="p-6">
+                      <p className="crest-type text-2xl text-astra-gold">{program.age}</p>
+                      <h3 className="mt-2 text-xl font-black text-white">{program.title}</h3>
+                      <p className="mt-3 text-sm leading-6 text-white/72">{program.copy}</p>
+                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
+                        Learn more <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
+                      </span>
+                    </div>
+                  </Link>
+                </PopCard>
+              ))}
+            </div>
+            {/* Development pillars strip beneath the program cards (t5) */}
+            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+              {trialPillars.map((pillar, index) => (
+                <PopCard key={pillar.label} className="card-dark p-5" delay={index * 0.04}>
+                  <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-red">{pillar.label}</p>
+                  <p className="mt-2 text-sm leading-6 text-white/72">{pillar.copy}</p>
+                </PopCard>
+              ))}
+            </div>
+          </div>
+        </FlowReveal>
+
+        {/* 2 — Live pitch status + next moment */}
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
             <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
@@ -146,9 +217,9 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 2 — Why families choose Astra (Revised content spec §6). Welcome now
+        {/* 3 — Why families choose Astra (Revised content spec §6). Welcome now
             lives in its own band above; this section keeps the reasons grid. */}
-        <FlowReveal className="section-band band-deep">
+        <FlowReveal className="section-band band-fog">
           <div className="container-wide">
             <div data-touchline-node>
               <SectionHeader
@@ -165,40 +236,6 @@ export default function Home() {
                     <Check aria-hidden="true" className="h-4 w-4 text-astra-red" />
                   </span>
                   <p className="text-sm font-semibold leading-6 text-white/90">{reason}</p>
-                </PopCard>
-              ))}
-            </div>
-          </div>
-        </FlowReveal>
-
-        {/* 3 — Academy pathway */}
-        <FlowReveal className="section-band band-fog">
-          <div className="container-wide">
-            <div data-touchline-node>
-              <SectionHeader
-                eyebrow="Youth Academy"
-                title="Development over results."
-                copy="The academy is the heartbeat of Astra United FC: confident players, technical excellence, tactical awareness, and social growth from U6 to U18."
-                inverse
-              />
-            </div>
-            <div className="mt-10 grid gap-5 md:grid-cols-3">
-              {academyCards.map((stage, index) => (
-                <PopCard key={stage.age} className="card-dark overflow-hidden" delay={index * 0.06}>
-                  <SlotImage slot={stage.slot} width={1280} height={853} sizes="(min-width: 768px) 33vw, 100vw" className="h-44 w-full object-cover" />
-                  <div className="p-6">
-                    <p className="crest-type text-2xl text-astra-gold">{stage.age}</p>
-                    <h3 className="mt-2 text-xl font-black text-white">{stage.title}</h3>
-                    <p className="mt-3 text-sm leading-6 text-white/72">{stage.copy}</p>
-                  </div>
-                </PopCard>
-              ))}
-            </div>
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {trialPillars.map((pillar, index) => (
-                <PopCard key={pillar.label} className="card-dark p-5" delay={index * 0.04}>
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-red">{pillar.label}</p>
-                  <p className="mt-2 text-sm leading-6 text-white/72">{pillar.copy}</p>
                 </PopCard>
               ))}
             </div>

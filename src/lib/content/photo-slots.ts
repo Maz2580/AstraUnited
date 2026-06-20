@@ -51,6 +51,22 @@ export const PHOTO_SLOTS = [
     }
   },
   {
+    key: "home-program-performance",
+    label: "Homepage — Next-Gen Performance Groups card",
+    default: {
+      src: "/images/academy/astra-academy-coaching-huddle-1280.webp",
+      alt: "Astra United coaches and advanced youth players in a high-intensity training huddle on the Darebin pitch"
+    }
+  },
+  {
+    key: "home-program-girls",
+    label: "Homepage — Astra Evolution Girls Program card",
+    default: {
+      src: "/images/womens/astra-girls-program-ball-1280.webp",
+      alt: "Astra United girls' program player holding a football on the pitch at Darebin International Sports Centre"
+    }
+  },
+  {
     key: "home-news",
     label: "Homepage — News & media photo",
     default: {
