@@ -35,3 +35,8 @@ resume.md
 .claude/
 /t*.PNG
 /verify-*.png
+
+# Motion-lab scratch — keyframe/matte experiments + source video drops,
+# kept on disk for reference but never source.
+motion-lab/
+/Astra Vid 01.gif

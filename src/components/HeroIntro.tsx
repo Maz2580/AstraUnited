@@ -1,115 +1,122 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 import {
   motion,
+  useMotionTemplate,
+  useMotionValue,
   useReducedMotion,
   useScroll,
-  useTransform,
-  type MotionValue
+  useSpring,
+  useTransform
 } from "framer-motion";
 import { ArrowDown, ArrowRight, Play } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
 import { heroContent } from "@/src/lib/content/home";
 
-// Temporary stop-motion loop from curated burst photos (Dr Emamifar ball
-// skills on the Darebin pitch) until the team delivers production motion
-// frames. Values come from `node scripts/build-hero-frames.mjs`.
+// Approved hero footage (team-supplied), extracted to a webp frame set and
+// SCRUBBED by scroll: as the user scrolls through the pinned hero the clip
+// advances frame-by-frame (the ball plays with the scroll), exactly like the
+// previous stop-motion hero. Regenerate frames with
+// `node scripts/build-hero-video-frames.mjs` to swap the footage.
 const heroMedia: HeroSource = {
   kind: "frames",
-  frameCount: 15,
-  fps: 7,
+  frameCount: 60,
+  basePath: "/images/hero-video-frames",
   scrub: true,
-  poster: "/images/hero-frames/poster-1920.webp",
-  posterMobile: "/images/hero-frames/poster-960.webp",
-  blurDataURL:
-    "data:image/webp;base64,UklGRkoAAABXRUJQVlA4ID4AAADQAQCdASoQAAkABABoJQBOgBuka8n5gAD+8rTK71cyipkpvzNiZkcmJV7aexrrF/pma0pZISijB9pSAAAAAA==",
-  blurDataURLMobile:
-    "data:image/webp;base64,UklGRm4AAABXRUJQVlA4IGIAAAAQBACdASoQABgAPxFysVCsJqSisAgBgCIJQBajUABp1f3o8yqdk8u4AAD+wycrv+1B6fsvGjB/MfxwHqAfx3W3Qb0ZrgOxtfV8iFHdbsi7E/FFHEyaU99K4uXjshYnrvAAAA=="
+  poster: "/images/hero-video-frames/poster-desktop.webp",
+  posterMobile: "/images/hero-video-frames/poster-mobile.webp"
 };
 
-const stats = [
-  { value: "U6–Snr", label: "One clear pathway" },
-  { value: "2×", label: "Week structured training" },
-  { value: "DISC", label: "Thornbury home ground" }
-];
-
-// Scroll-progress windows for the puzzle-piece assembly. The page lands on
-// the photo alone; every piece of content — kicker, headline, lead, CTAs,
-// stat rail — clicks into place as the user scrolls through the pinned hero
-// (and disassembles when they scroll back). All pieces are settled by ~0.79
-// so the last stretch of the pin is a clean, fully-assembled frame before
-// the page releases.
+// Two scroll-reveal steps over the pinned hero, matching the approved design.
+// The windows are deliberately spaced with a "hold" between them so each step
+// lands and is readable before the next begins — that's the step-by-step feel:
+//   step 1 — the headline drops in over the footage (screenshot t1), holds
+//   step 2 — the centred registration card rises in with the lead + CTAs (t2)
+// Reduced motion / mobile collapse the pin and render everything assembled.
 type Window = [number, number];
-const PIECE_WINDOWS: {
-  kicker: Window;
+const PHASE: {
   headline: Window;
-  lead: Window;
-  ctas: Window;
-  rail: Window;
-  stats: Window[];
+  card: Window;
   affordanceOut: Window;
 } = {
-  kicker: [0.02, 0.1],
-  headline: [0.04, 0.18],
-  lead: [0.16, 0.3],
-  ctas: [0.26, 0.4],
-  rail: [0.36, 0.46],
-  stats: [
-    [0.4, 0.54],
-    [0.5, 0.64],
-    [0.6, 0.74]
-  ],
-  affordanceOut: [0.78, 0.9]
+  headline: [0.04, 0.22],
+  card: [0.46, 0.7],
+  affordanceOut: [0.72, 0.86]
 };
 
-// Emphasise one word of the headline in gold.
-function renderHeadline(headline: string) {
-  const accent = /community/i.test(headline) ? "community" : null;
-  if (!accent) return headline;
-  const parts = headline.split(new RegExp(`(${accent})`, "i"));
-  return parts.map((part, i) =>
-    part.toLowerCase() === accent ? (
-      <span key={i} className="text-astra-gold">
-        {part}
-      </span>
-    ) : (
-      part
-    )
+/** Wrapper that makes its child lean toward the cursor — a tactile, magnetic
+ *  feel on the CTAs. Pointer-driven only, so it's inert on touch devices. */
+function MagneticButton({ children, className }: { children: ReactNode; className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+  const sx = useSpring(x, { stiffness: 220, damping: 16, mass: 0.4 });
+  const sy = useSpring(y, { stiffness: 220, damping: 16, mass: 0.4 });
+  return (
+    <motion.div
+      ref={ref}
+      style={{ x: sx, y: sy }}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        x.set((e.clientX - (r.left + r.width / 2)) * 0.35);
+        y.set((e.clientY - (r.top + r.height / 2)) * 0.4);
+      }}
+      onMouseLeave={() => {
+        x.set(0);
+        y.set(0);
+      }}
+      className={className}
+    >
+      {children}
+    </motion.div>
   );
 }
 
-type StatPieceProps = {
-  stat: (typeof stats)[number];
-  progress: MotionValue<number>;
-  window: Window;
-  reduce: boolean;
-};
-
-/** One stat box sliding in from the right inside its scroll window. */
-function StatPiece({ stat, progress, window, reduce }: StatPieceProps) {
-  const [start, end] = window;
-  const opacity = useTransform(progress, [start, end], [0, 1]);
-  const x = useTransform(progress, [start, end], [56, 0]);
-  const sweep = useTransform(progress, [start + 0.06, end + 0.06], [0, 1]);
-
+/** The registration card: a gold cursor-spotlight follows the pointer, the card
+ *  tilts slightly toward it and lifts on hover. Tilt lives on this inner element
+ *  so it never clashes with the outer scroll-reveal transform. */
+function InteractiveCard({ children }: { children: ReactNode }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const gx = useMotionValue(50);
+  const gy = useMotionValue(50);
+  const rx = useMotionValue(0);
+  const ry = useMotionValue(0);
+  const srx = useSpring(rx, { stiffness: 150, damping: 18 });
+  const sry = useSpring(ry, { stiffness: 150, damping: 18 });
+  const glow = useMotionTemplate`radial-gradient(420px circle at ${gx}% ${gy}%, rgba(242,201,76,0.18), transparent 60%)`;
   return (
     <motion.div
-      style={reduce ? undefined : { opacity, x }}
-      className="flex flex-col gap-1 bg-astra-ink/30 px-5 py-5"
+      ref={ref}
+      onMouseMove={(e) => {
+        const r = ref.current?.getBoundingClientRect();
+        if (!r) return;
+        const px = (e.clientX - r.left) / r.width;
+        const py = (e.clientY - r.top) / r.height;
+        gx.set(px * 100);
+        gy.set(py * 100);
+        ry.set((px - 0.5) * 6);
+        rx.set(-(py - 0.5) * 6);
+      }}
+      onMouseLeave={() => {
+        rx.set(0);
+        ry.set(0);
+        gx.set(50);
+        gy.set(50);
+      }}
+      whileHover={{ y: -5 }}
+      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
+      className="group relative mx-auto w-full max-w-xl overflow-hidden rounded-2xl border border-astra-gold/30 bg-astra-ink/70 p-7 text-left backdrop-blur-md transition-colors duration-300 hover:border-astra-gold/70 sm:p-8"
     >
-      <dt className="crest-type text-3xl leading-none text-white lg:text-4xl">
-        <span className="text-astra-gold">{stat.value}</span>
-      </dt>
+      {/* Cursor-tracked gold spotlight (fades in on hover) */}
       <motion.span
-        style={reduce ? undefined : { scaleX: sweep }}
         aria-hidden="true"
-        className="block h-px w-10 origin-left bg-astra-gold/70"
+        style={{ background: glow }}
+        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
       />
-      <dd className="text-[0.68rem] font-bold uppercase tracking-[0.16em] text-white/60">
-        {stat.label}
-      </dd>
+      <div className="relative">{children}</div>
     </motion.div>
   );
 }
@@ -117,8 +124,8 @@ function StatPiece({ stat, progress, window, reduce }: StatPieceProps) {
 export function HeroIntro() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion() ?? false;
-  // The pin-and-scrub choreography is a desktop gesture; phones get the
-  // grown hero with everything assembled and the loop playing.
+  // The pin-and-reveal choreography is a desktop gesture; phones get the
+  // grown hero with everything assembled and the clip playing.
   const [isDesktop, setIsDesktop] = useState(false);
   useEffect(() => {
     const query = window.matchMedia("(min-width: 1024px)");
@@ -133,134 +140,118 @@ export function HeroIntro() {
     offset: ["start start", "end end"]
   });
 
-  const kickerOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.kicker, [0, 1]);
-  const kickerY = useTransform(scrollYProgress, PIECE_WINDOWS.kicker, [-16, 0]);
-  const headlineOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.headline, [0, 1]);
-  const headlineY = useTransform(scrollYProgress, PIECE_WINDOWS.headline, [-40, 0]);
-  const leadOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [0, 1]);
-  const leadY = useTransform(scrollYProgress, PIECE_WINDOWS.lead, [36, 0]);
-  const ctaOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.ctas, [0, 1]);
-  const ctaY = useTransform(scrollYProgress, PIECE_WINDOWS.ctas, [36, 0]);
-  const railOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.rail, [0, 1]);
-  const railX = useTransform(scrollYProgress, PIECE_WINDOWS.rail, [56, 0]);
-  const affordanceOpacity = useTransform(scrollYProgress, PIECE_WINDOWS.affordanceOut, [1, 0]);
+  const headlineOpacity = useTransform(scrollYProgress, PHASE.headline, [0, 1]);
+  const headlineY = useTransform(scrollYProgress, PHASE.headline, [-48, 0]);
+  const cardOpacity = useTransform(scrollYProgress, PHASE.card, [0, 1]);
+  const cardY = useTransform(scrollYProgress, PHASE.card, [72, 0]);
+  const cardScale = useTransform(scrollYProgress, PHASE.card, [0.94, 1]);
+  const affordanceOpacity = useTransform(scrollYProgress, PHASE.affordanceOut, [1, 0]);
 
   return (
-    // Tall wrapper pins the hero while the user scrolls through it; that
-    // scroll distance drives BOTH the stop-motion frames (scrub mode) and the
-    // puzzle-piece assembly of the content. Reduced motion collapses the pin
-    // and renders everything assembled.
+    // Tall wrapper pins the hero while the user scrolls through it; that scroll
+    // distance drives the two-phase reveal. Reduced motion collapses the pin
+    // and renders everything assembled over the still poster.
     <div
       ref={wrapperRef}
       data-hero-scrub
-      className="relative h-auto bg-astra-ink lg:h-[220svh] motion-reduce:lg:h-auto"
+      className="relative h-auto bg-astra-ink lg:h-[280svh] motion-reduce:lg:h-auto"
     >
       <section
-        className="hero-cutline relative isolate flex min-h-[100svh] overflow-hidden px-5 pb-24 pt-28 text-white lg:sticky lg:top-0 lg:h-[100svh] motion-reduce:lg:static motion-reduce:lg:h-auto"
+        className="hero-cutline relative isolate flex min-h-[100svh] flex-col overflow-hidden px-5 pb-24 pt-28 text-white lg:sticky lg:top-0 lg:h-[100svh] motion-reduce:lg:static motion-reduce:lg:h-auto"
         aria-label="Astra United FC introduction"
       >
-      {/* Background media (decorative) */}
-      <HeroMedia source={heroMedia} />
+        {/* Background media (decorative ambient loop) */}
+        <HeroMedia source={heroMedia} />
 
-      {/* Overlays above the media, below the content — keep white text legible */}
-      <div className="absolute inset-0 -z-10 bg-astra-ink/72" aria-hidden="true" />
-      <div
-        className="absolute inset-0 -z-10 bg-gradient-to-br from-astra-navy/80 via-astra-ink/70 to-astra-ink/95"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute inset-y-0 left-0 -z-10 w-2/5 skew-x-[-18deg] bg-astra-red/15 blur-2xl"
-        aria-hidden="true"
-      />
-      <div
-        className="absolute bottom-0 left-0 right-0 -z-10 h-32 bg-gradient-to-t from-astra-ink to-transparent"
-        aria-hidden="true"
-      />
-      {/* Subtle film grain / vignette feel */}
-      <div
-        className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(6,17,26,0.55))] mix-blend-multiply"
-        aria-hidden="true"
-      />
+        {/* Overlays above the media, below the content — keep white text legible */}
+        <div className="absolute inset-0 -z-10 bg-astra-ink/72" aria-hidden="true" />
+        <div
+          className="absolute inset-0 -z-10 bg-gradient-to-br from-astra-navy/80 via-astra-ink/70 to-astra-ink/95"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute inset-y-0 left-0 -z-10 w-2/5 skew-x-[-18deg] bg-astra-red/15 blur-2xl"
+          aria-hidden="true"
+        />
+        <div
+          className="absolute bottom-0 left-0 right-0 -z-10 h-32 bg-gradient-to-t from-astra-ink to-transparent"
+          aria-hidden="true"
+        />
+        {/* Subtle film grain / vignette feel */}
+        <div
+          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(6,17,26,0.55))] mix-blend-multiply"
+          aria-hidden="true"
+        />
+        {/* Centre-zone mute: the placeholder footage carries a faint stock
+            watermark dead-centre. A light elliptical wash + tiny blur over that
+            zone knocks the watermark's contrast/legibility down while the player
+            and pitch stay clearly visible. Remove once the clean clip lands. */}
+        <div
+          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_55%_38%_at_50%_45%,rgba(5,14,23,0.34),transparent_72%)] backdrop-blur-[1.5px]"
+          aria-hidden="true"
+        />
 
-      {/* Poster layout around the CENTRED player: title drops in from the
-          top over the sky band, lead+CTAs rise bottom-left, stats slide in
-          bottom-right — three directions assembling around the subject. */}
-      <div className="container-wide relative z-10 flex min-h-[calc(100svh-13rem)] flex-col">
-        <div className="mx-auto w-full max-w-4xl text-center">
-          {/* Kicker — first puzzle piece, arrives on the slightest scroll */}
-          <motion.div
-            style={reduce ? undefined : { opacity: kickerOpacity, y: kickerY }}
-            className="flex items-center justify-center gap-3"
-          >
-            <span className="h-px w-8 bg-astra-red" aria-hidden="true" />
-            <span className="text-xs font-bold uppercase tracking-[0.18em] text-astra-gold">
-              {heroContent.kicker}
-            </span>
-            <span className="h-px w-8 bg-astra-red" aria-hidden="true" />
-          </motion.div>
-
-          {/* Headline — second piece, dropping in over the sky */}
-          <motion.h1
-            style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
-            className="crest-type mx-auto mt-5 text-4xl leading-[0.92] text-white sm:text-6xl lg:text-7xl xl:text-8xl"
-          >
-            {renderHeadline(heroContent.headline)}
-          </motion.h1>
-        </div>
-
-        <div className="mt-auto grid items-end gap-10 pt-10 lg:grid-cols-[1.1fr_0.9fr]">
-          <div className="max-w-xl">
-            {/* Lead — rises in from below, bottom-left */}
-            <motion.p
-              style={reduce ? undefined : { opacity: leadOpacity, y: leadY }}
-              className="max-w-prose text-lg leading-8 text-white/75"
-            >
-              {heroContent.lead}
-            </motion.p>
-
-            {/* CTAs — follow the lead */}
+        {/* Centred stack: headline reveals first (step 1), then the
+            registration card rises into the centre below it (step 2). Both
+            slots are reserved up front so revealing causes no layout shift. */}
+        <div className="container-wide relative z-10 flex min-h-[calc(100svh-13rem)] flex-col items-center justify-center gap-8 text-center sm:gap-10">
+          {/* Step 1 — live chip + headline drop in over the footage */}
+          <div className="flex flex-col items-center gap-5">
             <motion.div
-              style={reduce ? undefined : { opacity: ctaOpacity, y: ctaY }}
-              className="mt-7 flex flex-col gap-3 sm:flex-row"
+              style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
+              className="flex items-center gap-2.5 rounded-full border border-white/15 bg-astra-ink/50 px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-sm"
             >
-              <CtaLink
-                href={heroContent.primaryCta.href}
-                className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
-              >
-                {heroContent.primaryCta.label}
-                <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
-              </CtaLink>
-              <CtaLink
-                href={heroContent.secondaryCta.href}
-                variant="ghost"
-                className="px-6 py-3.5 text-sm font-black uppercase tracking-wide"
-              >
-                <Play aria-hidden="true" className="h-4 w-4" />
-                {heroContent.secondaryCta.label}
-              </CtaLink>
+              <span className="relative flex h-2 w-2">
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
+                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
+              </span>
+              Pitches open · training &amp; match days
             </motion.div>
+
+            <motion.h1
+              style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
+              className="crest-type mx-auto max-w-4xl text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl xl:text-7xl"
+            >
+              {heroContent.headline}
+            </motion.h1>
           </div>
 
-          {/* Stat rail — the container is a piece too (no empty frame at
-              rest), then its boxes slide in from the right one by one */}
-          <motion.dl
-            style={reduce ? undefined : { opacity: railOpacity, x: railX }}
-            className="grid gap-px overflow-hidden rounded-xl border border-white/12 bg-white/5 backdrop-blur lg:ml-auto lg:max-w-xs"
+          {/* Step 2 — the registration card rises into the centre, then becomes
+              interactive (cursor spotlight + tilt + magnetic CTAs) */}
+          <motion.div
+            style={reduce ? undefined : { opacity: cardOpacity, y: cardY, scale: cardScale }}
+            className="w-full"
           >
-            {stats.map((stat, index) => (
-              <StatPiece
-                key={stat.value}
-                stat={stat}
-                progress={scrollYProgress}
-                window={PIECE_WINDOWS.stats[index]}
-                reduce={reduce}
-              />
-            ))}
-          </motion.dl>
+            <InteractiveCard>
+              <p className="text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
+                {heroContent.lead}
+              </p>
+              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
+                <MagneticButton className="w-full sm:w-auto">
+                  <CtaLink
+                    href={heroContent.primaryCta.href}
+                    className="w-full justify-center px-6 py-3.5 text-sm font-black uppercase tracking-wide sm:w-auto"
+                  >
+                    {heroContent.primaryCta.label}
+                    <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+                  </CtaLink>
+                </MagneticButton>
+                <MagneticButton className="w-full sm:w-auto">
+                  <CtaLink
+                    href={heroContent.secondaryCta.href}
+                    variant="ghost"
+                    className="w-full justify-center px-6 py-3.5 text-sm font-black uppercase tracking-wide sm:w-auto"
+                  >
+                    <Play aria-hidden="true" className="h-4 w-4" />
+                    {heroContent.secondaryCta.label}
+                  </CtaLink>
+                </MagneticButton>
+              </div>
+            </InteractiveCard>
+          </motion.div>
         </div>
-      </div>
 
-      {/* Scroll affordance — fades out once the puzzle is assembled */}
+        {/* Scroll affordance — fades out once both pieces are assembled */}
         <motion.a
           href="#club-flow"
           style={reduce ? undefined : { opacity: affordanceOpacity }}

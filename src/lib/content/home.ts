@@ -1,9 +1,10 @@
 export const heroContent = {
   status: "All Astra pitches are currently OPEN for training and match days.",
   kicker: "Est. Melbourne's North - Academy & Senior",
-  headline: "The home of community & player development.",
+  headline:
+    "The Home of Football Community & Player Development in Melbourne's Suburbs",
   lead:
-    "Professional coaching, a safe environment, and a clear pathway from grassroots football to senior squads at Darebin International Sports Centre.",
+    "Astra Football Club provides a professional, highly structured football environment for local families across Melbourne's growing northern and eastern suburbs, based at Darebin International Sports Centre.",
   primaryCta: { label: "Register for 2026", href: "/join-us" },
   secondaryCta: { label: "View match-day fixtures", href: "/teams" }
 };

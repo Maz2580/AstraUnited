@@ -20,6 +20,8 @@ export type HeroSource =
       blurDataURL?: string;
       blurDataURLMobile?: string;
       fps?: number;
+      /** Frame folder under /public (defaults to /images/hero-frames). */
+      basePath?: string;
       /** Scrub frames with scroll through a [data-hero-scrub] ancestor. */
       scrub?: boolean;
     };
@@ -106,6 +108,7 @@ export function HeroMedia({ source }: { source: HeroSource }) {
         <HeroFramesCanvas
           frameCount={source.frameCount}
           fps={source.fps}
+          basePath={source.basePath}
           mode={source.scrub ? "scrub" : "loop"}
         />
       </div>
