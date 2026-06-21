@@ -353,70 +353,11 @@ export default function Home() {
             previews when none are published). See NewsSection. */}
         <NewsSection />
 
-        {/* 7 — Live pitch status + next moment */}
-        <FlowReveal className="section-band band-fog">
-          <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
-            <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
-              <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
-              <h2 className="crest-type text-3xl leading-none text-white">All Astra FC pitches are open.</h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/72">
-                Training and match-day activity is currently available at Darebin International Sports Centre. Check back on match mornings for any pitch-status changes.
-              </p>
-            </PopCard>
-            <PopCard className="card-dark p-6 sm:p-8" delay={0.06}>
-              <div className="flex items-start gap-4">
-                <CalendarDays aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 text-astra-gold" />
-                <div>
-                  <p className="text-sm font-black uppercase tracking-normal text-astra-red">Next campaign moment</p>
-                  <h3 className="mt-2 text-2xl font-black text-white">2026 registrations and trials</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/72">
-                    Registrations are open now for the 2026 season. Trial windows, camps, and awards night details are confirmed below.
-                  </p>
-                </div>
-              </div>
-            </PopCard>
-          </div>
-        </FlowReveal>
-
-        {/* Club Spotlight (mid) */}
-        <SpotlightSection placement="mid" />
-
-        {/* 8 — Senior & Women's teams */}
-        <FlowReveal className="section-band band-deep">
-          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div>
-              <SectionHeader
-                eyebrow="Senior pathway"
-                title="Men's, women's, and U23 football."
-                copy="The senior program gives emerging players a competitive destination and shows families that the academy has a real long-term pathway."
-                inverse
-              />
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                {["Men's First Team", "Women's First Team", "Under-23s"].map((team, index) => (
-                  <PopCard key={team} className="card-dark p-5" delay={index * 0.05}>
-                    <Trophy aria-hidden="true" className="mb-4 h-6 w-6 text-astra-gold" />
-                    <p className="font-black text-white">{team}</p>
-                  </PopCard>
-                ))}
-              </div>
-            </div>
-            <PopCard className="card-dark overflow-hidden">
-              <WomensMotionCard />
-              <div className="border-t border-white/10 p-5 text-white">
-                <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Women's First Team</p>
-                <p className="mt-2 text-sm leading-6 text-white/72">A growing women's program at Darebin International Sports Centre.</p>
-              </div>
-            </PopCard>
-          </div>
-        </FlowReveal>
-
-        {/* Club Spotlight (after news) */}
-        <SpotlightSection placement="after-news" />
-
         {/* Club Spotlight (before join) */}
         <SpotlightSection placement="before-join" />
 
-        {/* 9 — Join / contact CTA */}
+        {/* 7 — Join / contact CTA (Revised content spec §9): moved to sit directly
+            after the News section as the closing call to action. */}
         <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <SectionHeader
@@ -449,6 +390,66 @@ export default function Home() {
             </div>
           </div>
         </FlowReveal>
+
+        {/* 8 — Live pitch status + next moment */}
+        <FlowReveal className="section-band band-deep">
+          <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
+            <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
+              <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
+              <h2 className="crest-type text-3xl leading-none text-white">All Astra FC pitches are open.</h2>
+              <p className="mt-4 max-w-2xl text-base leading-7 text-white/72">
+                Training and match-day activity is currently available at Darebin International Sports Centre. Check back on match mornings for any pitch-status changes.
+              </p>
+            </PopCard>
+            <PopCard className="card-dark p-6 sm:p-8" delay={0.06}>
+              <div className="flex items-start gap-4">
+                <CalendarDays aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 text-astra-gold" />
+                <div>
+                  <p className="text-sm font-black uppercase tracking-normal text-astra-red">Next campaign moment</p>
+                  <h3 className="mt-2 text-2xl font-black text-white">2026 registrations and trials</h3>
+                  <p className="mt-3 text-sm leading-6 text-white/72">
+                    Registrations are open now for the 2026 season. Trial windows, camps, and awards night details are confirmed below.
+                  </p>
+                </div>
+              </div>
+            </PopCard>
+          </div>
+        </FlowReveal>
+
+        {/* Club Spotlight (mid) */}
+        <SpotlightSection placement="mid" />
+
+        {/* 9 — Senior & Women's teams */}
+        <FlowReveal className="section-band band-fog">
+          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+            <div>
+              <SectionHeader
+                eyebrow="Senior pathway"
+                title="Men's, women's, and U23 football."
+                copy="The senior program gives emerging players a competitive destination and shows families that the academy has a real long-term pathway."
+                inverse
+              />
+              <div className="mt-8 grid gap-4 sm:grid-cols-3">
+                {["Men's First Team", "Women's First Team", "Under-23s"].map((team, index) => (
+                  <PopCard key={team} className="card-dark p-5" delay={index * 0.05}>
+                    <Trophy aria-hidden="true" className="mb-4 h-6 w-6 text-astra-gold" />
+                    <p className="font-black text-white">{team}</p>
+                  </PopCard>
+                ))}
+              </div>
+            </div>
+            <PopCard className="card-dark overflow-hidden">
+              <WomensMotionCard />
+              <div className="border-t border-white/10 p-5 text-white">
+                <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Women's First Team</p>
+                <p className="mt-2 text-sm leading-6 text-white/72">A growing women's program at Darebin International Sports Centre.</p>
+              </div>
+            </PopCard>
+          </div>
+        </FlowReveal>
+
+        {/* Club Spotlight (after news) */}
+        <SpotlightSection placement="after-news" />
       </Touchline>
     </main>
   );
