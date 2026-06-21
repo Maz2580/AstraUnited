@@ -255,17 +255,6 @@ export const pages: MarketingPage[] = [
     blocks: [
       {
         type: "cards",
-        title: "Senior teams",
-        intro:
-          "Our senior program shows the club's philosophy at a competitive level - and many senior players have progressed through our own Youth Academy.",
-        items: [
-          { title: "Men's First Team", copy: "Competing in the Victorian league system - a blend of experienced heads and emerging talent." },
-          { title: "Women's First Team", copy: "A core part of our identity - growing, competitive, and inspiring the next generation." },
-          { title: "Under-23s", copy: "The bridge between youth and senior football, refining technical and tactical discipline." }
-        ]
-      },
-      {
-        type: "cards",
         title: "Youth Academy",
         intro:
           "Based at Darebin, the Academy gives boys and girls from U6 to U18 a safe, structured environment built on development over results - technical excellence, game intelligence, and social growth.",

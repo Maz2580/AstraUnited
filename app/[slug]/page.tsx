@@ -10,6 +10,7 @@ import { isLive } from "@/src/lib/content/expiry";
 import { listSummaries } from "@/src/lib/content/news";
 import { resolvePhoto, isSlotKey } from "@/src/lib/content/photo-slots";
 import { NewsCard } from "@/src/components/content/NewsCard";
+import { SeniorPathway } from "@/src/components/SeniorPathway";
 
 type PageProps = { params: { slug: string } };
 
@@ -51,6 +52,7 @@ export default async function MarketingPage({ params }: PageProps) {
   return (
     <main id="main-content" className="bg-astra-ink">
       <PageHero eyebrow={page.eyebrow} title={page.title} intro={page.intro} hero={page.hero} overrideSrc={heroOverrideSrc} />
+      {page.slug === "teams" ? <SeniorPathway band="band-deep" /> : null}
       {newsPosts.length > 0 ? (
         <section className="section-band band-deep">
           <div className="container-wide">

@@ -5,7 +5,6 @@ import {
   ExternalLink,
   MapPin,
   ShieldCheck,
-  Trophy,
   Users
 } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
@@ -15,7 +14,6 @@ import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
 import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
-import { WomensMotionCard } from "@/src/components/WomensMotionCard";
 import { WhyFamiliesBoard } from "@/src/components/WhyFamiliesBoard";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
 import { welcome, whyFamilies } from "@/src/lib/content/home";
@@ -418,35 +416,6 @@ export default function Home() {
 
         {/* Club Spotlight (mid) */}
         <SpotlightSection placement="mid" />
-
-        {/* 9 — Senior & Women's teams */}
-        <FlowReveal className="section-band band-fog">
-          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
-            <div>
-              <SectionHeader
-                eyebrow="Senior pathway"
-                title="Men's, women's, and U23 football."
-                copy="The senior program gives emerging players a competitive destination and shows families that the academy has a real long-term pathway."
-                inverse
-              />
-              <div className="mt-8 grid gap-4 sm:grid-cols-3">
-                {["Men's First Team", "Women's First Team", "Under-23s"].map((team, index) => (
-                  <PopCard key={team} className="card-dark p-5" delay={index * 0.05}>
-                    <Trophy aria-hidden="true" className="mb-4 h-6 w-6 text-astra-gold" />
-                    <p className="font-black text-white">{team}</p>
-                  </PopCard>
-                ))}
-              </div>
-            </div>
-            <PopCard className="card-dark overflow-hidden">
-              <WomensMotionCard />
-              <div className="border-t border-white/10 p-5 text-white">
-                <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Women's First Team</p>
-                <p className="mt-2 text-sm leading-6 text-white/72">A growing women's program at Darebin International Sports Centre.</p>
-              </div>
-            </PopCard>
-          </div>
-        </FlowReveal>
 
         {/* Club Spotlight (after news) */}
         <SpotlightSection placement="after-news" />
