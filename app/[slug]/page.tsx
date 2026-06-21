@@ -7,6 +7,7 @@ import { BlockRenderer } from "@/src/components/blocks/BlockRenderer";
 import { getPageBySlug, pages } from "@/src/lib/site-data";
 import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
+import { listSummaries } from "@/src/lib/content/news";
 import { resolvePhoto, isSlotKey } from "@/src/lib/content/photo-slots";
 import { NewsCard } from "@/src/components/content/NewsCard";
 
@@ -31,13 +32,16 @@ export default async function MarketingPage({ params }: PageProps) {
   const heroOverride = isSlotKey(heroKey) ? resolvePhoto(heroKey, photoOverrides) : null;
   const heroOverrideSrc = heroOverride?.isOverride ? heroOverride.src : undefined;
 
-  // On /news-media, surface every live event post (newest first) as the archive
-  // of full articles — the homepage "View All" lands here.
+  // On /news-media, the blog index: every live post (newest first) as a grid of
+  // full articles — live admin posts, or the seed sample posts when none are
+  // published. The homepage "View All" lands here.
   const newsPosts =
     page.slug === "news-media"
-      ? events
-          .filter((e) => isLive(e, new Date()))
-          .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+      ? listSummaries(
+          events
+            .filter((e) => isLive(e, new Date()))
+            .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+        )
       : [];
 
   // BlockRenderer alternates fog/deep from fog at index 0, so the closing CTA
@@ -50,16 +54,17 @@ export default async function MarketingPage({ params }: PageProps) {
       {newsPosts.length > 0 ? (
         <section className="section-band band-deep">
           <div className="container-wide">
-            <h2 className="crest-type text-3xl leading-none text-white sm:text-4xl">Latest posts</h2>
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">From the training ground</p>
+            <h2 className="crest-type mt-2 text-3xl leading-none text-white sm:text-4xl">Latest posts</h2>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-              {newsPosts.map((event) => (
+              {newsPosts.map((post) => (
                 <NewsCard
-                  key={event.id}
-                  href={`/news-media/${event.id}`}
-                  image={event.image}
-                  kicker="Club News"
-                  title={event.headline}
-                  body={event.body}
+                  key={post.id}
+                  href={post.href}
+                  image={post.image}
+                  kicker={post.kicker}
+                  title={post.title}
+                  body={post.body}
                 />
               ))}
             </div>

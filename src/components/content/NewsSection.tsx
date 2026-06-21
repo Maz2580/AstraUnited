@@ -4,49 +4,21 @@ import { FlowReveal } from "@/src/components/FlowReveal";
 import { CtaLink } from "@/src/components/CtaLink";
 import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
-import { newsPreview } from "@/src/lib/site-data";
+import { listSummaries } from "@/src/lib/content/news";
 import { NewsCard } from "./NewsCard";
 
-// Static fallback imagery for when no event posts are published yet, so the
-// section is never empty pre-launch. Real posts (with their own images) take
-// over automatically once published in the admin.
-const FALLBACK_IMAGES = [
-  "/images/community/astra-community-team-photo-1280.webp",
-  "/images/academy/astra-academy-youth-training-1280.webp",
-  "/images/academy/astra-academy-coaching-huddle-1280.webp"
-];
-
-type Card = { href: string; image: string; kicker: string; title: string; body: string };
-
 /**
- * "Latest News & Match Reports" (Revised content spec §8, t9). Driven by the
- * admin event-post system: the three most recent LIVE posts render as cards that
- * link to their full article at /news-media/[id]. With no posts published yet it
- * falls back to the static newsPreview so the homepage always looks complete.
+ * "Latest News & Match Reports" (Revised content spec §8, t9) — a homepage teaser
+ * showing only the three most recent posts. Each card opens that post's own
+ * subpage; "View All" goes to the full blog at /news-media. Driven by the admin
+ * event-post system, falling back to the seed sample posts so it's never empty.
  */
 export async function NewsSection() {
   const { events } = await getClubContent();
   const live = events
     .filter((e) => isLive(e, new Date()))
-    .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
-    .slice(0, 3);
-
-  const cards: Card[] =
-    live.length > 0
-      ? live.map((e) => ({
-          href: `/news-media/${e.id}`,
-          image: e.image,
-          kicker: "Club News",
-          title: e.headline,
-          body: e.body
-        }))
-      : newsPreview.slice(0, 3).map((n, i) => ({
-          href: "/news-media",
-          image: FALLBACK_IMAGES[i % FALLBACK_IMAGES.length],
-          kicker: n.kicker,
-          title: n.title,
-          body: n.copy
-        }));
+    .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
+  const cards = listSummaries(live).slice(0, 3);
 
   return (
     <FlowReveal className="section-band band-deep" id="news">
@@ -60,7 +32,14 @@ export async function NewsSection() {
 
         <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {cards.map((card) => (
-            <NewsCard key={card.href + card.title} {...card} />
+            <NewsCard
+              key={card.id}
+              href={card.href}
+              image={card.image}
+              kicker={card.kicker}
+              title={card.title}
+              body={card.body}
+            />
           ))}
         </div>
 
