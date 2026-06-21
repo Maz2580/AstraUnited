@@ -1,7 +1,6 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  CalendarDays,
   ExternalLink,
   MapPin,
   ShieldCheck,
@@ -386,31 +385,6 @@ export default function Home() {
                 </Link>
               </PopCard>
             </div>
-          </div>
-        </FlowReveal>
-
-        {/* 8 — Live pitch status + next moment */}
-        <FlowReveal className="section-band band-deep">
-          <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
-            <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
-              <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
-              <h2 className="crest-type text-3xl leading-none text-white">All Astra FC pitches are open.</h2>
-              <p className="mt-4 max-w-2xl text-base leading-7 text-white/72">
-                Training and match-day activity is currently available at Darebin International Sports Centre. Check back on match mornings for any pitch-status changes.
-              </p>
-            </PopCard>
-            <PopCard className="card-dark p-6 sm:p-8" delay={0.06}>
-              <div className="flex items-start gap-4">
-                <CalendarDays aria-hidden="true" className="mt-1 h-6 w-6 shrink-0 text-astra-gold" />
-                <div>
-                  <p className="text-sm font-black uppercase tracking-normal text-astra-red">Next campaign moment</p>
-                  <h3 className="mt-2 text-2xl font-black text-white">2026 registrations and trials</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/72">
-                    Registrations are open now for the 2026 season. Trial windows, camps, and awards night details are confirmed below.
-                  </p>
-                </div>
-              </div>
-            </PopCard>
           </div>
         </FlowReveal>
 
