@@ -84,52 +84,6 @@ function MagneticButton({ children, className }: { children: ReactNode; classNam
   );
 }
 
-/** The registration card: a gold cursor-spotlight follows the pointer, the card
- *  tilts slightly toward it and lifts on hover. Tilt lives on this inner element
- *  so it never clashes with the outer scroll-reveal transform. */
-function InteractiveCard({ children }: { children: ReactNode }) {
-  const ref = useRef<HTMLDivElement>(null);
-  const gx = useMotionValue(50);
-  const gy = useMotionValue(50);
-  const rx = useMotionValue(0);
-  const ry = useMotionValue(0);
-  const srx = useSpring(rx, { stiffness: 150, damping: 18 });
-  const sry = useSpring(ry, { stiffness: 150, damping: 18 });
-  const glow = useMotionTemplate`radial-gradient(420px circle at ${gx}% ${gy}%, rgba(242,201,76,0.18), transparent 60%)`;
-  return (
-    <motion.div
-      ref={ref}
-      onMouseMove={(e) => {
-        const r = ref.current?.getBoundingClientRect();
-        if (!r) return;
-        const px = (e.clientX - r.left) / r.width;
-        const py = (e.clientY - r.top) / r.height;
-        gx.set(px * 100);
-        gy.set(py * 100);
-        ry.set((px - 0.5) * 6);
-        rx.set(-(py - 0.5) * 6);
-      }}
-      onMouseLeave={() => {
-        rx.set(0);
-        ry.set(0);
-        gx.set(50);
-        gy.set(50);
-      }}
-      whileHover={{ y: -5 }}
-      style={{ rotateX: srx, rotateY: sry, transformPerspective: 900 }}
-      className="group relative mx-auto w-full max-w-xl overflow-hidden rounded-2xl border border-astra-gold/30 bg-astra-ink/70 p-7 text-left backdrop-blur-md transition-colors duration-300 hover:border-astra-gold/70 sm:p-8"
-    >
-      {/* Cursor-tracked gold spotlight (fades in on hover) */}
-      <motion.span
-        aria-hidden="true"
-        style={{ background: glow }}
-        className="pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-      />
-      <div className="relative">{children}</div>
-    </motion.div>
-  );
-}
-
 /** One word of the lead, revealed (rise + un-blur + fade) over its own slice of
  *  the hero scroll. Hooks run unconditionally; reduced motion renders it plain. */
 function RevealWord({
@@ -215,6 +169,8 @@ export function HeroIntro() {
   const cardOpacity = useTransform(scrollYProgress, PHASE.card, [0, 1]);
   const cardY = useTransform(scrollYProgress, PHASE.card, [72, 0]);
   const cardScale = useTransform(scrollYProgress, PHASE.card, [0.94, 1]);
+  // Gold kit-stripe draws in from the centre as the lead block lands.
+  const stripeScale = useTransform(scrollYProgress, [0.46, 0.58], [0, 1]);
   const affordanceOpacity = useTransform(scrollYProgress, PHASE.affordanceOut, [1, 0]);
 
   return (
@@ -276,36 +232,47 @@ export function HeroIntro() {
             </motion.h1>
           </div>
 
-          {/* Step 2 — the registration card rises into the centre, then becomes
-              interactive (cursor spotlight + tilt + magnetic CTAs) */}
+          {/* Step 2 — broadcast/matchday lead + CTAs straight on the footage
+              (no box): a gold kit-stripe draws in, the lead cascades word-by-
+              word, then the matchday CTAs. The global dark overlays plus a soft,
+              edgeless focus scrim keep it legible on the pitch. */}
           <motion.div
             style={reduce ? undefined : { opacity: cardOpacity, y: cardY, scale: cardScale }}
-            className="w-full"
+            className="relative mx-auto w-full max-w-2xl"
           >
-            <InteractiveCard>
-              <LeadReveal text={heroContent.lead} progress={scrollYProgress} reduce={reduce} />
-              <div className="mt-6 flex flex-col gap-3 sm:flex-row">
-                <MagneticButton className="w-full sm:w-auto">
-                  <CtaLink
-                    href={heroContent.primaryCta.href}
-                    className="w-full justify-center px-6 py-3.5 text-sm font-black uppercase tracking-wide sm:w-auto"
-                  >
-                    {heroContent.primaryCta.label}
-                    <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
-                  </CtaLink>
-                </MagneticButton>
-                <MagneticButton className="w-full sm:w-auto">
-                  <CtaLink
-                    href={heroContent.secondaryCta.href}
-                    variant="ghost"
-                    className="w-full justify-center px-6 py-3.5 text-sm font-black uppercase tracking-wide sm:w-auto"
-                  >
-                    <Play aria-hidden="true" className="h-4 w-4" />
-                    {heroContent.secondaryCta.label}
-                  </CtaLink>
-                </MagneticButton>
-              </div>
-            </InteractiveCard>
+            {/* Edgeless focus scrim — darkens the footage under the text with no
+                visible panel edge (legibility without the old card vibe). */}
+            <div
+              aria-hidden="true"
+              className="pointer-events-none absolute -inset-x-16 -inset-y-12 -z-10 bg-[radial-gradient(ellipse_at_center,rgba(6,17,26,0.62),transparent_70%)] blur-2xl"
+            />
+            <motion.span
+              aria-hidden="true"
+              style={reduce ? undefined : { scaleX: stripeScale }}
+              className="mx-auto mb-6 block h-[3px] w-16 origin-center rounded-full bg-astra-gold"
+            />
+            <LeadReveal text={heroContent.lead} progress={scrollYProgress} reduce={reduce} />
+            <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+              <MagneticButton className="w-full sm:w-auto">
+                <CtaLink
+                  href={heroContent.primaryCta.href}
+                  className="w-full justify-center px-6 py-3.5 text-sm font-black uppercase tracking-wide sm:w-auto"
+                >
+                  {heroContent.primaryCta.label}
+                  <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+                </CtaLink>
+              </MagneticButton>
+              <MagneticButton className="w-full sm:w-auto">
+                <CtaLink
+                  href={heroContent.secondaryCta.href}
+                  variant="ghost"
+                  className="w-full justify-center px-6 py-3.5 text-sm font-black uppercase tracking-wide sm:w-auto"
+                >
+                  <Play aria-hidden="true" className="h-4 w-4" />
+                  {heroContent.secondaryCta.label}
+                </CtaLink>
+              </MagneticButton>
+            </div>
           </motion.div>
         </div>
 
