@@ -3,6 +3,7 @@ import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { navItems } from "@/src/lib/site-data";
+import { NoticeMarqueeServer } from "@/src/components/content/NoticeMarqueeServer";
 
 export function SiteHeader() {
   return (
@@ -40,6 +41,8 @@ export function SiteHeader() {
           <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
         </CtaLink>
       </nav>
+      {/* Admin announcements — gold scrolling band pinned under the nav (t10) */}
+      <NoticeMarqueeServer />
     </header>
   );
 }

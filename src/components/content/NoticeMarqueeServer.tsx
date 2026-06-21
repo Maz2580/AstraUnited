@@ -1,12 +1,12 @@
 import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
-import { NoticeRing } from "./NoticeRing";
+import { NoticeMarquee } from "./NoticeMarquee";
 
-export async function NoticeRingServer() {
+export async function NoticeMarqueeServer() {
   const { notices } = await getClubContent();
   const live = notices
     .filter((n) => isLive(n, new Date()))
     .sort((a, b) => b.createdAt.localeCompare(a.createdAt));
   if (live.length === 0) return null;
-  return <NoticeRing notices={live} />;
+  return <NoticeMarquee notices={live} />;
 }

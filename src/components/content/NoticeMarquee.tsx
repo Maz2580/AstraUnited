@@ -14,13 +14,20 @@ function todaysSeen(): Record<string, string> {
   }
 }
 
-export function NoticeRing({ notices }: { notices: Notice[] }) {
+/**
+ * Club announcements as a gold marquee band pinned under the nav (designer's t10):
+ * created in the admin, they scroll across the top for maximum visibility. The
+ * band is a button — tapping it opens the full notice(s) in a modal, and urgent
+ * notices still auto-open once per day. Falls back to a static row under reduced
+ * motion (the .marquee-track animation is disabled globally there).
+ */
+export function NoticeMarquee({ notices }: { notices: Notice[] }) {
   const [open, setOpen] = useState(false);
   const [index, setIndex] = useState(0);
   const closeRef = useRef<HTMLButtonElement>(null);
   const triggerRef = useRef<HTMLButtonElement>(null);
-  const hasUrgent = notices.some((n) => n.kind === "urgent");
 
+  // Urgent notices still pop the modal once per day, even with the band visible.
   useEffect(() => {
     const today = new Date().toISOString().slice(0, 10);
     const seen = todaysSeen();
@@ -42,37 +49,56 @@ export function NoticeRing({ notices }: { notices: Notice[] }) {
     closeRef.current?.focus();
     const onKey = (e: KeyboardEvent) => e.key === "Escape" && setOpen(false);
     window.addEventListener("keydown", onKey);
-    // Cleanup runs when the dialog closes — restore focus to the ring trigger.
     return () => {
       window.removeEventListener("keydown", onKey);
       triggerRef.current?.focus();
     };
   }, [open]);
 
-  const newest = notices[0]; // the pill always previews the newest notice
   const current = notices[Math.min(index, notices.length - 1)];
   const step = useCallback(
     (d: number) => setIndex((i) => (i + d + notices.length) % notices.length),
     [notices.length]
   );
 
+  // Repeat the notices so the track fills the width even for a single short
+  // notice; .marquee-track then duplicates it (-50%) for a seamless loop.
+  const reps = Math.max(2, Math.ceil(8 / notices.length));
+  const copy = Array.from({ length: reps }).flatMap(() => notices);
+
   return (
     <>
       <button
         ref={triggerRef}
         type="button"
-        onClick={() => { setIndex(0); setOpen(true); }}
-        className="fixed bottom-5 left-5 z-50 flex items-center gap-3"
-        aria-label={`Club notices (${notices.length})`}
+        onClick={() => {
+          setIndex(0);
+          setOpen(true);
+        }}
+        className="notice-marquee block w-full text-astra-ink"
+        aria-label={`Club announcements — ${notices.length} notice${notices.length > 1 ? "s" : ""}, tap to read`}
       >
-        <span
-          className={`flex h-14 w-14 items-center justify-center rounded-full border-2 border-astra-gold bg-astra-ink shadow-[0_0_0_3px_rgba(200,164,77,0.25)] ${hasUrgent ? "animate-pulse motion-reduce:animate-none" : ""}`}
-        >
-          <Megaphone aria-hidden="true" className="h-6 w-6 text-astra-gold" />
-        </span>
-        <span className="max-w-[16rem] truncate rounded-full border border-white/12 bg-astra-ink/90 px-3 py-1.5 text-xs font-bold text-white/85">
-          {newest.title}
-        </span>
+        <div className="marquee-track py-2" aria-hidden="true">
+          {[0, 1].map((dup) => (
+            <span key={dup} className="flex shrink-0 items-center">
+              {copy.map((n, i) => (
+                <span
+                  key={`${dup}-${i}`}
+                  className="flex items-center text-xs font-black uppercase tracking-[0.16em] sm:text-sm"
+                >
+                  <Megaphone aria-hidden="true" className="mx-3 h-4 w-4 shrink-0" />
+                  {n.kind === "urgent" ? (
+                    <span className="mr-2 rounded-sm bg-astra-red px-1.5 py-0.5 text-[0.6rem] leading-none text-white">
+                      Urgent
+                    </span>
+                  ) : null}
+                  <span className="whitespace-nowrap">{n.title}</span>
+                  <span className="px-4 text-astra-ink/45">•</span>
+                </span>
+              ))}
+            </span>
+          ))}
+        </div>
       </button>
 
       {open ? (
@@ -93,18 +119,32 @@ export function NoticeRing({ notices }: { notices: Notice[] }) {
             >
               <X aria-hidden="true" className="h-4 w-4" />
             </button>
-            <p className={`text-xs font-black uppercase tracking-[0.14em] ${current.kind === "urgent" ? "text-astra-red" : "text-astra-gold"}`}>
+            <p
+              className={`text-xs font-black uppercase tracking-[0.14em] ${current.kind === "urgent" ? "text-astra-red" : "text-astra-gold"}`}
+            >
               {current.kind === "urgent" ? "Urgent" : "Club notice"}
             </p>
             <h2 className="crest-type mt-3 text-3xl text-white">{current.title}</h2>
             <p className="mt-4 text-sm leading-6 text-white/80">{current.message}</p>
             {notices.length > 1 ? (
               <div className="mt-6 flex items-center justify-between text-white/70">
-                <button type="button" onClick={() => step(-1)} aria-label="Previous notice" className="rounded-full border border-white/12 p-2 transition hover:border-white/35 hover:text-white">
+                <button
+                  type="button"
+                  onClick={() => step(-1)}
+                  aria-label="Previous notice"
+                  className="rounded-full border border-white/12 p-2 transition hover:border-white/35 hover:text-white"
+                >
                   <ChevronLeft aria-hidden="true" className="h-4 w-4" />
                 </button>
-                <span className="text-xs font-bold">{index + 1} / {notices.length}</span>
-                <button type="button" onClick={() => step(1)} aria-label="Next notice" className="rounded-full border border-white/12 p-2 transition hover:border-white/35 hover:text-white">
+                <span className="text-xs font-bold">
+                  {index + 1} / {notices.length}
+                </span>
+                <button
+                  type="button"
+                  onClick={() => step(1)}
+                  aria-label="Next notice"
+                  className="rounded-full border border-white/12 p-2 transition hover:border-white/35 hover:text-white"
+                >
                   <ChevronRight aria-hidden="true" className="h-4 w-4" />
                 </button>
               </div>

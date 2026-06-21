@@ -571,6 +571,16 @@ svg {
   background: var(--astra-red);
 }
 
+/* Gold notice marquee — admin announcements, pinned under the nav */
+.notice-marquee {
+  overflow: hidden;
+  background: var(--astra-gold);
+}
+.notice-marquee:hover .marquee-track,
+.notice-marquee:focus-visible .marquee-track {
+  animation-play-state: paused;
+}
+
 .marquee-track {
   display: inline-flex;
   white-space: nowrap;

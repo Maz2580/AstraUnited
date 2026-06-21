@@ -3,7 +3,6 @@ import "./globals.css";
 import { display, sans } from "@/src/lib/fonts";
 import { SiteFooter } from "@/src/components/SiteFooter";
 import { SiteHeader } from "@/src/components/SiteHeader";
-import { NoticeRingServer } from "@/src/components/content/NoticeRingServer";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"),
@@ -48,7 +47,6 @@ export default function RootLayout({
         </a>
         <SiteHeader />
         {children}
-        <NoticeRingServer />
         <SiteFooter />
       </body>
     </html>
