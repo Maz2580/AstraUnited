@@ -92,7 +92,11 @@ export function NoticeMarquee({ notices }: { notices: Notice[] }) {
                       Urgent
                     </span>
                   ) : null}
-                  <span className="whitespace-nowrap">{n.title}</span>
+                  <span className="whitespace-nowrap font-black">{n.title}</span>
+                  <span className="px-2 text-astra-ink/40">—</span>
+                  <span className="whitespace-nowrap font-semibold normal-case tracking-normal text-astra-ink/80">
+                    {n.message}
+                  </span>
                   <span className="px-4 text-astra-ink/45">•</span>
                 </span>
               ))}

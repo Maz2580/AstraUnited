@@ -116,6 +116,10 @@ export function EventForm({ initial }: { initial?: EventPost }) {
   const [previewUrl, setPreviewUrl] = useState(initial?.image ?? "");
   const [fileError, setFileError] = useState<string | null>(null);
   const [compressing, setCompressing] = useState(false);
+  // Set after a successful publish so the admin gets a clear confirmation + a
+  // link to the new post (otherwise a news-only post clears the form with no
+  // visible sign it worked).
+  const [publishedHref, setPublishedHref] = useState<string | null>(null);
 
   // This effect's cleanup solely owns object-URL revocation: it fires with the
   // previous url whenever previewUrl changes (and on unmount). Revoking a normal
@@ -132,7 +136,8 @@ export function EventForm({ initial }: { initial?: EventPost }) {
       router.refresh();
       return;
     }
-    // Create: clear the form for the next post.
+    // Create: confirm success, then clear the form for the next post.
+    setPublishedHref(state.href ?? "/news-media");
     formRef.current?.reset();
     setHeadline("");
     setCategory("Club News");
@@ -245,7 +250,7 @@ export function EventForm({ initial }: { initial?: EventPost }) {
         <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
           <label className="grid gap-1.5">
             <span className={labelCls}>Headline</span>
-            <input name="headline" required maxLength={80} value={headline} onChange={(e) => setHeadline(e.target.value)} className={inputCls} placeholder="Senior Team Secure Three Points" />
+            <input name="headline" required maxLength={80} value={headline} onChange={(e) => { setHeadline(e.target.value); setPublishedHref(null); }} className={inputCls} placeholder="Senior Team Secure Three Points" />
           </label>
           <label className="grid gap-1.5">
             <span className={labelCls}>Category</span>
@@ -381,6 +386,15 @@ export function EventForm({ initial }: { initial?: EventPost }) {
         </div>
         {fileError ? <p className="text-sm font-semibold text-astra-red">{fileError}</p> : null}
         {errorMsg ? <p className="text-sm font-semibold text-astra-red">{errorMsg}</p> : null}
+        {publishedHref && !isEdit ? (
+          <div className="flex flex-wrap items-center gap-x-3 gap-y-1 rounded border border-astra-gold/40 bg-astra-gold/10 p-3 text-sm text-white/85">
+            <span className="font-black uppercase tracking-wide text-astra-gold">Published ✓</span>
+            <span>It&apos;s now live in the News section.</span>
+            <Link href={publishedHref} target="_blank" className="font-bold text-white underline underline-offset-2 hover:text-astra-gold">
+              View the post →
+            </Link>
+          </div>
+        ) : null}
         <SubmitButton
           idleLabel={isEdit ? "Save changes" : "Publish event post"}
           pendingLabel={isEdit ? "Saving…" : "Publishing…"}

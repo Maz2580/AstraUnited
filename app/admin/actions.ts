@@ -231,7 +231,7 @@ export async function createEvent(_prev: ActionState, form: FormData): Promise<A
     const { events } = await getClubContentForWrite();
     await writeEvents([event, ...events]);
     refresh();
-    return { ok: true };
+    return { ok: true, href: `/news-media/${id}` };
   } catch (err) {
     return fail(err instanceof Error ? err.message : "Could not publish the event.");
   }
@@ -284,7 +284,7 @@ export async function updateEvent(_prev: ActionState, form: FormData): Promise<A
     };
     await writeEvents(events.map((e) => (e.id === id ? updated : e)));
     refresh();
-    return { ok: true };
+    return { ok: true, href: `/news-media/${id}` };
   } catch (err) {
     return fail(err instanceof Error ? err.message : "Could not save the changes.");
   }
