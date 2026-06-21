@@ -65,10 +65,7 @@ export const photoOverridesSchema = z.record(
 export type PhotoOverrides = z.infer<typeof photoOverridesSchema>;
 
 // Fail-soft: any JSON or schema error returns the fallback so the public site
-// never breaks on bad content. Note the all-or-nothing array behaviour — if a
-// single item in a notices/events array fails validation, z.array rejects the
-// whole array and the feed falls back to empty. Acceptable for a single-admin
-// club site; temporal fields stay loose here and are guarded at write time.
+// never breaks on bad content.
 function safeParse<T>(schema: z.ZodType<T>, raw: string, fallback: T): T {
   try {
     const result = schema.safeParse(JSON.parse(raw));
@@ -83,6 +80,33 @@ function safeParse<T>(schema: z.ZodType<T>, raw: string, fallback: T): T {
   }
 }
 
-export const parseNotices = (raw: string): Notice[] => safeParse(z.array(noticeSchema), raw, []);
-export const parseEvents = (raw: string): EventPost[] => safeParse(z.array(eventPostSchema), raw, []);
+// Parse an array of stored items PER ITEM, keeping the valid ones and skipping
+// (logging) only the invalid ones. This deliberately avoids z.array(schema)'s
+// all-or-nothing behaviour: there, a SINGLE bad item rejects the whole array and
+// the feed falls back to empty — and because the admin write path does
+// read-modify-write, that empty read then gets persisted, silently deleting
+// every notice/post the admin never touched. The realistic trigger is the Blob
+// store shared between preview and prod running different schema versions (e.g.
+// a post with the newer placement: "none" is unknown to the older enum). Per-item
+// parsing contains the blast radius to just the incompatible item.
+function parseItems<T>(itemSchema: z.ZodType<T>, raw: string, label: string): T[] {
+  let data: unknown;
+  try {
+    data = JSON.parse(raw);
+  } catch (error) {
+    console.error(`[content] malformed ${label} JSON:`, error);
+    return [];
+  }
+  if (!Array.isArray(data)) return [];
+  const out: T[] = [];
+  for (const entry of data) {
+    const result = itemSchema.safeParse(entry);
+    if (result.success) out.push(result.data);
+    else console.error(`[content] skipping invalid ${label} item:`, result.error.issues[0]);
+  }
+  return out;
+}
+
+export const parseNotices = (raw: string): Notice[] => parseItems(noticeSchema, raw, "notice");
+export const parseEvents = (raw: string): EventPost[] => parseItems(eventPostSchema, raw, "event");
 export const parsePhotoOverrides = (raw: string): PhotoOverrides => safeParse(photoOverridesSchema, raw, {});
