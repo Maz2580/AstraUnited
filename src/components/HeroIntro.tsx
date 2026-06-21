@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 import {
   motion,
   useMotionTemplate,
@@ -8,7 +8,8 @@ import {
   useReducedMotion,
   useScroll,
   useSpring,
-  useTransform
+  useTransform,
+  type MotionValue
 } from "framer-motion";
 import { ArrowDown, ArrowRight, Play } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
@@ -45,6 +46,14 @@ const PHASE: {
   card: [0.46, 0.7],
   affordanceOut: [0.72, 0.86]
 };
+
+// The lead sentence "writes itself" word-by-word as the card settles: each word
+// is mapped to its own staggered slice of this scroll band, so the reveal is
+// driven by the user's scroll (not a timer) and stays in lock-step with the
+// frame scrub. Each word fades over PER_WORD of progress; starts cascade evenly
+// from band start to (band end − PER_WORD).
+const LEAD_BAND: Window = [0.5, 0.74];
+const PER_WORD = 0.1;
 
 /** Wrapper that makes its child lean toward the cursor — a tactile, magnetic
  *  feel on the CTAs. Pointer-driven only, so it's inert on touch devices. */
@@ -121,6 +130,67 @@ function InteractiveCard({ children }: { children: ReactNode }) {
   );
 }
 
+/** One word of the lead, revealed (rise + un-blur + fade) over its own slice of
+ *  the hero scroll. Hooks run unconditionally; reduced motion renders it plain. */
+function RevealWord({
+  progress,
+  start,
+  end,
+  reduce,
+  children
+}: {
+  progress: MotionValue<number>;
+  start: number;
+  end: number;
+  reduce: boolean;
+  children: string;
+}) {
+  const opacity = useTransform(progress, [start, end], [0, 1]);
+  const y = useTransform(progress, [start, end], [14, 0]);
+  const blurPx = useTransform(progress, [start, end], [10, 0]);
+  const filter = useMotionTemplate`blur(${blurPx}px)`;
+  // inline-block so y/blur transforms apply; real spaces live between words in
+  // LeadReveal (not as margins) so the sentence stays one readable text run.
+  if (reduce) return <span className="inline-block">{children}</span>;
+  return (
+    <motion.span style={{ opacity, y, filter }} className="inline-block will-change-[opacity,transform,filter]">
+      {children}
+    </motion.span>
+  );
+}
+
+/** The lead paragraph as a scroll-driven word cascade. */
+function LeadReveal({
+  text,
+  progress,
+  reduce
+}: {
+  text: string;
+  progress: MotionValue<number>;
+  reduce: boolean;
+}) {
+  const words = text.split(" ");
+  const [bandStart, bandEnd] = LEAD_BAND;
+  const lastStart = bandEnd - PER_WORD;
+  const startOf = (i: number) =>
+    words.length <= 1 ? bandStart : bandStart + (lastStart - bandStart) * (i / (words.length - 1));
+  return (
+    <p className="text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
+      {words.map((word, i) => {
+        const start = startOf(i);
+        return (
+          <Fragment key={i}>
+            <RevealWord progress={progress} start={start} end={start + PER_WORD} reduce={reduce}>
+              {word}
+            </RevealWord>
+            {i < words.length - 1 ? " " : null}
+          </Fragment>
+        );
+      })}
+    </p>
+  );
+}
+
 export function HeroIntro() {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion() ?? false;
@@ -182,10 +252,11 @@ export function HeroIntro() {
           className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(6,17,26,0.55))] mix-blend-multiply"
           aria-hidden="true"
         />
-        {/* Centre-zone mute: the placeholder footage carries a faint stock
-            watermark dead-centre. A light elliptical wash + tiny blur over that
-            zone knocks the watermark's contrast/legibility down while the player
-            and pitch stay clearly visible. Remove once the clean clip lands. */}
+        {/* Centre-zone mute: frame 1 + both posters are now the clean (no-
+            watermark) still, so the resting hero is clean — but frames 2-60 are
+            still the stock comp with a faint dead-centre watermark, so this light
+            elliptical wash + tiny blur stays to mute it DURING the scroll scrub.
+            Remove entirely once a fully clean clip replaces all 60 frames. */}
         <div
           className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_55%_38%_at_50%_45%,rgba(5,14,23,0.34),transparent_72%)] backdrop-blur-[1.5px]"
           aria-hidden="true"
@@ -195,19 +266,8 @@ export function HeroIntro() {
             registration card rises into the centre below it (step 2). Both
             slots are reserved up front so revealing causes no layout shift. */}
         <div className="container-wide relative z-10 flex min-h-[calc(100svh-13rem)] flex-col items-center justify-center gap-8 text-center sm:gap-10">
-          {/* Step 1 — live chip + headline drop in over the footage */}
+          {/* Step 1 — headline drops in over the footage */}
           <div className="flex flex-col items-center gap-5">
-            <motion.div
-              style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
-              className="flex items-center gap-2.5 rounded-full border border-white/15 bg-astra-ink/50 px-4 py-1.5 text-[0.7rem] font-bold uppercase tracking-[0.18em] text-white/80 backdrop-blur-sm"
-            >
-              <span className="relative flex h-2 w-2">
-                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-75 motion-reduce:animate-none" />
-                <span className="relative inline-flex h-2 w-2 rounded-full bg-emerald-400" />
-              </span>
-              Pitches open · training &amp; match days
-            </motion.div>
-
             <motion.h1
               style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
               className="crest-type mx-auto max-w-4xl text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl xl:text-7xl"
@@ -223,9 +283,7 @@ export function HeroIntro() {
             className="w-full"
           >
             <InteractiveCard>
-              <p className="text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
-                {heroContent.lead}
-              </p>
+              <LeadReveal text={heroContent.lead} progress={scrollYProgress} reduce={reduce} />
               <div className="mt-6 flex flex-col gap-3 sm:flex-row">
                 <MagneticButton className="w-full sm:w-auto">
                   <CtaLink
