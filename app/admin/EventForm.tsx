@@ -26,13 +26,18 @@ const LINK_PRESETS: { label: string; href: string }[] = [
   { label: "Sponsors", href: "/sponsors" }
 ];
 
-// Where the post appears on the homepage (matches the placement enum in types).
+// Every post is a news article; placement controls whether it ALSO appears as a
+// featured Spotlight band on the homepage. "none" = news only (matches the enum).
 const PLACEMENTS: { value: string; label: string }[] = [
-  { value: "top", label: "Top — under the hero (default)" },
-  { value: "mid", label: "Middle — after the academy section" },
-  { value: "after-news", label: "After News & media" },
-  { value: "before-join", label: "Bottom — before the Join section" }
+  { value: "none", label: "News only — no spotlight band (default)" },
+  { value: "top", label: "Also feature: top — under the hero" },
+  { value: "mid", label: "Also feature: middle of the page" },
+  { value: "after-news", label: "Also feature: after the News section" },
+  { value: "before-join", label: "Also feature: before the Join section" }
 ];
+
+// News category shown on the card + article page.
+const CATEGORIES = ["Club News", "Match Report", "Community Update", "Academy", "Event"];
 
 // Defaults for the optional design panel — close to the standard Spotlight look.
 const DEFAULT_BG = "#101a23";
@@ -91,13 +96,14 @@ export function EventForm({ initial }: { initial?: EventPost }) {
 
   const initialLink = deriveLink(initial?.ctaHref);
   const [headline, setHeadline] = useState(initial?.headline ?? "");
+  const [category, setCategory] = useState(initial?.category ?? "Club News");
   const [body, setBody] = useState(initial?.body ?? "");
   const [ctaLabel, setCtaLabel] = useState(initial?.ctaLabel ?? "");
   const [ctaHref, setCtaHref] = useState(initialLink.custom); // holds the custom link text
   const [linkChoice, setLinkChoice] = useState(initialLink.choice); // "", a preset href, or "custom"
   const [from, setFrom] = useState(toLocalInput(initial?.activeFrom));
   const [until, setUntil] = useState(toLocalInput(initial?.activeUntil));
-  const [placement, setPlacement] = useState<string>(initial?.placement ?? "top");
+  const [placement, setPlacement] = useState<string>(initial?.placement ?? "none");
   const [customise, setCustomise] = useState(Boolean(initial?.style));
   const [bgColor, setBgColor] = useState(initial?.style?.bg ?? DEFAULT_BG);
   const [textColor, setTextColor] = useState(initial?.style?.text ?? DEFAULT_TEXT);
@@ -129,13 +135,14 @@ export function EventForm({ initial }: { initial?: EventPost }) {
     // Create: clear the form for the next post.
     formRef.current?.reset();
     setHeadline("");
+    setCategory("Club News");
     setBody("");
     setCtaLabel("");
     setCtaHref("");
     setLinkChoice("");
     setFrom("");
     setUntil("");
-    setPlacement("top");
+    setPlacement("none");
     setCustomise(false);
     setBgColor(DEFAULT_BG);
     setTextColor(DEFAULT_TEXT);
@@ -210,13 +217,18 @@ export function EventForm({ initial }: { initial?: EventPost }) {
     <div className="grid gap-6">
       <form ref={formRef} action={formAction} className="card-dark grid gap-4 p-6">
         <div className="flex items-center justify-between gap-3">
-          <h2 className="crest-type text-2xl text-white">{isEdit ? "Edit event post" : "New event post"}</h2>
+          <h2 className="crest-type text-2xl text-white">{isEdit ? "Edit news post" : "New news post"}</h2>
           {isEdit ? (
             <Link href="/admin?tab=events" className="text-xs font-bold text-white/55 underline-offset-2 hover:text-white hover:underline">
               Cancel
             </Link>
           ) : null}
         </div>
+        <p className="rounded border border-white/12 bg-white/5 px-3 py-2.5 text-xs leading-5 text-white/65">
+          Publishing adds this to the <strong className="text-white/85">News</strong> section — the three newest show on
+          the homepage, and every post gets its own page at <span className="text-astra-gold">/news-media</span>. Use{" "}
+          <strong className="text-white/85">Where it appears</strong> below to also pin it as a featured spotlight band.
+        </p>
         {isEdit ? <input type="hidden" name="id" value={initial!.id} /> : null}
         <label className="grid gap-1.5">
           <span className={labelCls}>Image</span>
@@ -230,13 +242,25 @@ export function EventForm({ initial }: { initial?: EventPost }) {
           />
           {isEdit ? <span className="text-xs text-white/40">Leave empty to keep the current image.</span> : null}
         </label>
+        <div className="grid gap-4 sm:grid-cols-[1.4fr_1fr]">
+          <label className="grid gap-1.5">
+            <span className={labelCls}>Headline</span>
+            <input name="headline" required maxLength={80} value={headline} onChange={(e) => setHeadline(e.target.value)} className={inputCls} placeholder="Senior Team Secure Three Points" />
+          </label>
+          <label className="grid gap-1.5">
+            <span className={labelCls}>Category</span>
+            <input name="category" list="news-categories" maxLength={60} value={category} onChange={(e) => setCategory(e.target.value)} className={inputCls} placeholder="Club News" />
+            <datalist id="news-categories">
+              {CATEGORIES.map((c) => (
+                <option key={c} value={c} />
+              ))}
+            </datalist>
+          </label>
+        </div>
         <label className="grid gap-1.5">
-          <span className={labelCls}>Headline</span>
-          <input name="headline" required maxLength={80} value={headline} onChange={(e) => setHeadline(e.target.value)} className={inputCls} placeholder="Mother's Day Special" />
-        </label>
-        <label className="grid gap-1.5">
-          <span className={labelCls}>Text</span>
-          <textarea name="body" required rows={3} value={body} onChange={(e) => setBody(e.target.value)} className={inputCls} placeholder="20% off all academy registrations this weekend." />
+          <span className={labelCls}>Article text</span>
+          <textarea name="body" required rows={7} value={body} onChange={(e) => setBody(e.target.value)} className={inputCls} placeholder={"Write the full post here.\n\nLeave a blank line between paragraphs — each becomes its own paragraph on the news page."} />
+          <span className="text-xs text-white/40">Separate paragraphs with a blank line. The first lines show as the preview on cards.</span>
         </label>
         <div className="grid gap-4 sm:grid-cols-2">
           <label className="grid gap-1.5">
@@ -275,6 +299,9 @@ export function EventForm({ initial }: { initial?: EventPost }) {
               </option>
             ))}
           </select>
+          <span className="text-xs text-white/40">
+            It always appears in News. Pick a spotlight position only for important announcements.
+          </span>
         </label>
 
         <div className="rounded border border-white/12 p-4">
@@ -362,11 +389,35 @@ export function EventForm({ initial }: { initial?: EventPost }) {
         />
       </form>
 
-      <div>
-        <p className={labelCls}>Preview — exactly how the homepage will show it</p>
-        <div className="mt-3">
-          <SpotlightCard event={previewEvent} unoptimized />
+      <div className="grid gap-6">
+        <div>
+          <p className={labelCls}>Preview — how it appears in News</p>
+          <div className="mt-3 max-w-sm">
+            <div className="card-dark overflow-hidden">
+              <div className="relative aspect-[16/10] w-full overflow-hidden bg-white/5">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={previewUrl || TRANSPARENT} alt="" className="absolute inset-0 h-full w-full object-cover" />
+                <div className="absolute inset-0 bg-gradient-to-t from-astra-ink/85 via-astra-ink/10 to-transparent" />
+              </div>
+              <div className="p-6">
+                <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-gold">{category || "Club News"}</p>
+                <h3 className="mt-3 text-xl font-black leading-tight text-white">{headline || "Your headline"}</h3>
+                <p className="mt-3 line-clamp-3 text-sm leading-6 text-white/72">
+                  {body || "Your article text will appear here…"}
+                </p>
+                <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">Read more →</span>
+              </div>
+            </div>
+          </div>
         </div>
+        {placement !== "none" ? (
+          <div>
+            <p className={labelCls}>Preview — featured spotlight band</p>
+            <div className="mt-3">
+              <SpotlightCard event={previewEvent} unoptimized />
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

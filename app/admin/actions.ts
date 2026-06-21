@@ -90,8 +90,8 @@ const fail = (error: string): ActionState => ({ ok: false, error });
 
 const HEX_COLOR = /^#([0-9a-fA-F]{3}|[0-9a-fA-F]{6})$/;
 const hexOrUndefined = (v: string) => (HEX_COLOR.test(v) ? v : undefined);
-const PLACEMENTS = new Set<Placement>(["top", "mid", "after-news", "before-join"]);
-const placementOf = (v: string): Placement => (PLACEMENTS.has(v as Placement) ? (v as Placement) : "top");
+const PLACEMENTS = new Set<Placement>(["none", "top", "mid", "after-news", "before-join"]);
+const placementOf = (v: string): Placement => (PLACEMENTS.has(v as Placement) ? (v as Placement) : "none");
 const alignOf = (v: string): "left" | "center" | "right" => (v === "center" || v === "right" ? v : "left");
 const imageSideOf = (v: string): "left" | "right" | "top" => (v === "right" || v === "top" ? v : "left");
 const sizeOf = (v: string): "sm" | "md" | "lg" => (v === "sm" || v === "md" ? v : "lg");
@@ -219,6 +219,7 @@ export async function createEvent(_prev: ActionState, form: FormData): Promise<A
       image: url,
       headline,
       body,
+      category: str(form, "category") || undefined,
       ctaLabel,
       ctaHref,
       placement: placementOf(str(form, "placement")),
@@ -273,6 +274,7 @@ export async function updateEvent(_prev: ActionState, form: FormData): Promise<A
       image,
       headline,
       body,
+      category: str(form, "category") || undefined,
       ctaLabel,
       ctaHref,
       placement: placementOf(str(form, "placement")),

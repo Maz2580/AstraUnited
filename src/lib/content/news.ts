@@ -77,7 +77,7 @@ export function listSummaries(liveEvents: EventPost[]): PostSummary[] {
       id: e.id,
       href: `/news-media/${e.id}`,
       image: e.image,
-      kicker: "Club News",
+      kicker: e.category || "Club News",
       title: e.headline,
       body: e.body
     }));
@@ -99,7 +99,7 @@ export function findArticle(id: string, allEvents: EventPost[]): Article | null 
     return {
       id: event.id,
       title: event.headline,
-      category: "Club News",
+      category: event.category || "Club News",
       image: event.image,
       body: event.body,
       ctaLabel: event.ctaLabel,

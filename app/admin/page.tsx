@@ -38,7 +38,7 @@ const fmt = (iso: string) =>
 
 const TABS = [
   { key: "notices", label: "Notices" },
-  { key: "events", label: "Event posts" },
+  { key: "events", label: "News posts" },
   { key: "photos", label: "Photos" }
 ] as const;
 
@@ -151,6 +151,11 @@ export default async function AdminPage({ searchParams }: Props) {
                           <span className={`shrink-0 text-xs font-bold ${STATUS_CLS[status]}`}>{status}</span>
                         </div>
                         <p className="mt-1 text-xs text-white/45">
+                          {ev.category || "Club News"}
+                          {" · "}
+                          {ev.placement && ev.placement !== "none" ? "News + featured spotlight" : "News only"}
+                        </p>
+                        <p className="mt-0.5 text-xs text-white/45">
                           {ev.activeFrom ? `From ${fmt(ev.activeFrom)}` : "From now"}
                           {" · "}
                           {ev.activeUntil ? `until ${fmt(ev.activeUntil)}` : "no end"}
@@ -161,6 +166,13 @@ export default async function AdminPage({ searchParams }: Props) {
                             className="rounded border border-white/15 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:text-white"
                           >
                             Edit
+                          </Link>
+                          <Link
+                            href={`/news-media/${ev.id}`}
+                            target="_blank"
+                            className="rounded border border-white/15 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:text-white"
+                          >
+                            View post
                           </Link>
                           {status !== "Expired" ? (
                             <form action={endEvent}>

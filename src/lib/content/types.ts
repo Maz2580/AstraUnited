@@ -27,8 +27,9 @@ export const eventStyleSchema = z.object({
 });
 export type EventStyle = z.infer<typeof eventStyleSchema>;
 
-// Where a post shows on the homepage. "top" (under the hero) is the default.
-export const placementSchema = z.enum(["top", "mid", "after-news", "before-join"]);
+// Where a post shows on the homepage as a featured Spotlight band. Every post is
+// also a news article regardless; "none" means news-only (no Spotlight band).
+export const placementSchema = z.enum(["none", "top", "mid", "after-news", "before-join"]);
 export type Placement = z.infer<typeof placementSchema>;
 
 export const eventPostSchema = z.object({
@@ -36,6 +37,8 @@ export const eventPostSchema = z.object({
   image: z.string().url(),
   headline: z.string().min(1),
   body: z.string().min(1),
+  // News category shown on the card + article page (e.g. "Match Report").
+  category: z.string().max(60).optional(),
   ctaLabel: z.string().optional(),
   // The only field that becomes an href in the DOM. Allowlist http(s):// URLs
   // or a leading-slash relative path; reject javascript:/data:/protocol-relative
