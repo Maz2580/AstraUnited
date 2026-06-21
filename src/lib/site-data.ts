@@ -12,6 +12,7 @@ import type { LucideIcon } from "lucide-react";
 export type NavItem = {
   label: string;
   href: string;
+  children?: { label: string; href: string }[];
 };
 
 export type Highlight = {
@@ -65,12 +66,18 @@ export const mapEmbedSrc =
   "https://www.google.com/maps?q=Darebin%20International%20Sports%20Centre%2C%20281%20Darebin%20Road%2C%20Thornbury%20VIC%203071&output=embed";
 
 export const navItems: NavItem[] = [
-  { label: "The Club", href: "/the-club" },
-  { label: "Teams", href: "/teams" },
-  { label: "Join Us", href: "/join-us" },
-  { label: "News", href: "/news-media" },
+  {
+    label: "About The Club",
+    href: "/the-club",
+    children: [
+      { label: "Leadership team", href: "/the-club" },
+      { label: "Programs", href: "/teams" },
+      { label: "News and media", href: "/news-media" }
+    ]
+  },
   { label: "Sponsors", href: "/sponsors" },
-  { label: "Contact", href: "/contact" }
+  { label: "Contact", href: "/contact" },
+  { label: "Shop", href: "/shop" }
 ];
 
 export const homeHighlights: Highlight[] = [
