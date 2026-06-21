@@ -21,11 +21,31 @@ export const welcome = {
   ]
 };
 
-export const whyAstra = [
-  "Qualified and experienced coaches",
-  "Safe and inclusive environment",
-  "Structured development pathway",
-  "Clear pathway from Youth Academy to senior football",
-  "Professional training environment at Darebin International Sports Centre",
-  "Multicultural community focus"
+// "Why Families Choose Astra" (Revised content spec §6) — five labelled reasons
+// that reinforce the decision to join. Each is a {label, detail} pair: the label
+// rides the swinging tag, the detail reveals on hover/focus (and shows inline in
+// the accessible/mobile fallback). Verbatim from the team's revised copy.
+export const whyFamilies = [
+  {
+    label: "Qualified Coaching Pedigree",
+    detail: "Learn from highly experienced, accredited UEFA and AFC coaches."
+  },
+  {
+    label: "Safe & Inclusive Environment",
+    detail: "Built strictly on rigorous child safeguarding and protection frameworks."
+  },
+  {
+    label: "Structured Development Pathway",
+    detail:
+      "A clear blueprint designed to transition players seamlessly from the Youth Academy to senior football."
+  },
+  {
+    label: "Multicultural Community Focus",
+    detail:
+      "Uniting diverse families across local Melbourne suburbs through a shared love of the game."
+  },
+  {
+    label: "Elite Training Environments",
+    detail: "Access to premium pitches and structured training setups tailored for player growth."
+  }
 ];

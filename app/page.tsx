@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   CalendarDays,
-  Check,
   Clock,
   ExternalLink,
   MapPin,
@@ -18,8 +17,9 @@ import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
 import { WomensMotionCard } from "@/src/components/WomensMotionCard";
+import { WhyFamiliesBoard } from "@/src/components/WhyFamiliesBoard";
 import { newsPreview, upcomingMoments } from "@/src/lib/site-data";
-import { welcome, whyAstra } from "@/src/lib/content/home";
+import { welcome, whyFamilies } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
@@ -265,8 +265,36 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 4 — Live pitch status + next moment */}
-        <FlowReveal className="section-band band-deep">
+        {/* 4 — Why families choose Astra (Revised content spec §6): moved to sit
+            directly after the founder bio. Interactive "hanging tags" board (t7) —
+            the five reasons swing from a rail on scroll, drag, and pointer for a
+            3D, locker-room feel that rewards continued scrolling. */}
+        <FlowReveal className="section-band band-deep" id="why-families">
+          <div className="container-wide">
+            <div
+              data-touchline-node
+              className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center"
+            >
+              <div>
+                <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">Why Astra</p>
+                <h2 className="mt-3 crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+                  Why families choose <span className="text-astra-red">Astra</span>
+                </h2>
+                <p className="mt-4 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
+                  Five reasons to back the badge
+                </p>
+                <p className="mt-4 max-w-md text-base leading-7 text-white/70">
+                  Easy-to-scan reasons that reinforce the decision to join — from accredited
+                  coaching to a safe, inclusive pathway from the Youth Academy to senior football.
+                </p>
+              </div>
+              <WhyFamiliesBoard reasons={whyFamilies} />
+            </div>
+          </div>
+        </FlowReveal>
+
+        {/* 5 — Live pitch status + next moment */}
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
             <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
@@ -287,31 +315,6 @@ export default function Home() {
                 </div>
               </div>
             </PopCard>
-          </div>
-        </FlowReveal>
-
-        {/* 5 — Why families choose Astra (Revised content spec §6). Welcome now
-            lives in its own band above; this section keeps the reasons grid. */}
-        <FlowReveal className="section-band band-fog">
-          <div className="container-wide">
-            <div data-touchline-node>
-              <SectionHeader
-                eyebrow="Why Astra"
-                title="Why families choose Astra."
-                copy="Clear, easy-to-scan reasons to back the decision to join — qualified coaching, a safe and inclusive environment, and a structured pathway from the Youth Academy to senior football."
-                inverse
-              />
-            </div>
-            <div className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {whyAstra.map((reason, index) => (
-                <PopCard key={reason} className="card-dark flex items-start gap-3 p-5" delay={index * 0.04}>
-                  <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-astra-red/15">
-                    <Check aria-hidden="true" className="h-4 w-4 text-astra-red" />
-                  </span>
-                  <p className="text-sm font-semibold leading-6 text-white/90">{reason}</p>
-                </PopCard>
-              ))}
-            </div>
           </div>
         </FlowReveal>
 
