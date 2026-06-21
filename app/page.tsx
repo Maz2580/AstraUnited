@@ -258,8 +258,15 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 3 — Live pitch status + next moment */}
+        {/* 3 — Founder feature (moved to sit directly after Club Essentials) */}
         <FlowReveal className="section-band band-fog">
+          <div data-touchline-node className="container-wide">
+            <FounderFeature />
+          </div>
+        </FlowReveal>
+
+        {/* 4 — Live pitch status + next moment */}
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
             <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
@@ -283,9 +290,9 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 4 — Why families choose Astra (Revised content spec §6). Welcome now
+        {/* 5 — Why families choose Astra (Revised content spec §6). Welcome now
             lives in its own band above; this section keeps the reasons grid. */}
-        <FlowReveal className="section-band band-deep">
+        <FlowReveal className="section-band band-fog">
           <div className="container-wide">
             <div data-touchline-node>
               <SectionHeader
@@ -310,13 +317,6 @@ export default function Home() {
 
         {/* Club Spotlight (mid) */}
         <SpotlightSection placement="mid" />
-
-        {/* 5 — Founder feature */}
-        <FlowReveal className="section-band band-fog">
-          <div data-touchline-node className="container-wide">
-            <FounderFeature />
-          </div>
-        </FlowReveal>
 
         {/* 6 — Senior & Women's teams */}
         <FlowReveal className="section-band band-deep">
