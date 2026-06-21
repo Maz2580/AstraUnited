@@ -26,22 +26,6 @@ import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
 
-// PLACEHOLDER partners for the "Trusted by" logo wall (t8). These are generic
-// sample local businesses, NOT real sponsors — the designer's mock used stock
-// brand logos (HSBC, Vodafone, etc.) purely to show the layout; shipping those
-// would falsely imply real endorsements. Swap these for real sponsor logos once
-// partnerships are signed.
-const sponsorPartners = [
-  "Northside Motors",
-  "Darebin Dental",
-  "Preston Print Co.",
-  "Coburg Coffee",
-  "Thornbury Physio",
-  "Melba Electrical",
-  "Reservoir Realty",
-  "High St Pharmacy"
-];
-
 const sponsorTiers = [
   {
     title: "Principal Club Partner",
@@ -325,12 +309,13 @@ export default function Home() {
               and youth pathways across Melbourne&apos;s north.
             </p>
 
-            {/* Trusted-by logo wall (t8) — slow seamless marquee on a purple pill */}
-            <div className="relative mt-8 overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#3b1278] via-[#7c3aed] to-[#3b1278] px-6 py-5 shadow-[0_24px_60px_-24px_rgba(124,58,237,0.7)] ring-1 ring-white/15">
-              <p className="text-center text-[0.7rem] font-black uppercase tracking-[0.32em] text-white/75">
-                Trusted by
+            {/* Trusted-by logo wall (t8) — slow seamless marquee of monochrome
+                partner logos on a purple pill */}
+            <div className="relative mt-8 overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#3b1278] via-[#7c3aed] to-[#3b1278] px-6 py-7 shadow-[0_24px_60px_-24px_rgba(124,58,237,0.7)] ring-1 ring-white/15">
+              <p className="text-center text-[0.7rem] font-black uppercase tracking-[0.36em] text-white/70">
+                Trusted by partners across Melbourne&apos;s north
               </p>
-              <SponsorMarquee partners={sponsorPartners} />
+              <SponsorMarquee />
             </div>
 
             {/* The value pitch + partner tiers */}
