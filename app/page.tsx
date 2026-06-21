@@ -2,7 +2,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   CalendarDays,
-  Clock,
   ExternalLink,
   MapPin,
   ShieldCheck,
@@ -19,9 +18,9 @@ import { FounderFeature } from "@/src/components/FounderFeature";
 import { WomensMotionCard } from "@/src/components/WomensMotionCard";
 import { WhyFamiliesBoard } from "@/src/components/WhyFamiliesBoard";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
-import { newsPreview, upcomingMoments } from "@/src/lib/site-data";
 import { welcome, whyFamilies } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
+import { NewsSection } from "@/src/components/content/NewsSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
@@ -348,8 +347,14 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 6 — Live pitch status + next moment */}
-        <FlowReveal className="section-band band-deep">
+        {/* 6 — Latest News & Match Reports (Revised content spec §8, t9):
+            event-driven cards + View All / Subscribe, sitting directly after
+            Sponsors. Renders the latest live admin posts (falls back to static
+            previews when none are published). See NewsSection. */}
+        <NewsSection />
+
+        {/* 7 — Live pitch status + next moment */}
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
             <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
@@ -376,8 +381,8 @@ export default function Home() {
         {/* Club Spotlight (mid) */}
         <SpotlightSection placement="mid" />
 
-        {/* 7 — Senior & Women's teams */}
-        <FlowReveal className="section-band band-fog">
+        {/* 8 — Senior & Women's teams */}
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <SectionHeader
@@ -402,43 +407,6 @@ export default function Home() {
                 <p className="mt-2 text-sm leading-6 text-white/72">A growing women's program at Darebin International Sports Centre.</p>
               </div>
             </PopCard>
-          </div>
-        </FlowReveal>
-
-        {/* 8 — News & media */}
-        <FlowReveal className="section-band band-deep">
-          <div className="container-wide">
-            <div data-touchline-node className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
-              <div>
-                <SectionHeader
-                  eyebrow="News & media"
-                  title="From the training ground to the touchline."
-                  copy="Match reports, club announcements, events, and highlights from across the Astra community - a content hub for the whole season."
-                  inverse
-                />
-                <div className="mt-8 grid gap-4">
-                  {newsPreview.map((item, index) => (
-                    <PopCard key={item.title} className="card-dark p-6" delay={index * 0.05}>
-                      <p className="text-xs font-black uppercase tracking-normal text-astra-red">{item.kicker}</p>
-                      <h3 className="mt-3 text-2xl font-black leading-tight text-white">{item.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-white/72">{item.copy}</p>
-                    </PopCard>
-                  ))}
-                </div>
-              </div>
-              <PopCard className="card-dark overflow-hidden">
-                <SlotImage slot="home-news" width={1280} height={853} sizes="(min-width: 1024px) 40vw, 100vw" className="h-[300px] w-full object-cover" />
-                <div className="grid gap-px bg-white/10 sm:grid-cols-3">
-                  {upcomingMoments.map((moment) => (
-                    <div key={moment.title} className="bg-astra-ink p-4 text-white">
-                      <Clock aria-hidden="true" className="mb-3 h-4 w-4 text-astra-gold" />
-                      <p className="text-[0.65rem] font-black uppercase tracking-normal text-astra-gold">{moment.meta}</p>
-                      <p className="mt-1 text-sm font-black leading-5">{moment.title}</p>
-                    </div>
-                  ))}
-                </div>
-              </PopCard>
-            </div>
           </div>
         </FlowReveal>
 
