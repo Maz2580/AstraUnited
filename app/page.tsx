@@ -281,7 +281,7 @@ export default function Home() {
                   Why families choose <span className="text-astra-red">Astra</span>
                 </h2>
                 <p className="mt-4 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
-                  Five reasons to back the badge
+                  Every reason is a step on the pathway
                 </p>
                 <p className="mt-4 max-w-md text-base leading-7 text-white/70">
                   Easy-to-scan reasons that reinforce the decision to join — from accredited
