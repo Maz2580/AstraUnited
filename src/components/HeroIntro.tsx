@@ -99,15 +99,19 @@ function RevealWord({
   reduce: boolean;
   children: string;
 }) {
-  const opacity = useTransform(progress, [start, end], [0, 1]);
-  const y = useTransform(progress, [start, end], [14, 0]);
-  const blurPx = useTransform(progress, [start, end], [10, 0]);
+  // Each word PUNCHES in: rises past its line then settles (y overshoot), with a
+  // small scale pop and a quick blur-streak that resolves by mid-window.
+  const mid = start + (end - start) * 0.55;
+  const opacity = useTransform(progress, [start, mid], [0, 1]);
+  const y = useTransform(progress, [start, mid, end], [16, -4, 0]);
+  const scale = useTransform(progress, [start, mid, end], [0.86, 1.06, 1]);
+  const blurPx = useTransform(progress, [start, mid], [10, 0]);
   const filter = useMotionTemplate`blur(${blurPx}px)`;
-  // inline-block so y/blur transforms apply; real spaces live between words in
-  // LeadReveal (not as margins) so the sentence stays one readable text run.
+  // inline-block so y/scale/blur transforms apply; real spaces live between words
+  // in LeadReveal (not as margins) so the sentence stays one readable text run.
   if (reduce) return <span className="inline-block">{children}</span>;
   return (
-    <motion.span style={{ opacity, y, filter }} className="inline-block will-change-[opacity,transform,filter]">
+    <motion.span style={{ opacity, y, scale, filter }} className="inline-block will-change-[opacity,transform,filter]">
       {children}
     </motion.span>
   );
@@ -164,13 +168,21 @@ export function HeroIntro() {
     offset: ["start start", "end end"]
   });
 
-  const headlineOpacity = useTransform(scrollYProgress, PHASE.headline, [0, 1]);
-  const headlineY = useTransform(scrollYProgress, PHASE.headline, [-48, 0]);
+  // Headline kicks up from below, OVERSHOOTS past its spot, then settles — an
+  // athletic snap rather than a smooth drop. (3-point keyframes = overshoot.)
+  const headlineOpacity = useTransform(scrollYProgress, [0.04, 0.13], [0, 1]);
+  const headlineY = useTransform(scrollYProgress, [0.04, 0.15, 0.22], [44, -10, 0]);
+  const headlineScale = useTransform(scrollYProgress, [0.04, 0.15, 0.22], [0.97, 1.014, 1]);
+  // The lead block fades up gently; the PUNCH lives in the per-element motion
+  // (stripe flick, word kicks, CTA pop) so the movements layer instead of fight.
   const cardOpacity = useTransform(scrollYProgress, PHASE.card, [0, 1]);
-  const cardY = useTransform(scrollYProgress, PHASE.card, [72, 0]);
-  const cardScale = useTransform(scrollYProgress, PHASE.card, [0.94, 1]);
-  // Gold kit-stripe draws in from the centre as the lead block lands.
-  const stripeScale = useTransform(scrollYProgress, [0.46, 0.58], [0, 1]);
+  const cardY = useTransform(scrollYProgress, PHASE.card, [40, 0]);
+  // Gold kit-stripe wipes WIDER than its width then snaps back — a quick flick.
+  const stripeScale = useTransform(scrollYProgress, [0.46, 0.55, 0.6], [0, 1.18, 1]);
+  // CTAs pop in (scale overshoot + rise) just after the lead lands.
+  const ctaOpacity = useTransform(scrollYProgress, [0.6, 0.68], [0, 1]);
+  const ctaY = useTransform(scrollYProgress, [0.6, 0.7, 0.76], [20, -3, 0]);
+  const ctaScale = useTransform(scrollYProgress, [0.6, 0.7, 0.76], [0.9, 1.05, 1]);
   const affordanceOpacity = useTransform(scrollYProgress, PHASE.affordanceOut, [1, 0]);
 
   return (
@@ -225,7 +237,7 @@ export function HeroIntro() {
           {/* Step 1 — headline drops in over the footage */}
           <div className="flex flex-col items-center gap-5">
             <motion.h1
-              style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY }}
+              style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY, scale: headlineScale }}
               className="crest-type mx-auto max-w-4xl text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl xl:text-7xl"
             >
               {heroContent.headline}
@@ -237,7 +249,7 @@ export function HeroIntro() {
               word, then the matchday CTAs. The global dark overlays plus a soft,
               edgeless focus scrim keep it legible on the pitch. */}
           <motion.div
-            style={reduce ? undefined : { opacity: cardOpacity, y: cardY, scale: cardScale }}
+            style={reduce ? undefined : { opacity: cardOpacity, y: cardY }}
             className="relative mx-auto w-full max-w-2xl"
           >
             {/* Edgeless focus scrim — darkens the footage under the text with no
@@ -249,10 +261,13 @@ export function HeroIntro() {
             <motion.span
               aria-hidden="true"
               style={reduce ? undefined : { scaleX: stripeScale }}
-              className="mx-auto mb-6 block h-[3px] w-16 origin-center rounded-full bg-astra-gold"
+              className="mx-auto mb-6 block h-[3px] w-16 origin-center rounded-full bg-astra-gold shadow-[0_0_14px_rgba(242,201,76,0.65)]"
             />
             <LeadReveal text={heroContent.lead} progress={scrollYProgress} reduce={reduce} />
-            <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center">
+            <motion.div
+              style={reduce ? undefined : { opacity: ctaOpacity, y: ctaY, scale: ctaScale }}
+              className="mt-7 flex flex-col items-center gap-3 sm:flex-row sm:justify-center"
+            >
               <MagneticButton className="w-full sm:w-auto">
                 <CtaLink
                   href={heroContent.primaryCta.href}
@@ -272,7 +287,7 @@ export function HeroIntro() {
                   {heroContent.secondaryCta.label}
                 </CtaLink>
               </MagneticButton>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
 
