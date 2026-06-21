@@ -18,12 +18,29 @@ import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
 import { WomensMotionCard } from "@/src/components/WomensMotionCard";
 import { WhyFamiliesBoard } from "@/src/components/WhyFamiliesBoard";
+import { SponsorMarquee } from "@/src/components/SponsorMarquee";
 import { newsPreview, upcomingMoments } from "@/src/lib/site-data";
 import { welcome, whyFamilies } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
+
+// PLACEHOLDER partners for the "Trusted by" logo wall (t8). These are generic
+// sample local businesses, NOT real sponsors — the designer's mock used stock
+// brand logos (HSBC, Vodafone, etc.) purely to show the layout; shipping those
+// would falsely imply real endorsements. Swap these for real sponsor logos once
+// partnerships are signed.
+const sponsorPartners = [
+  "Northside Motors",
+  "Darebin Dental",
+  "Preston Print Co.",
+  "Coburg Coffee",
+  "Thornbury Physio",
+  "Melba Electrical",
+  "Reservoir Realty",
+  "High St Pharmacy"
+];
 
 const sponsorTiers = [
   {
@@ -293,8 +310,61 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 5 — Live pitch status + next moment */}
-        <FlowReveal className="section-band band-fog">
+        {/* 5 — Sponsorship & Community Partners (Revised content spec §7, t8):
+            moved up to sit directly after Why Families. A premium "Trusted by"
+            logo wall (placeholder partners — real sponsor marks drop into the same
+            slots) over the value pitch and partner tiers — tuned to attract
+            sponsors and catch the eye without pulling focus from the page. */}
+        <FlowReveal className="section-band band-fog text-white" id="sponsors">
+          <div data-touchline-node className="container-wide">
+            <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+              Sponsorship &amp; Community <span className="text-astra-red">Partners</span>
+            </h2>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-white/70">
+              Astra Football Club welcomes local businesses who want to support grassroots football
+              and youth pathways across Melbourne&apos;s north.
+            </p>
+
+            {/* Trusted-by logo wall (t8) — slow seamless marquee on a purple pill */}
+            <div className="relative mt-8 overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#3b1278] via-[#7c3aed] to-[#3b1278] px-6 py-5 shadow-[0_24px_60px_-24px_rgba(124,58,237,0.7)] ring-1 ring-white/15">
+              <p className="text-center text-[0.7rem] font-black uppercase tracking-[0.32em] text-white/75">
+                Trusted by
+              </p>
+              <SponsorMarquee partners={sponsorPartners} />
+            </div>
+
+            {/* The value pitch + partner tiers */}
+            <div className="mt-12">
+              <SectionHeader
+                eyebrow="Why partner"
+                title="Support grassroots football in Melbourne's north."
+                copy="When you partner with Astra you invest in the health, development, and future of young people across Melbourne's north - more than a logo on a shirt."
+                inverse
+              />
+            </div>
+            <div className="mt-10 grid gap-4 md:grid-cols-3">
+              {sponsorTiers.map((tier, index) => (
+                <PopCard key={tier.title} className="card-dark p-6" delay={index * 0.05}>
+                  <ShieldCheck aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
+                  <h3 className="text-xl font-black text-white">{tier.title}</h3>
+                  <p className="mt-3 text-sm leading-6 text-white/72">{tier.copy}</p>
+                </PopCard>
+              ))}
+            </div>
+            <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
+              <p className="text-sm font-semibold text-white/70">
+                Interested in becoming an official corporate or community sponsor?
+              </p>
+              <CtaLink href="/sponsors" className="px-5 py-3 text-sm font-black uppercase tracking-wide">
+                View sponsorship packages
+                <ExternalLink aria-hidden="true" className="btn-icon h-4 w-4" />
+              </CtaLink>
+            </div>
+          </div>
+        </FlowReveal>
+
+        {/* 6 — Live pitch status + next moment */}
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-5 md:grid-cols-[1.1fr_0.9fr] md:items-stretch">
             <PopCard className="red-rule card-dark p-6 pl-8 sm:p-8 sm:pl-10">
               <p className="mb-2 text-sm font-black uppercase tracking-normal text-astra-red">Live pitch status</p>
@@ -321,8 +391,8 @@ export default function Home() {
         {/* Club Spotlight (mid) */}
         <SpotlightSection placement="mid" />
 
-        {/* 6 — Senior & Women's teams */}
-        <FlowReveal className="section-band band-deep">
+        {/* 7 — Senior & Women's teams */}
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
             <div>
               <SectionHeader
@@ -350,8 +420,8 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 7 — News & media */}
-        <FlowReveal className="section-band band-fog">
+        {/* 8 — News & media */}
+        <FlowReveal className="section-band band-deep">
           <div className="container-wide">
             <div data-touchline-node className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
               <div>
@@ -389,31 +459,6 @@ export default function Home() {
 
         {/* Club Spotlight (after news) */}
         <SpotlightSection placement="after-news" />
-
-        {/* 8 — Sponsors */}
-        <FlowReveal className="section-band band-deep text-white">
-          <div data-touchline-node className="container-wide">
-            <SectionHeader
-              eyebrow="Sponsors"
-              title="Support grassroots football in Melbourne's north."
-              copy="When you partner with Astra you invest in the health, development, and future of young people across Melbourne's north - more than a logo on a shirt."
-              inverse
-            />
-            <div className="mt-12 grid gap-4 md:grid-cols-3">
-              {sponsorTiers.map((tier, index) => (
-                <PopCard key={tier.title} className="card-dark p-6" delay={index * 0.05}>
-                  <ShieldCheck aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
-                  <h3 className="text-xl font-black text-white">{tier.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/72">{tier.copy}</p>
-                </PopCard>
-              ))}
-            </div>
-            <CtaLink href="/sponsors" className="mt-9 px-5 py-3 text-sm font-black uppercase tracking-wide">
-              View sponsorship packages
-              <ExternalLink aria-hidden="true" className="btn-icon h-4 w-4" />
-            </CtaLink>
-          </div>
-        </FlowReveal>
 
         {/* Club Spotlight (before join) */}
         <SpotlightSection placement="before-join" />
