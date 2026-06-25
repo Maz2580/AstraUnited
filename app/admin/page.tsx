@@ -12,6 +12,7 @@ import {
   deleteEvent,
   deleteNotice,
   deleteSpecialEvent,
+  deleteSubscriber,
   deleteTrainingSession,
   logout
 } from "./actions";
@@ -50,6 +51,7 @@ const TABS = [
   { key: "notices", label: "Notices" },
   { key: "events", label: "News posts" },
   { key: "schedule", label: "Schedule" },
+  { key: "subscribers", label: "Subscribers" },
   { key: "photos", label: "Photos" }
 ] as const;
 
@@ -57,12 +59,13 @@ export default async function AdminPage({ searchParams }: Props) {
   if (!isAdmin()) return <LoginForm />;
 
   const requested = searchParams?.tab ?? "";
-  const tab = (["events", "schedule", "photos"].includes(requested) ? requested : "notices") as
+  const tab = (["events", "schedule", "subscribers", "photos"].includes(requested) ? requested : "notices") as
     | "notices"
     | "events"
     | "schedule"
+    | "subscribers"
     | "photos";
-  const { notices, events, training, specialEvents, photoOverrides } = await getClubContent();
+  const { notices, events, training, specialEvents, subscribers, photoOverrides } = await getClubContent();
   const editingNotice =
     tab === "notices" && searchParams?.edit ? notices.find((n) => n.id === searchParams.edit) : undefined;
   const editingEvent =
@@ -275,6 +278,44 @@ export default async function AdminPage({ searchParams }: Props) {
                     })}
                   </div>
                 </div>
+              </div>
+            </div>
+          ) : null}
+          {tab === "subscribers" ? (
+            <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
+              <div className="card-dark h-fit p-6">
+                <h2 className="crest-type text-2xl text-white">Newsletter subscribers</h2>
+                <p className="mt-2 text-sm text-white/60">
+                  {subscribers.length} {subscribers.length === 1 ? "person has" : "people have"} signed up from the
+                  homepage. An email service or export can be connected on top of this later.
+                </p>
+                {subscribers.length > 0 ? (
+                  <label className="mt-5 grid gap-1.5">
+                    <span className="text-xs font-bold uppercase tracking-wide text-white/60">
+                      All emails (copy &amp; paste into your mail tool)
+                    </span>
+                    <textarea
+                      readOnly
+                      rows={5}
+                      value={subscribers.map((s) => s.email).join(", ")}
+                      className="w-full rounded border border-white/15 bg-white/5 px-3 py-2 text-sm text-white"
+                    />
+                  </label>
+                ) : null}
+              </div>
+              <div className="grid gap-2">
+                {subscribers.length === 0 ? <p className="text-sm text-white/55">No subscribers yet.</p> : null}
+                {[...subscribers]
+                  .sort((a, b) => b.createdAt.localeCompare(a.createdAt))
+                  .map((s) => (
+                    <div key={s.email} className="card-dark flex items-center justify-between gap-3 p-4">
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-bold text-white">{s.email}</p>
+                        <p className="mt-0.5 text-xs text-white/45">Joined {fmt(s.createdAt)}</p>
+                      </div>
+                      <ConfirmDeleteButton id={s.email} action={deleteSubscriber} noun="subscriber" />
+                    </div>
+                  ))}
               </div>
             </div>
           ) : null}

@@ -90,6 +90,14 @@ export const specialEventSchema = z.object({
 });
 export type SpecialEvent = z.infer<typeof specialEventSchema>;
 
+// Newsletter signup capture. Stored as a simple list; an email service / export
+// can be wired on top later. Email is lower-cased + deduped at the write path.
+export const subscriberSchema = z.object({
+  email: z.string().email().max(160),
+  createdAt: z.string()
+});
+export type Subscriber = z.infer<typeof subscriberSchema>;
+
 export const photoOverridesSchema = z.record(
   z.string(),
   z.object({ url: z.string().url(), updatedAt: z.string() })
@@ -145,4 +153,5 @@ export const parseTrainingSessions = (raw: string): TrainingSession[] =>
   parseItems(trainingSessionSchema, raw, "training session");
 export const parseSpecialEvents = (raw: string): SpecialEvent[] =>
   parseItems(specialEventSchema, raw, "special event");
+export const parseSubscribers = (raw: string): Subscriber[] => parseItems(subscriberSchema, raw, "subscriber");
 export const parsePhotoOverrides = (raw: string): PhotoOverrides => safeParse(photoOverridesSchema, raw, {});

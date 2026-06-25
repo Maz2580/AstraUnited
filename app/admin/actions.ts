@@ -10,6 +10,7 @@ import {
   writeEvents,
   writeNotices,
   writeSpecialEvents,
+  writeSubscribers,
   writeTraining,
   writePhotoOverrides
 } from "@/src/lib/content/store";
@@ -408,6 +409,39 @@ export async function deleteSpecialEvent(form: FormData): Promise<void> {
   const id = str(form, "id");
   const { specialEvents } = await getClubContentForWrite();
   await writeSpecialEvents(specialEvents.filter((e) => e.id !== id));
+  refresh();
+}
+
+// --- Newsletter subscribers --------------------------------------------------
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+/**
+ * PUBLIC action (no admin gate) — anyone can subscribe from the homepage. Captures
+ * the email to the Blob store so the club can see/export it in /admin; an email
+ * service or auto-forward can be wired on top later. Deduped, lower-cased, capped.
+ */
+export async function subscribe(_prev: ActionState, form: FormData): Promise<ActionState> {
+  try {
+    assertConfigured();
+    const email = str(form, "email").toLowerCase();
+    if (!EMAIL_RE.test(email) || email.length > 160) return fail("Please enter a valid email address.");
+    const { subscribers } = await getClubContentForWrite();
+    if (subscribers.some((s) => s.email === email)) return { ok: true }; // already on the list — succeed quietly
+    if (subscribers.length >= 5000) return fail("Sign-ups are temporarily closed — please try again later.");
+    await writeSubscribers([...subscribers, { email, createdAt: new Date().toISOString() }]);
+    revalidateTag("club-content"); // refresh the admin subscriber list
+    return { ok: true };
+  } catch {
+    return fail("Could not subscribe right now. Please try again.");
+  }
+}
+
+export async function deleteSubscriber(form: FormData): Promise<void> {
+  requireAdmin();
+  assertConfigured();
+  const email = str(form, "id"); // ConfirmDeleteButton sends the email under "id"
+  const { subscribers } = await getClubContentForWrite();
+  await writeSubscribers(subscribers.filter((s) => s.email !== email));
   refresh();
 }
 
