@@ -31,28 +31,28 @@ export async function NewsSection() {
           News from the training ground
         </p>
 
-        {/* News cards on the left, newsletter Subscribe box beside them. */}
-        <div className="mt-10 grid gap-6 lg:grid-cols-[1.6fr_1fr] lg:items-stretch">
-          <div className="flex flex-col">
-            <div className="grid gap-5 sm:grid-cols-2">
-              {cards.map((card) => (
-                <NewsCard
-                  key={card.id}
-                  href={card.href}
-                  image={card.image}
-                  kicker={card.kicker}
-                  title={card.title}
-                  body={card.body}
-                />
-              ))}
-            </div>
-            <div className="mt-7">
-              <CtaLink href="/news-media" className="px-5 py-3 text-sm font-black uppercase tracking-wide">
-                View all news
-                <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
-              </CtaLink>
-            </div>
-          </div>
+        <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {cards.map((card) => (
+            <NewsCard
+              key={card.id}
+              href={card.href}
+              image={card.image}
+              kicker={card.kicker}
+              title={card.title}
+              body={card.body}
+            />
+          ))}
+        </div>
+
+        <div className="mt-7">
+          <CtaLink href="/news-media" className="px-5 py-3 text-sm font-black uppercase tracking-wide">
+            View all news
+            <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+          </CtaLink>
+        </div>
+
+        {/* Compact newsletter signup bar, beneath the news cards. */}
+        <div className="mt-6">
           <SubscribeBox />
         </div>
       </div>

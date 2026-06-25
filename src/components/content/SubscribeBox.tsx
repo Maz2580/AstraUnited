@@ -12,7 +12,7 @@ function SubmitButton() {
     <button
       type="submit"
       disabled={pending}
-      className="btn btn-primary btn-sweep inline-flex shrink-0 items-center justify-center gap-2 rounded bg-astra-red px-5 py-3 text-sm font-black uppercase tracking-wide text-white disabled:opacity-60"
+      className="btn btn-primary btn-sweep inline-flex shrink-0 items-center justify-center gap-2 rounded bg-astra-red px-5 py-2.5 text-sm font-black uppercase tracking-wide text-white disabled:opacity-60"
     >
       {pending ? "Joining…" : "Subscribe"}
       {pending ? null : <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />}
@@ -21,10 +21,10 @@ function SubmitButton() {
 }
 
 /**
- * Newsletter signup beside the News section. Posts to the public `subscribe`
- * server action, which captures the email to the club's store (viewable in
- * /admin). A real email service can be wired on top later. Shows an inline
- * thank-you on success; the box keeps the section's navy + gold brand look.
+ * Compact newsletter signup bar beneath the News cards. Posts to the public
+ * `subscribe` server action, which captures the email to the club's store
+ * (viewable in /admin); an email service can be wired on top later. One row on
+ * desktop, stacking on mobile; shows an inline thank-you on success.
  */
 export function SubscribeBox() {
   const [state, formAction] = useFormState(subscribe, IDLE_STATE);
@@ -40,38 +40,41 @@ export function SubscribeBox() {
 
   return (
     <div
-      className="relative flex h-full flex-col justify-center overflow-hidden rounded-[1.75rem] p-7 ring-1 ring-astra-gold/25 sm:p-8"
+      className="relative overflow-hidden rounded-2xl p-5 ring-1 ring-astra-gold/25 sm:p-6"
       style={{
         background:
-          "radial-gradient(120% 120% at 0% 0%, rgba(242,201,76,0.14), rgba(242,201,76,0) 48%), linear-gradient(160deg, #0d2c4d 0%, #06141f 100%)"
+          "radial-gradient(120% 180% at 0% 0%, rgba(242,201,76,0.12), rgba(242,201,76,0) 42%), linear-gradient(160deg, #0d2c4d 0%, #06141f 100%)"
       }}
     >
-      <span
-        aria-hidden="true"
-        className="grid h-12 w-12 place-items-center rounded-2xl bg-astra-gold/10 ring-1 ring-astra-gold/30"
-      >
-        <Mail className="h-6 w-6 text-astra-gold" />
-      </span>
-
-      <h3 className="crest-type mt-5 text-3xl leading-tight text-white">
-        Never miss a <span className="text-astra-gold">match report</span>
-      </h3>
-      <p className="mt-3 text-sm leading-6 text-white/72">
-        Fixtures, results and club news — straight to your inbox.
-      </p>
-
-      {done ? (
-        <div className="mt-6 flex items-start gap-3 rounded-xl border border-astra-gold/30 bg-astra-gold/10 p-4">
-          <Check aria-hidden="true" className="mt-0.5 h-5 w-5 shrink-0 text-astra-gold" />
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <div className="flex items-center gap-3">
+          <span
+            aria-hidden="true"
+            className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-astra-gold/10 ring-1 ring-astra-gold/30"
+          >
+            <Mail className="h-5 w-5 text-astra-gold" />
+          </span>
           <div>
-            <p className="text-sm font-black text-white">You&apos;re on the list!</p>
-            <p className="mt-1 text-xs text-white/65">We&apos;ll be in touch with the latest from the club.</p>
+            <p className="text-base font-black text-white">
+              Never miss a <span className="text-astra-gold">match report</span>
+            </p>
+            <p className="mt-0.5 text-sm text-white/60">
+              Fixtures, results &amp; club news — straight to your inbox.
+            </p>
           </div>
         </div>
-      ) : (
-        <form ref={formRef} action={formAction} className="mt-6 grid gap-3">
-          <label className="grid gap-1.5">
-            <span className="sr-only">Email address</span>
+
+        {done ? (
+          <div className="flex shrink-0 items-center gap-2 rounded-xl border border-astra-gold/30 bg-astra-gold/10 px-4 py-2.5 text-sm font-bold text-white">
+            <Check aria-hidden="true" className="h-4 w-4 text-astra-gold" />
+            You&apos;re on the list!
+          </div>
+        ) : (
+          <form
+            ref={formRef}
+            action={formAction}
+            className="flex w-full shrink-0 flex-col gap-2 sm:w-auto sm:flex-row sm:items-center"
+          >
             <input
               type="email"
               name="email"
@@ -79,16 +82,14 @@ export function SubscribeBox() {
               maxLength={160}
               autoComplete="email"
               placeholder="you@email.com"
-              className="w-full rounded border border-white/15 bg-white/5 px-3.5 py-3 text-sm text-white placeholder:text-white/40 focus:border-astra-gold/50 focus:outline-none"
+              aria-label="Email address"
+              className="w-full rounded border border-white/15 bg-white/5 px-3.5 py-2.5 text-sm text-white placeholder:text-white/40 focus:border-astra-gold/50 focus:outline-none sm:w-60"
             />
-          </label>
-          <SubmitButton />
-          {state?.error ? <p className="text-xs font-semibold text-astra-red">{state.error}</p> : null}
-          <p className="text-[0.7rem] leading-5 text-white/45">
-            We&apos;ll only email club updates. Unsubscribe anytime.
-          </p>
-        </form>
-      )}
+            <SubmitButton />
+          </form>
+        )}
+      </div>
+      {state?.error ? <p className="mt-3 text-xs font-semibold text-astra-red sm:text-right">{state.error}</p> : null}
     </div>
   );
 }
