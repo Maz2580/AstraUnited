@@ -306,9 +306,21 @@ export default function Home() {
             </p>
 
             {/* Trusted-by logo wall (t8) — slow seamless marquee of monochrome
-                partner logos on a purple pill */}
-            <div className="relative mt-8 overflow-hidden rounded-[2rem] bg-gradient-to-r from-[#3b1278] via-[#7c3aed] to-[#3b1278] px-6 py-7 shadow-[0_24px_60px_-24px_rgba(124,58,237,0.7)] ring-1 ring-white/15">
-              <p className="text-center text-[0.7rem] font-black uppercase tracking-[0.36em] text-white/70">
+                partner logos on a floodlit-navy panel (brand navy + gold light
+                wash from the top, echoing the stadium-lights motif). */}
+            <div
+              className="relative mt-8 overflow-hidden rounded-[2rem] px-6 py-7 ring-1 ring-astra-gold/20 shadow-[0_28px_70px_-30px_rgba(0,0,0,0.9),0_0_55px_-22px_rgba(242,201,76,0.4)]"
+              style={{
+                background:
+                  "radial-gradient(120% 140% at 50% 0%, rgba(242,201,76,0.16) 0%, rgba(242,201,76,0) 46%), linear-gradient(180deg, #0a2c45 0%, #06192a 58%, #04111d 100%)"
+              }}
+            >
+              {/* crisp gold hairline along the top edge */}
+              <span
+                aria-hidden="true"
+                className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-r from-transparent via-astra-gold/70 to-transparent"
+              />
+              <p className="text-center text-[0.7rem] font-black uppercase tracking-[0.36em] text-astra-gold/80">
                 Trusted by partners across Melbourne&apos;s north
               </p>
               <SponsorMarquee />

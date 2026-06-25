@@ -5,8 +5,8 @@ import { motion, useReducedMotion } from "framer-motion";
 
 /**
  * "Trusted by" logo wall for the sponsorship section (t8). A slow, seamless
- * marquee of monochrome partner logos across the purple pill — premium and
- * restrained (the FC Barcelona partner-wall treatment): every mark in a single
+ * marquee of monochrome partner logos across the floodlit-navy panel — premium
+ * and restrained (the FC Barcelona partner-wall treatment): every mark in a single
  * white ink, dimmed and brightening on hover, so a clashing set of brands reads
  * as one curated, top-tier wall. Reduced-motion falls back to a static row.
  *
@@ -138,9 +138,9 @@ export function SponsorMarquee() {
           <PartnerLogo key={`${partner.name}-${i}`} partner={partner} />
         ))}
       </motion.div>
-      {/* edges fade into the purple pill */}
-      <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#3b1278] to-transparent" />
-      <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#3b1278] to-transparent" />
+      {/* edges fade into the floodlit-navy panel */}
+      <div className="pointer-events-none absolute inset-y-0 left-0 w-20 bg-gradient-to-r from-[#06192a] to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 w-20 bg-gradient-to-l from-[#06192a] to-transparent" />
     </div>
   );
 }
