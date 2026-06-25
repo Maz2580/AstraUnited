@@ -51,6 +51,11 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
         const breath = 0.5 + 0.5 * Math.sin(t * (0.22 + i * 0.017) + i * 1.3);
         const glow = Math.min(1, proximity * 0.85 + breath * 0.3);
         el.style.setProperty("--glow", glow.toFixed(3));
+        // auto-reveal: as the glow reaches this milestone it blooms fully open,
+        // then eases shut as the light moves on to the next. Smoothstep so the
+        // card stays closed until the light is genuinely close.
+        const open = proximity * proximity * (3 - 2 * proximity);
+        el.style.setProperty("--open", open.toFixed(3));
       });
 
       raf = requestAnimationFrame(tick);
@@ -98,7 +103,7 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
                 nodeRefs.current[i] = el;
               }}
               className="absolute inset-x-0"
-              style={{ top: `${POS[i] * 100}%`, "--glow": "0.3" } as CSSProperties}
+              style={{ top: `${POS[i] * 100}%`, "--glow": "0.3", "--open": "0" } as CSSProperties}
             >
               <div className="flex -translate-y-1/2 items-start gap-4">
                 {/* node on the rail */}
@@ -116,7 +121,7 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
                 <div
                   tabIndex={0}
                   aria-label={`${reason.label}. ${reason.detail}`}
-                  className="group/tag w-full rounded-2xl bg-gradient-to-br from-[#0d2c4d] to-[#06141f] px-4 py-3 transition focus:outline-none"
+                  className="w-full rounded-2xl bg-gradient-to-br from-[#0d2c4d] to-[#06141f] px-4 py-3 transition [--hover:0] hover:[--hover:1] focus:outline-none focus-within:[--hover:1]"
                   style={{
                     boxShadow:
                       "0 18px 38px -18px rgba(0,0,0,0.8), 0 0 0 1px rgba(242,201,76, calc(0.1 + var(--glow,0) * 0.5))"
@@ -126,7 +131,16 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
                     <Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-astra-gold" />
                     <p className="crest-type text-sm leading-tight text-white">{reason.label}</p>
                   </div>
-                  <p className="mt-0 max-h-0 overflow-hidden text-xs leading-5 text-white/0 transition-all duration-300 group-hover/tag:mt-2 group-hover/tag:max-h-28 group-hover/tag:text-white/70 group-focus-within/tag:mt-2 group-focus-within/tag:max-h-28 group-focus-within/tag:text-white/70">
+                  {/* Reveal = whichever is greater: the travelling light (--open) or
+                      hover/focus (--hover). Lets the auto-bloom and manual reveal coexist. */}
+                  <p
+                    className="overflow-hidden text-xs leading-5 transition-all duration-300"
+                    style={{
+                      maxHeight: "calc(max(var(--open,0), var(--hover,0)) * 7rem)",
+                      marginTop: "calc(max(var(--open,0), var(--hover,0)) * 0.5rem)",
+                      color: "rgba(255,255,255, calc(max(var(--open,0), var(--hover,0)) * 0.72))"
+                    }}
+                  >
                     {reason.detail}
                   </p>
                 </div>
