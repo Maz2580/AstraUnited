@@ -58,6 +58,38 @@ export const eventPostSchema = z.object({
 });
 export type EventPost = z.infer<typeof eventPostSchema>;
 
+// --- Schedule: recurring training + dated special events ---------------------
+const TIME = /^([01]\d|2[0-3]):[0-5]\d$/; // 24h HH:MM
+const DATE = /^\d{4}-\d{2}-\d{2}$/; // YYYY-MM-DD
+export const WEEKDAYS = ["mon", "tue", "wed", "thu", "fri", "sat", "sun"] as const;
+export type Weekday = (typeof WEEKDAYS)[number];
+
+// A recurring weekly training slot — set once (e.g. "U10s, Tuesdays, 5–6pm"),
+// always current. The widget computes "today / next / live" from these.
+export const trainingSessionSchema = z.object({
+  id: z.string().min(1),
+  group: z.string().min(1).max(60),
+  day: z.enum(WEEKDAYS),
+  start: z.string().regex(TIME),
+  end: z.string().regex(TIME),
+  location: z.string().max(80).optional(),
+  createdAt: z.string()
+});
+export type TrainingSession = z.infer<typeof trainingSessionSchema>;
+
+// A one-off dated event (gala day, trials, presentation night).
+export const specialEventSchema = z.object({
+  id: z.string().min(1),
+  title: z.string().min(1).max(100),
+  date: z.string().regex(DATE),
+  start: z.string().regex(TIME).optional(),
+  end: z.string().regex(TIME).optional(),
+  location: z.string().max(80).optional(),
+  note: z.string().max(200).optional(),
+  createdAt: z.string()
+});
+export type SpecialEvent = z.infer<typeof specialEventSchema>;
+
 export const photoOverridesSchema = z.record(
   z.string(),
   z.object({ url: z.string().url(), updatedAt: z.string() })
@@ -109,4 +141,8 @@ function parseItems<T>(itemSchema: z.ZodType<T>, raw: string, label: string): T[
 
 export const parseNotices = (raw: string): Notice[] => parseItems(noticeSchema, raw, "notice");
 export const parseEvents = (raw: string): EventPost[] => parseItems(eventPostSchema, raw, "event");
+export const parseTrainingSessions = (raw: string): TrainingSession[] =>
+  parseItems(trainingSessionSchema, raw, "training session");
+export const parseSpecialEvents = (raw: string): SpecialEvent[] =>
+  parseItems(specialEventSchema, raw, "special event");
 export const parsePhotoOverrides = (raw: string): PhotoOverrides => safeParse(photoOverridesSchema, raw, {});

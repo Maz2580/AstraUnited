@@ -23,6 +23,7 @@ import { SponsorMarquee } from "@/src/components/SponsorMarquee";
 import { welcome, whyFamilies } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 import { NewsSection } from "@/src/components/content/NewsSection";
+import { ScheduleSection } from "@/src/components/content/ScheduleSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
@@ -389,9 +390,14 @@ export default function Home() {
         {/* Club Spotlight (before join) */}
         <SpotlightSection placement="before-join" />
 
+        {/* 6.5 — "This Week at Astra": live training schedule + special events,
+            admin-managed, sitting right before the Join CTA (what you'd be part
+            of → join). Renders band-fog, so Join flips to band-deep below it. */}
+        <ScheduleSection />
+
         {/* 7 — Join / contact CTA (Revised content spec §9): moved to sit directly
             after the News section as the closing call to action. */}
-        <FlowReveal className="section-band band-fog">
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
             <SectionHeader
               eyebrow="Join Astra"

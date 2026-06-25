@@ -5,9 +5,19 @@ import { isLive } from "@/src/lib/content/expiry";
 import { NoticeForm } from "./NoticeForm";
 import { ConfirmDeleteButton } from "./ConfirmDeleteButton";
 import { EventForm } from "./EventForm";
-import { endNotice, endEvent, deleteEvent, deleteNotice, logout } from "./actions";
+import { TrainingForm, SpecialEventForm } from "./ScheduleForms";
+import {
+  endNotice,
+  endEvent,
+  deleteEvent,
+  deleteNotice,
+  deleteSpecialEvent,
+  deleteTrainingSession,
+  logout
+} from "./actions";
 import { PhotoSlotCard } from "./PhotoSlotCard";
 import { PHOTO_SLOTS, resolvePhoto } from "@/src/lib/content/photo-slots";
+import { DEFAULT_SPECIAL_EVENTS, DEFAULT_TRAINING, WEEK } from "@/src/lib/content/schedule";
 import { isAdmin } from "./auth";
 import { LoginForm } from "./LoginForm";
 
@@ -39,14 +49,20 @@ const fmt = (iso: string) =>
 const TABS = [
   { key: "notices", label: "Notices" },
   { key: "events", label: "News posts" },
+  { key: "schedule", label: "Schedule" },
   { key: "photos", label: "Photos" }
 ] as const;
 
 export default async function AdminPage({ searchParams }: Props) {
   if (!isAdmin()) return <LoginForm />;
 
-  const tab = searchParams?.tab === "events" || searchParams?.tab === "photos" ? searchParams.tab : "notices";
-  const { notices, events, photoOverrides } = await getClubContent();
+  const requested = searchParams?.tab ?? "";
+  const tab = (["events", "schedule", "photos"].includes(requested) ? requested : "notices") as
+    | "notices"
+    | "events"
+    | "schedule"
+    | "photos";
+  const { notices, events, training, specialEvents, photoOverrides } = await getClubContent();
   const editingNotice =
     tab === "notices" && searchParams?.edit ? notices.find((n) => n.id === searchParams.edit) : undefined;
   const editingEvent =
@@ -188,6 +204,77 @@ export default async function AdminPage({ searchParams }: Props) {
                     </div>
                   );
                 })}
+              </div>
+            </div>
+          ) : null}
+          {tab === "schedule" ? (
+            <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
+              <div className="grid gap-6">
+                <TrainingForm />
+                <SpecialEventForm />
+              </div>
+              <div className="grid gap-8">
+                <div>
+                  <h3 className="crest-type mb-3 text-xl text-white">Weekly training</h3>
+                  {training.length === 0 ? (
+                    <p className="mb-3 rounded border border-astra-gold/30 bg-astra-gold/5 p-3 text-xs text-white/70">
+                      The site is showing a <strong>sample schedule</strong>. Add your first session to replace it
+                      with the club&apos;s real training times.
+                    </p>
+                  ) : null}
+                  <div className="grid gap-2">
+                    {(training.length ? training : DEFAULT_TRAINING).map((t) => {
+                      const isSample = training.length === 0;
+                      const dayLabel = WEEK.find((d) => d.key === t.day)?.long ?? t.day;
+                      return (
+                        <div key={t.id} className="card-dark flex items-center justify-between gap-3 p-4">
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-bold text-white">{t.group}</p>
+                            <p className="mt-0.5 text-xs text-white/55">
+                              {dayLabel} · {t.start}–{t.end}
+                              {t.location ? ` · ${t.location}` : ""}
+                            </p>
+                          </div>
+                          {isSample ? (
+                            <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-white/35">Sample</span>
+                          ) : (
+                            <ConfirmDeleteButton id={t.id} action={deleteTrainingSession} noun="session" />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+                <div>
+                  <h3 className="crest-type mb-3 text-xl text-white">Special events</h3>
+                  {specialEvents.length === 0 ? (
+                    <p className="mb-3 rounded border border-astra-gold/30 bg-astra-gold/5 p-3 text-xs text-white/70">
+                      Showing <strong>sample events</strong>. Add your first event to replace them.
+                    </p>
+                  ) : null}
+                  <div className="grid gap-2">
+                    {(specialEvents.length ? specialEvents : DEFAULT_SPECIAL_EVENTS).map((ev) => {
+                      const isSample = specialEvents.length === 0;
+                      return (
+                        <div key={ev.id} className="card-dark flex items-center justify-between gap-3 p-4">
+                          <div className="min-w-0">
+                            <p className="truncate text-sm font-bold text-white">{ev.title}</p>
+                            <p className="mt-0.5 text-xs text-white/55">
+                              {ev.date}
+                              {ev.start ? ` · ${ev.start}` : ""}
+                              {ev.location ? ` · ${ev.location}` : ""}
+                            </p>
+                          </div>
+                          {isSample ? (
+                            <span className="shrink-0 text-xs font-bold uppercase tracking-wide text-white/35">Sample</span>
+                          ) : (
+                            <ConfirmDeleteButton id={ev.id} action={deleteSpecialEvent} noun="event" />
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
             </div>
           ) : null}

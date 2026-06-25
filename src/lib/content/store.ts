@@ -5,18 +5,24 @@ import {
   parseEvents,
   parseNotices,
   parsePhotoOverrides,
+  parseSpecialEvents,
+  parseTrainingSessions,
   type EventPost,
   type Notice,
-  type PhotoOverrides
+  type PhotoOverrides,
+  type SpecialEvent,
+  type TrainingSession
 } from "./types";
 
 export type ClubContent = {
   notices: Notice[];
   events: EventPost[];
+  training: TrainingSession[];
+  specialEvents: SpecialEvent[];
   photoOverrides: PhotoOverrides;
 };
 
-const EMPTY: ClubContent = { notices: [], events: [], photoOverrides: {} };
+const EMPTY: ClubContent = { notices: [], events: [], training: [], specialEvents: [], photoOverrides: {} };
 
 // Each content type is stored as IMMUTABLE, versioned JSON under its own prefix.
 // Every edit writes a brand-new file (addRandomSuffix) and prunes the old ones;
@@ -27,6 +33,8 @@ const EMPTY: ClubContent = { notices: [], events: [], photoOverrides: {} };
 const PREFIXES = {
   notices: "content/notices/",
   events: "content/events/",
+  training: "content/training/",
+  specialEvents: "content/special-events/",
   photos: "content/photo-overrides/"
 } as const;
 
@@ -54,14 +62,18 @@ function settledRaw(result: PromiseSettledResult<string | null>): string | null 
 
 async function readAll(): Promise<ClubContent> {
   try {
-    const [notices, events, photos] = await Promise.allSettled([
+    const [notices, events, training, specialEvents, photos] = await Promise.allSettled([
       readLatest(PREFIXES.notices),
       readLatest(PREFIXES.events),
+      readLatest(PREFIXES.training),
+      readLatest(PREFIXES.specialEvents),
       readLatest(PREFIXES.photos)
     ]);
     return {
       notices: parseNotices(settledRaw(notices) ?? "[]"),
       events: parseEvents(settledRaw(events) ?? "[]"),
+      training: parseTrainingSessions(settledRaw(training) ?? "[]"),
+      specialEvents: parseSpecialEvents(settledRaw(specialEvents) ?? "[]"),
       photoOverrides: parsePhotoOverrides(settledRaw(photos) ?? "{}")
     };
   } catch (error) {
@@ -112,6 +124,8 @@ async function writeVersion(prefix: string, data: unknown): Promise<void> {
 
 export const writeNotices = (n: Notice[]) => writeVersion(PREFIXES.notices, n);
 export const writeEvents = (e: EventPost[]) => writeVersion(PREFIXES.events, e);
+export const writeTraining = (t: TrainingSession[]) => writeVersion(PREFIXES.training, t);
+export const writeSpecialEvents = (s: SpecialEvent[]) => writeVersion(PREFIXES.specialEvents, s);
 export const writePhotoOverrides = (p: PhotoOverrides) => writeVersion(PREFIXES.photos, p);
 
 /** Upload a processed image buffer; returns its public URL. Image filenames are

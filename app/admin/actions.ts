@@ -9,10 +9,21 @@ import {
   uploadImage,
   writeEvents,
   writeNotices,
+  writeSpecialEvents,
+  writeTraining,
   writePhotoOverrides
 } from "@/src/lib/content/store";
 import { PHOTO_SLOTS } from "@/src/lib/content/photo-slots";
-import type { EventPost, EventStyle, Notice, Placement } from "@/src/lib/content/types";
+import { WEEKDAYS } from "@/src/lib/content/types";
+import type {
+  EventPost,
+  EventStyle,
+  Notice,
+  Placement,
+  SpecialEvent,
+  TrainingSession,
+  Weekday
+} from "@/src/lib/content/types";
 import type { ActionState } from "./shared";
 import { ADMIN_COOKIE, adminToken, isAdmin, passwordMatches } from "./auth";
 
@@ -313,6 +324,90 @@ export async function deleteEvent(form: FormData): Promise<void> {
       console.error("[content] event image delete failed (harmless):", err);
     }
   }
+  refresh();
+}
+
+// --- Schedule: training sessions + special events ----------------------------
+const TIME_RE = /^([01]\d|2[0-3]):[0-5]\d$/;
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+const dayOf = (v: string): Weekday | null => (WEEKDAYS.includes(v as Weekday) ? (v as Weekday) : null);
+
+export async function createTrainingSession(_prev: ActionState, form: FormData): Promise<ActionState> {
+  try {
+    requireAdmin();
+    assertConfigured();
+    const group = str(form, "group");
+    const day = dayOf(str(form, "day"));
+    const start = str(form, "start");
+    const end = str(form, "end");
+    if (!group) return fail("Group name is required.");
+    if (!day) return fail("Pick a day of the week.");
+    if (!TIME_RE.test(start) || !TIME_RE.test(end)) return fail("Use valid start and end times (e.g. 17:00).");
+    if (end <= start) return fail("End time must be after the start time."); // HH:MM sorts lexically
+    const session: TrainingSession = {
+      id: crypto.randomUUID(),
+      group,
+      day,
+      start,
+      end,
+      location: str(form, "location") || undefined,
+      createdAt: new Date().toISOString()
+    };
+    const { training } = await getClubContentForWrite();
+    await writeTraining([...training, session]);
+    refresh();
+    return { ok: true };
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : "Could not save the session.");
+  }
+}
+
+export async function deleteTrainingSession(form: FormData): Promise<void> {
+  requireAdmin();
+  assertConfigured();
+  const id = str(form, "id");
+  const { training } = await getClubContentForWrite();
+  await writeTraining(training.filter((t) => t.id !== id));
+  refresh();
+}
+
+export async function createSpecialEvent(_prev: ActionState, form: FormData): Promise<ActionState> {
+  try {
+    requireAdmin();
+    assertConfigured();
+    const title = str(form, "title");
+    const date = str(form, "date");
+    const start = str(form, "start");
+    const end = str(form, "end");
+    if (!title) return fail("Event title is required.");
+    if (!DATE_RE.test(date)) return fail("Pick a date for the event.");
+    if (start && !TIME_RE.test(start)) return fail("Start time looks invalid (use e.g. 09:00).");
+    if (end && !TIME_RE.test(end)) return fail("End time looks invalid (use e.g. 13:00).");
+    const event: SpecialEvent = {
+      id: crypto.randomUUID(),
+      title,
+      date,
+      start: start || undefined,
+      end: end || undefined,
+      location: str(form, "location") || undefined,
+      note: str(form, "note") || undefined,
+      createdAt: new Date().toISOString()
+    };
+    const { specialEvents } = await getClubContentForWrite();
+    await writeSpecialEvents([...specialEvents, event]);
+    refresh();
+    return { ok: true };
+  } catch (err) {
+    return fail(err instanceof Error ? err.message : "Could not save the event.");
+  }
+}
+
+export async function deleteSpecialEvent(form: FormData): Promise<void> {
+  requireAdmin();
+  assertConfigured();
+  const id = str(form, "id");
+  const { specialEvents } = await getClubContentForWrite();
+  await writeSpecialEvents(specialEvents.filter((e) => e.id !== id));
   refresh();
 }
 
