@@ -1,10 +1,14 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  CalendarDays,
+  ClipboardList,
   ExternalLink,
+  GraduationCap,
   MapPin,
   ShieldCheck,
-  Users
+  Users,
+  type LucideIcon
 } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroIntro } from "@/src/components/HeroIntro";
@@ -90,30 +94,34 @@ const trialPillars = [
 // Club Essentials quick-links matrix (Revised content spec §5): routes parents,
 // senior players, and fans straight to their destination. Rendered as full-width
 // navy bars (t6) — gold title · description · red CTA.
-const clubEssentials: { title: string; copy: string; cta: string; href: string }[] = [
+const clubEssentials: { title: string; copy: string; cta: string; href: string; icon: LucideIcon }[] = [
   {
     title: "Our Teams",
     copy: "From Under 6s to First Team squads, explore our comprehensive Astra FC team rosters.",
     cta: "Explore Squads",
-    href: "/teams"
+    href: "/teams",
+    icon: Users
   },
   {
     title: "Astra Academy",
     copy: "Specialist football coaching programmes engineered for elite youth player development.",
     cta: "Academy Programs",
-    href: "/teams"
+    href: "/teams",
+    icon: GraduationCap
   },
   {
     title: "Fixtures & Results",
     copy: "Stay up to date with the latest league fixtures, results, and upcoming kick-off times.",
     cta: "Match Centre",
-    href: "/news-media"
+    href: "/news-media",
+    icon: CalendarDays
   },
   {
     title: "Join the Club",
     copy: "Comprehensive information on youth football trials, club membership fees, and registration.",
     cta: "Trial Information",
-    href: "/join-us"
+    href: "/join-us",
+    icon: ClipboardList
   }
 ];
 
@@ -231,24 +239,42 @@ export default function Home() {
               </p>
             </div>
             <div className="mt-10 flex flex-col gap-4">
-              {clubEssentials.map((item, index) => (
-                <PopCard
-                  key={item.title}
-                  delay={index * 0.05}
-                  className="overflow-hidden rounded-2xl bg-[#0c2a4a] ring-1 ring-white/10"
-                >
-                  <div className="grid items-center gap-4 p-5 sm:gap-6 sm:p-6 lg:grid-cols-[0.85fr_1.6fr_auto] lg:gap-8">
-                    <p className="crest-type text-2xl text-astra-gold">{item.title}</p>
-                    <p className="text-sm leading-6 text-white/80 sm:text-base">{item.copy}</p>
-                    <CtaLink
-                      href={item.href}
-                      className="w-full justify-center px-5 py-3 text-sm font-black uppercase tracking-wide lg:w-auto"
-                    >
-                      {item.cta}
-                    </CtaLink>
-                  </div>
-                </PopCard>
-              ))}
+              {clubEssentials.map((item, index) => {
+                const Icon = item.icon;
+                return (
+                  <PopCard
+                    key={item.title}
+                    delay={index * 0.05}
+                    className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0e3258] to-[#0a1f38] ring-1 ring-white/10 transition duration-300 hover:ring-astra-gold/45 hover:shadow-[0_26px_55px_-26px_rgba(0,0,0,0.9)]"
+                  >
+                    {/* gold left-edge accent — wipes in on hover/focus */}
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-y-0 left-0 w-1 origin-center scale-y-0 bg-astra-gold transition-transform duration-300 group-hover:scale-y-100 group-focus-within:scale-y-100"
+                    />
+                    {/* warm sheen drifting from the left on hover */}
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(120%_120%_at_0%_50%,rgba(242,201,76,0.10),transparent_55%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                    />
+                    <div className="relative grid items-center gap-4 p-5 sm:gap-6 sm:p-6 lg:grid-cols-[3.5rem_minmax(0,0.9fr)_minmax(0,1.7fr)_15rem] lg:gap-7">
+                      {/* icon tile */}
+                      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-astra-gold/10 ring-1 ring-astra-gold/25 transition-colors duration-300 group-hover:bg-astra-gold/20">
+                        <Icon aria-hidden="true" className="h-6 w-6 text-astra-gold" />
+                      </span>
+                      <p className="crest-type text-2xl text-astra-gold">{item.title}</p>
+                      <p className="text-sm leading-6 text-white/80 sm:text-base">{item.copy}</p>
+                      <CtaLink
+                        href={item.href}
+                        className="w-full justify-center whitespace-nowrap px-5 py-3 text-sm font-black uppercase tracking-wide"
+                      >
+                        {item.cta}
+                        <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+                      </CtaLink>
+                    </div>
+                  </PopCard>
+                );
+              })}
             </div>
           </div>
         </FlowReveal>
