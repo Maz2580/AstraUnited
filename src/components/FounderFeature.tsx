@@ -3,12 +3,11 @@ import { ArrowRight, Quote } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { founder } from "@/src/lib/content/founder";
 
-// Placeholder portrait until a dedicated founder photo is supplied.
 const portrait = {
-  src: "/images/community/astra-community-squad-portrait-1280.webp",
-  alt: "Astra United FC youth team and coaching staff together on the grass at Darebin International Sports Centre",
+  src: "/images/founder/astra-founder-portrait-1080.webp",
+  alt: "Dr Alireza Emamifar in Astra United kit juggling a football under the floodlights of a stadium",
   blurDataURL:
-    "data:image/webp;base64,UklGRmQAAABXRUJQVlA4IFgAAAAwAgCdASoQAAsAA4BaJZgAD4/QgVa3okoIAAD+6FH54b9TP2X1kQqZHZuT8SgztvbFQZW3uate7ay7RQPqrySbaHq5o+c/w353zcCb2fk2+UOHp5V9+gAA"
+    "data:image/webp;base64,UklGRrYAAABXRUJQVlA4IKoAAAAQBACdASoQABwAPu1kqU2ppaQiMAgBMB2JQBOgDSoI611SEvIicXwwAAD+/m3LLdvtK0RMxjviKf3VWhqxFIYRHtwfnN+ZzZeL+4rnzPDX+jyndKUHNmy+i8KJWh39OwcGhKHrgH2d1D642q3TQJISaX7uQboucepTNkbpp5GOP1WnhUDuPGf79ELArtPpMHY/HiWrmJGKOea6hN9eiKyyfrxHX9BQIdbgAA=="
 };
 
 export function FounderFeature() {
