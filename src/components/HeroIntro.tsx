@@ -16,11 +16,11 @@ import { CtaLink } from "@/src/components/CtaLink";
 import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
 import { heroContent } from "@/src/lib/content/home";
 
-// Approved hero footage (team-supplied), extracted to a webp frame set and
-// SCRUBBED by scroll: as the user scrolls through the pinned hero the clip
-// advances frame-by-frame (the ball plays with the scroll), exactly like the
-// previous stop-motion hero. Regenerate frames with
-// `node scripts/build-hero-video-frames.mjs` to swap the footage.
+// Approved hero footage (team-supplied): a clean, watermark-free 1080p clip of
+// the academy director dribbling across a sunlit pitch, extracted to a webp
+// frame set and SCRUBBED by scroll — as the user scrolls through the pinned hero
+// the clip advances frame-by-frame (the ball plays with the scroll). Regenerate
+// frames with `node scripts/build-hero-video-frames.mjs <clip.mp4>` to swap it.
 const heroMedia: HeroSource = {
   kind: "frames",
   frameCount: 60,
@@ -201,10 +201,13 @@ export function HeroIntro() {
         {/* Background media (decorative ambient loop) */}
         <HeroMedia source={heroMedia} />
 
-        {/* Overlays above the media, below the content — keep white text legible */}
-        <div className="absolute inset-0 -z-10 bg-astra-ink/72" aria-hidden="true" />
+        {/* Overlays above the media, below the content. The footage is now a
+            clean, bright daylight clip, so the wash is lighter than the old murky
+            comp needed — enough brand tint + contrast for legible white text,
+            but light enough to let the daylight clip read as the hero. */}
+        <div className="absolute inset-0 -z-10 bg-astra-ink/48" aria-hidden="true" />
         <div
-          className="absolute inset-0 -z-10 bg-gradient-to-br from-astra-navy/80 via-astra-ink/70 to-astra-ink/95"
+          className="absolute inset-0 -z-10 bg-gradient-to-br from-astra-navy/55 via-astra-ink/40 to-astra-ink/85"
           aria-hidden="true"
         />
         <div
@@ -218,15 +221,6 @@ export function HeroIntro() {
         {/* Subtle film grain / vignette feel */}
         <div
           className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_at_center,transparent_45%,rgba(6,17,26,0.55))] mix-blend-multiply"
-          aria-hidden="true"
-        />
-        {/* Centre-zone mute: frame 1 + both posters are now the clean (no-
-            watermark) still, so the resting hero is clean — but frames 2-60 are
-            still the stock comp with a faint dead-centre watermark, so this light
-            elliptical wash + tiny blur stays to mute it DURING the scroll scrub.
-            Remove entirely once a fully clean clip replaces all 60 frames. */}
-        <div
-          className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_55%_38%_at_50%_45%,rgba(5,14,23,0.34),transparent_72%)] backdrop-blur-[1.5px]"
           aria-hidden="true"
         />
 
