@@ -14,6 +14,7 @@ import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
 import { WhyFamiliesBoard } from "@/src/components/WhyFamiliesBoard";
+import { ProgramPillarsRail } from "@/src/components/ProgramPillarsRail";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
 import { welcome, whyFamilies } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
@@ -207,14 +208,11 @@ export default function Home() {
                 </PopCard>
               ))}
             </div>
-            {/* Development pillars strip beneath the program cards (t5) */}
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-              {trialPillars.map((pillar, index) => (
-                <PopCard key={pillar.label} className="card-dark p-5" delay={index * 0.04}>
-                  <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-red">{pillar.label}</p>
-                  <p className="mt-2 text-sm leading-6 text-white/72">{pillar.copy}</p>
-                </PopCard>
-              ))}
+            {/* Development pillars beneath the program cards (t5) — a horizontal
+                "Academy Pathway" rail: a travelling light auto-opens each pillar
+                as it passes (mirrors the Why-Families board, laid out across). */}
+            <div className="mt-8">
+              <ProgramPillarsRail pillars={trialPillars} />
             </div>
           </div>
         </FlowReveal>
