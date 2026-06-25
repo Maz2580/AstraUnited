@@ -84,7 +84,9 @@ export function SiteFooter() {
         </div>
       </div>
       <div className="mx-auto mt-10 flex w-full max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/48 sm:flex-row sm:items-center sm:justify-between">
-        <p>Copyright {new Date().getFullYear()} Astra United FC.</p>
+        <p>
+          Copyright &copy; {new Date().getFullYear()} Astra United Football Club | All Rights Reserved. | Designed by Sash Digital Agency
+        </p>
         <p>Football for all, played the Astra way.</p>
       </div>
     </footer>
