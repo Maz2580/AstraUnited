@@ -9,6 +9,8 @@ describe("photo slots", () => {
       "home-academy-mini",
       "home-academy-junior",
       "home-academy-youth",
+      "home-program-performance",
+      "home-program-girls",
       "home-news",
       "hero-the-club",
       "hero-teams",
