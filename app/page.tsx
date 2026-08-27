@@ -144,7 +144,7 @@ export default function Home() {
         <FlowReveal className="section-band band-deep">
           <div
             data-touchline-node
-            className="container-wide grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
+            className="container-wide grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch"
           >
             <div>
               <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
@@ -160,13 +160,19 @@ export default function Home() {
               </p>
               <p className="mt-6 max-w-2xl text-base leading-7 text-white/75">{welcome.body}</p>
             </div>
-            <PopCard className="card-dark overflow-hidden" delay={0.06}>
+            {/* The card matches the text column's height instead of floating
+                centred inside it (items-stretch above). The photo absorbs the
+                difference — flex-1 lets it grow while the caption keeps its
+                natural height — so the two columns start and finish on the same
+                lines. min-h keeps the old 380px when the grid stacks to one
+                column and there is no sibling height to match. */}
+            <PopCard className="card-dark flex flex-col overflow-hidden" delay={0.06}>
               <SlotImage
                 slot="home-welcome"
                 width={1280}
                 height={853}
                 sizes="(min-width: 1024px) 42vw, 100vw"
-                className="h-[380px] w-full object-cover"
+                className="w-full flex-1 min-h-[380px] object-cover"
               />
               <div className="border-t border-white/10 p-5 text-white">
                 <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Academy training</p>
