@@ -20,7 +20,7 @@ import { FounderFeature } from "@/src/components/FounderFeature";
 import { WhyFamiliesBoard } from "@/src/components/WhyFamiliesBoard";
 import { ProgramPillarsRail } from "@/src/components/ProgramPillarsRail";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
-import { welcome, whyFamilies } from "@/src/lib/content/home";
+import { developmentModel, developmentPillars, welcome, whyFamilies } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 import { NewsSection } from "@/src/components/content/NewsSection";
 import { ScheduleSection } from "@/src/components/content/ScheduleSection";
@@ -43,7 +43,9 @@ const sponsorTiers = [
   }
 ];
 
-// The five "Our Programs" tiers (Revised content spec §4) — a tailored pathway
+// The five "Our Programs" tiers (Round-5 content spec §4 — NOT architecture §4,
+// which is now the development model above; the Round-7 deck reworks these as
+// the Visual Pathway Grid in its §5) — a tailored pathway
 // from Future Stars through the performance and girls streams. Photos resolve
 // from the photo-slots registry; every card links through to the squads page.
 const programCards: { age: string; title: string; copy: string; slot: SlotKey; href: string }[] = [
@@ -82,14 +84,6 @@ const programCards: { age: string; title: string; copy: string; slot: SlotKey; h
     slot: "home-program-girls",
     href: "/teams"
   }
-];
-
-// The four development pillars shown as a strip beneath the program cards.
-const trialPillars = [
-  { label: "Technical", copy: "Ball control and passing range." },
-  { label: "Tactical", copy: "Game understanding and positioning." },
-  { label: "Physical", copy: "Speed, agility, and balance." },
-  { label: "Character", copy: "Work rate, respect, team-first attitude." }
 ];
 
 // Club Essentials quick-links matrix (Revised content spec §5): routes parents,
@@ -140,8 +134,16 @@ export default function Home() {
             motion. Crest headline with the red accent, the two body paragraphs,
             and the academy training photo. The deck specs no "Small Label" for
             this section, so there is no gold subhead line here (§4 and §5 do get
-            one) — the headline carries the band on its own. */}
-        <FlowReveal className="section-band band-deep">
+            one) — the headline carries the band on its own.
+
+            BAND NOTE: this flipped deep -> fog when §4 was inserted below it.
+            Bands alternate, so adding a section anywhere shifts the parity of
+            every band on one side of it. Flipping the ONE section above the
+            insertion was the whole fix — flipping everything below would have
+            meant touching NewsSection and ScheduleSection, which carry their band
+            internally, and would have moved seven approved sections onto
+            backgrounds they were not designed against. */}
+        <FlowReveal className="section-band band-fog">
           <div
             data-touchline-node
             className="container-wide grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch"
@@ -184,9 +186,39 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 1 — Our Programs (Revised content spec §4): sits directly after the
-            Welcome band. Headline with the red "Our" accent + subhead, then the
-            five program cards in a 3-on-top / 2-centred-below grid (t4). */}
+        {/* 1 — The Astra Player Development Model (Revised homepage architecture
+            §4). The four pillars used to be a strip inside the Programs band
+            below; the deck makes them a section in their own right, and puts them
+            BEFORE the pathway grid — "how we develop players" answered before
+            "where does my child fit". Same ProgramPillarsRail component the team
+            screenshotted as their reference for this section (image3), now with
+            the deck's longer copy and a bold line per pillar. */}
+        <FlowReveal className="section-band band-deep">
+          <div data-touchline-node className="container-wide">
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">
+              {developmentModel.eyebrow}
+            </p>
+            <h2 className="mt-3 crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+              The <span className="text-astra-red">Four</span> Fundamental Pillars of Football
+              Development
+            </h2>
+            {/* The deck gives §4 a label, a headline and this lead-in, with no
+                separate subhead. The lead-in takes the gold accent line every
+                other band has, and its trailing colon hands straight over to the
+                four cards. */}
+            <p className="mt-4 max-w-3xl text-base font-black leading-7 text-astra-gold sm:text-lg sm:leading-8">
+              {developmentModel.intro}
+            </p>
+            <div className="mt-10">
+              <ProgramPillarsRail pillars={developmentPillars} />
+            </div>
+          </div>
+        </FlowReveal>
+
+        {/* 2 — Our Programs (Revised content spec §4; becomes the Visual Pathway
+            Grid in architecture §5, not yet applied). Headline with the red "Our"
+            accent + subhead, then the five program cards in a 3-on-top /
+            2-centred-below grid (t4). */}
         <FlowReveal className="section-band band-fog">
           <div className="container-wide">
             <div data-touchline-node>
@@ -224,16 +256,10 @@ export default function Home() {
                 </PopCard>
               ))}
             </div>
-            {/* Development pillars beneath the program cards (t5) — a horizontal
-                "Academy Pathway" rail: a travelling light auto-opens each pillar
-                as it passes (mirrors the Why-Families board, laid out across). */}
-            <div className="mt-8">
-              <ProgramPillarsRail pillars={trialPillars} />
-            </div>
           </div>
         </FlowReveal>
 
-        {/* 2 — Club Essentials (Revised content spec §5): a quick-links matrix
+        {/* 3 — Club Essentials (Revised content spec §5): a quick-links matrix
             that routes each persona to their destination. Full-width navy bars
             on a near-black band — gold title, description, red CTA (t6). */}
         <FlowReveal className="section-band band-deep">
@@ -287,14 +313,14 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 3 — Founder feature (moved to sit directly after Club Essentials) */}
+        {/* 4 — Founder feature (moved to sit directly after Club Essentials) */}
         <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide">
             <FounderFeature />
           </div>
         </FlowReveal>
 
-        {/* 4 — Why families choose Astra (Revised content spec §6): moved to sit
+        {/* 5 — Why families choose Astra (Revised content spec §6): moved to sit
             directly after the founder bio. Interactive "hanging tags" board (t7) —
             the five reasons swing from a rail on scroll, drag, and pointer for a
             3D, locker-room feel that rewards continued scrolling. */}
@@ -322,7 +348,7 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 5 — Sponsorship & Community Partners (Revised content spec §7, t8):
+        {/* 6 — Sponsorship & Community Partners (Revised content spec §7, t8):
             moved up to sit directly after Why Families. A premium "Trusted by"
             logo wall (placeholder partners — real sponsor marks drop into the same
             slots) over the value pitch and partner tiers — tuned to attract
@@ -388,7 +414,7 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 6 — Latest News & Match Reports (Revised content spec §8, t9):
+        {/* 7 — Latest News & Match Reports (Revised content spec §8, t9):
             event-driven cards + View All / Subscribe, sitting directly after
             Sponsors. Renders the latest live admin posts (falls back to static
             previews when none are published). See NewsSection. */}
@@ -397,12 +423,12 @@ export default function Home() {
         {/* Club Spotlight (before join) */}
         <SpotlightSection placement="before-join" />
 
-        {/* 6.5 — "This Week at Astra": live training schedule + special events,
+        {/* 8 — "This Week at Astra": live training schedule + special events,
             admin-managed, sitting right before the Join CTA (what you'd be part
             of → join). Renders band-fog, so Join flips to band-deep below it. */}
         <ScheduleSection />
 
-        {/* 7 — Join / contact CTA (Revised content spec §9): moved to sit directly
+        {/* 9 — Join / contact CTA (Revised content spec §9): moved to sit directly
             after the News section as the closing call to action. */}
         <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">

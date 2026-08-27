@@ -38,6 +38,45 @@ export const welcome = {
   body: "We believe that every child—regardless of their current playing experience or initial ability—deserves the opportunity to learn, evolve, and enjoy the beautiful game. At Astra United, the Academy represents the beginning of a much larger journey. We are building concrete foundations for future boys' and girls' representative teams. When families join us today, they are stepping onto a long-term development pathway designed to take players from grassroots fundamentals all the way to official, competitive league football."
 };
 
+// The Astra Player Development Model (Revised homepage architecture §4) — the
+// four coaching pillars. These were already on the page as a strip tucked under
+// the program cards; Round 7 promotes them to a section of their own, ahead of
+// the pathway grid, because the deck wants "how we develop players" answered
+// before "where does my child fit".
+//
+// Each pillar is {label, title, copy}: the label rides the rail node, the title
+// is the bold line the deck sets under each heading, and the copy is its
+// description. The fourth pillar is "Psychological" — it replaces the older
+// "Character", per the deck.
+export const developmentModel = {
+  eyebrow: "Our methodology",
+  intro:
+    "Our elite coaching philosophy doesn't leave development to chance. We meticulously train the complete athlete by focusing on four interconnected sports-science disciplines:"
+};
+
+export const developmentPillars = [
+  {
+    label: "Technical",
+    title: "Ball Mastery & Precision",
+    copy: "Developing an impeccable first touch, passing accuracy, receiving, advanced dribbling, and goal-scoring precision."
+  },
+  {
+    label: "Tactical",
+    title: "Game Intelligence",
+    copy: "Cultivating elite decision-making, spatial awareness, positional discipline, movement off the ball, and overall tactical intelligence."
+  },
+  {
+    label: "Physical",
+    title: "Physical Literacy",
+    copy: "Enhancing core coordination, balance, agility, explosive speed, and age-appropriate movement mechanics."
+  },
+  {
+    label: "Psychological",
+    title: "Mindset & Resilience",
+    copy: "Building deep self-confidence, concentration, resilience, emotional regulation, teamwork, and positive sporting behaviours."
+  }
+];
+
 // "Why Families Choose Astra" (Revised content spec §6) — five labelled reasons
 // that reinforce the decision to join. Each is a {label, detail} pair: the label
 // rides the swinging tag, the detail reveals on hover/focus (and shows inline in
