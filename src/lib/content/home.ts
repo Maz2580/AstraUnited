@@ -1,12 +1,22 @@
+// Hero copy (Revised homepage architecture §1 — "Elite Vision & Immediate
+// Action"). The big headline is rendered in JSX inside HeroIntro so "Premier"
+// can carry the red brand accent — the same rule the Welcome band follows for
+// "United"; everything else lives here verbatim from the team's copy deck.
+//
+// `status` + `kicker` are currently unrendered: the pitch-status line is being
+// rebuilt as the standalone Live Utility Banner (architecture §2), so the copy
+// stays here rather than being deleted and immediately re-added.
 export const heroContent = {
   status: "All Astra pitches are currently OPEN for training and match days.",
   kicker: "Est. Melbourne's North - Academy & Senior",
-  headline:
-    "The Home of Football Community & Player Development in Melbourne's Suburbs",
+  subhead:
+    "Inspired by modern European player development models, Astra United FC is dedicated to shaping better players and better people",
   lead:
-    "Astra Football Club provides a professional, highly structured football environment for local families across Melbourne's growing northern and eastern suburbs, based at Darebin International Sports Centre.",
-  primaryCta: { label: "Register for 2026", href: "/join-us" },
-  secondaryCta: { label: "View match-day fixtures", href: "/teams" }
+    "Based in Melbourne's growing northern and eastern suburbs, we provide a highly structured, professional, safe, and enjoyable learning environment built for long-term athletic success. Join Astra United FC today.",
+  primaryCta: { label: "Register for 2026 Season", href: "/join-us" },
+  // No dedicated trials page yet — /join-us carries both the trial criteria and
+  // the interest form. Re-point this the moment a trials page exists.
+  secondaryCta: { label: "Book Football Trials", href: "/join-us" }
 };
 
 // "Welcome to Astra Football Club" — the first standalone section after the

@@ -11,7 +11,7 @@ import {
   useTransform,
   type MotionValue
 } from "framer-motion";
-import { ArrowDown, ArrowRight, Play } from "lucide-react";
+import { ArrowDown, ArrowRight, ClipboardList } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroMedia, type HeroSource } from "@/src/components/HeroMedia";
 import { heroContent } from "@/src/lib/content/home";
@@ -173,6 +173,11 @@ export function HeroIntro() {
   const headlineOpacity = useTransform(scrollYProgress, [0.04, 0.13], [0, 1]);
   const headlineY = useTransform(scrollYProgress, [0.04, 0.15, 0.22], [44, -10, 0]);
   const headlineScale = useTransform(scrollYProgress, [0.04, 0.15, 0.22], [0.97, 1.014, 1]);
+  // The gold positioning line follows the headline a beat later, still inside
+  // step 1's window — a gentle rise, no overshoot, so it supports the headline's
+  // kick rather than competing with it.
+  const subheadOpacity = useTransform(scrollYProgress, [0.1, 0.2], [0, 1]);
+  const subheadY = useTransform(scrollYProgress, [0.1, 0.2], [18, 0]);
   // The lead block fades up gently; the PUNCH lives in the per-element motion
   // (stripe flick, word kicks, CTA pop) so the movements layer instead of fight.
   const cardOpacity = useTransform(scrollYProgress, PHASE.card, [0, 1]);
@@ -234,8 +239,25 @@ export function HeroIntro() {
               style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY, scale: headlineScale }}
               className="crest-type mx-auto max-w-4xl text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl xl:text-7xl"
             >
-              {heroContent.headline}
+              {/* One block per sentence: the copy is a negation followed by the
+                  claim, and letting it wrap freely strands the "A" at the end of
+                  a line, away from "Premier". Breaking on the full stop keeps
+                  each statement whole at every width. */}
+              <span className="block">More Than a Training Provider.</span>
+              <span className="block">
+                A <span className="text-astra-red">Premier</span> Player Development Academy.
+              </span>
             </motion.h1>
+            {/* Brand positioning line. Gold like every other subhead, but left in
+                sentence case — the others are short uppercase labels, and this
+                one runs to a full sentence where uppercase would read as
+                shouting over the footage. */}
+            <motion.p
+              style={reduce ? undefined : { opacity: subheadOpacity, y: subheadY }}
+              className="mx-auto max-w-3xl text-base font-black leading-7 text-astra-gold sm:text-lg sm:leading-8"
+            >
+              {heroContent.subhead}
+            </motion.p>
           </div>
 
           {/* Step 2 — broadcast/matchday lead + CTAs straight on the footage
@@ -277,7 +299,7 @@ export function HeroIntro() {
                   variant="ghost"
                   className="w-full justify-center px-6 py-3.5 text-sm font-black uppercase tracking-wide sm:w-auto"
                 >
-                  <Play aria-hidden="true" className="h-4 w-4" />
+                  <ClipboardList aria-hidden="true" className="h-4 w-4" />
                   {heroContent.secondaryCta.label}
                 </CtaLink>
               </MagneticButton>
