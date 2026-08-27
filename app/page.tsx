@@ -135,10 +135,12 @@ export default function Home() {
         {/* Club Spotlight (top) — admin event posts under the hero; absent when none live */}
         <SpotlightSection placement="top" />
 
-        {/* 0 — Welcome to Astra United (Revised content spec §3): the first
-            standalone section after the hero motion. Big crest headline with the
-            red "United" accent, gold subheadline, the two intro paragraphs, and
-            the academy training photo — matching the team's t3 example. */}
+        {/* 0 — Welcome to Astra United FC, "The Brand Philosophy" (Revised
+            homepage architecture §3): the first standalone section after the hero
+            motion. Crest headline with the red accent, the two body paragraphs,
+            and the academy training photo. The deck specs no "Small Label" for
+            this section, so there is no gold subhead line here (§4 and §5 do get
+            one) — the headline carries the band on its own. */}
         <FlowReveal className="section-band band-deep">
           <div
             data-touchline-node
@@ -146,18 +148,17 @@ export default function Home() {
           >
             <div>
               <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
-                Welcome to Astra <span className="text-astra-red">United</span> Football Club
+                Developing the <span className="text-astra-red">Complete</span> Player and the
+                Resilient Individual
               </h2>
-              <p className="mt-4 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
-                {welcome.subhead}
+              {/* The opening paragraph takes the gold slot the old subhead held,
+                  so the band keeps its accent line under the headline. Sentence
+                  case, not uppercase — the same call §1's hero sub-headline made.
+                  mt-4 / mt-6 preserve the previous vertical rhythm exactly. */}
+              <p className="mt-4 max-w-2xl text-base font-black leading-7 text-astra-gold sm:text-lg sm:leading-8">
+                {welcome.lead}
               </p>
-              <div className="mt-6 space-y-4">
-                {welcome.intro.map((para) => (
-                  <p key={para} className="max-w-2xl text-base leading-7 text-white/75">
-                    {para}
-                  </p>
-                ))}
-              </div>
+              <p className="mt-6 max-w-2xl text-base leading-7 text-white/75">{welcome.body}</p>
             </div>
             <PopCard className="card-dark overflow-hidden" delay={0.06}>
               <SlotImage

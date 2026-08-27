@@ -19,16 +19,23 @@ export const heroContent = {
   secondaryCta: { label: "Book Football Trials", href: "/join-us" }
 };
 
-// "Welcome to Astra Football Club" — the first standalone section after the
-// hero motion (Revised content spec §3). The big headline is rendered in JSX so
-// "United" can carry the red accent; this object holds the subheadline + the two
-// intro paragraphs verbatim from the team's revised copy.
+// The Welcome band — "The Brand Philosophy" (Revised homepage architecture §3).
+// Only the headline is rendered in JSX (in app/page.tsx), so it can carry the red
+// brand accent; both paragraphs are plain prose and live here verbatim.
+//
+// There is no `subhead` field any more. The deck specs §3 as headline + body with
+// no "Small Label" line (§4 and §5 name one explicitly), and the old gold line —
+// "Excellence in Local Football and Player Development" — used the exact "local
+// football" framing §1 just moved the club away from. Instead `lead` TAKES that
+// gold slot: it is the deck's own opening paragraph, set in gold under the
+// headline exactly like the hero's §1 sub-headline. Same reasoning as §1, too —
+// gold but sentence case, because uppercase over a full sentence reads as
+// shouting. That also absorbs the two phrases the deck sets in bold ("Astra
+// United FC", "Player Development Academy"): the whole line is now the emphasis,
+// so they need no separate weight.
 export const welcome = {
-  subhead: "Excellence in Local Football and Player Development",
-  intro: [
-    "Welcome to Astra Football Club, a premier community-focused football club for players, coaches, and supporters. We are dedicated to fostering a professional environment where talent is meticulously nurtured from the grassroots up.",
-    "Whether you are looking for an elite Youth Academy with professional, highly qualified coaching or a competitive senior football team, Astra FC offers a distinct pathway for every player. Our mission is to combine technical excellence with a strong community spirit, ensuring every member of the Astra family can reach their full potential on the pitch. As a standout Melbourne soccer club, we proudly embrace the city's vibrant multicultural football culture and community values across all local Melbourne suburbs."
-  ]
+  lead: "Welcome to Astra United FC, a progressive, community-focused Player Development Academy designed for players, coaches, and families who demand more from grassroots sports.",
+  body: "We believe that every child—regardless of their current playing experience or initial ability—deserves the opportunity to learn, evolve, and enjoy the beautiful game. At Astra United, the Academy represents the beginning of a much larger journey. We are building concrete foundations for future boys' and girls' representative teams. When families join us today, they are stepping onto a long-term development pathway designed to take players from grassroots fundamentals all the way to official, competitive league football."
 };
 
 // "Why Families Choose Astra" (Revised content spec §6) — five labelled reasons
