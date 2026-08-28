@@ -22,7 +22,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-academy-mini",
-    label: "Homepage — Mini-Kickers card",
+    label: "Homepage — Pathway row 1: Astra Foundation Hub (U5–U7)",
     default: {
       src: "/images/academy/astra-academy-mini-kickers-1280.webp",
       alt: "Young Astra United Academy players in navy kit and Academy bibs with their coaches during a Mini-Kickers session at Darebin",
@@ -32,7 +32,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-academy-junior",
-    label: "Homepage — Junior Academy card",
+    label: "Homepage — Pathway row 2: Astra Youth Academy (U8–U10)",
     default: {
       src: "/images/academy/astra-academy-dribble-duel-1280.webp",
       alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
@@ -42,7 +42,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-academy-youth",
-    label: "Homepage — Youth Development card",
+    label: "Homepage — Pathway row 3: Next-Gen Performance Program (U11–U13)",
     default: {
       src: "/images/academy/astra-academy-youth-training-1280.webp",
       alt: "Astra United youth players in kit and bibs training in a small-sided session with coaches on the Darebin pitch",
@@ -52,7 +52,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-program-performance",
-    label: "Homepage — Next-Gen Performance Groups card",
+    label: "Homepage — Pathway row 4: High Performance Track (U14–U15)",
     default: {
       src: "/images/academy/astra-academy-coaching-huddle-1280.webp",
       alt: "Astra United coaches and advanced youth players in a high-intensity training huddle on the Darebin pitch"
@@ -60,7 +60,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-program-girls",
-    label: "Homepage — Astra Evolution Girls Program card",
+    label: "Homepage — Pathway row 5: Private Football Sessions (all ages)",
     default: {
       src: "/images/womens/astra-girls-program-wide-1280.webp",
       alt: "Astra United girls' program player holding a football on the pitch at Darebin International Sports Centre"

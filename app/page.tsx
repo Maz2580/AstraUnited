@@ -7,6 +7,7 @@ import {
   GraduationCap,
   MapPin,
   ShieldCheck,
+  Trophy,
   Users,
   type LucideIcon
 } from "lucide-react";
@@ -43,46 +44,71 @@ const sponsorTiers = [
   }
 ];
 
-// The five "Our Programs" tiers (Round-5 content spec §4 — NOT architecture §4,
-// which is now the development model above; the Round-7 deck reworks these as
-// the Visual Pathway Grid in its §5) — a tailored pathway
-// from Future Stars through the performance and girls streams. Photos resolve
-// from the photo-slots registry; every card links through to the squads page.
-const programCards: { age: string; title: string; copy: string; slot: SlotKey; href: string }[] = [
+// The Visual Pathway Grid (Revised homepage architecture §5). Five blocks, one
+// per phase, laid out as full-width rows in the Club Essentials treatment the
+// deck asks for — but each keeps a photo, because §5's designer note also asks
+// for "high-quality imagery behind each block". Age brackets carry the deck's en
+// dashes verbatim.
+//
+// Two programmes leave this list: Astra Future Stars (3-5) is dropped, and Astra
+// Evolution Girls moves to a "coming soon" line in §8. Two arrive: High
+// Performance Track and Private Football Sessions. No photo slot is added or
+// removed — the five existing ones are re-pointed at the phase each photo
+// actually suits, so the admin Photos tab and the slot-key test are unchanged.
+const pathwayBlocks: {
+  age: string;
+  title: string;
+  copy: string;
+  cta: string;
+  slot: SlotKey;
+  href: string;
+}[] = [
   {
-    age: "Ages 3-5",
-    title: "Astra Future Stars",
-    copy: "An energetic, fun introduction to local football — building fundamental motor skills, confidence, and early coordination through play-based activities.",
+    age: "U5–U7",
+    title: "Astra Foundation Hub",
+    copy: "Igniting a lifelong passion for soccer. This track introduces structured ball mastery, technical development, and positive teamwork across Melbourne suburbs.",
+    cta: "Explore Program",
+    // the mini-kickers photo — the youngest group we have, so it fits U5-U7
+    // better here than it did on the dropped 3-5 card.
     slot: "home-academy-mini",
     href: "/teams"
   },
   {
-    age: "U5-U7",
-    title: "Astra Foundation Hub",
-    copy: "Fostering a genuine passion for the game: initial technical development, basic ball mastery, and understanding teamwork in a supportive environment.",
+    age: "U8–U10",
+    title: "Astra Youth Academy",
+    copy: "Our flagship player development stream. Intensive technical training and tactical applications designed to prepare players for competitive environments.",
+    cta: "Explore Program",
     slot: "home-academy-junior",
     href: "/teams"
   },
   {
-    age: "U8-U13",
-    title: "Astra Youth Academy",
-    copy: "Our core elite youth tier. Under professional coaching, players refine tactical awareness, positional play, and advanced technical skills for competitive fixtures.",
+    age: "U11–U13",
+    title: "Next-Gen Performance Program",
+    copy: "Advanced performance squads engineered for accelerated development, preparing elite athletes for representative league fixtures and senior selection.",
+    cta: "Explore Track",
     slot: "home-academy-youth",
     href: "/teams"
   },
   {
-    age: "U8-U16",
-    title: "Next-Gen Performance Groups",
-    copy: "For advanced, high-performance players: high-intensity tactical training and accelerated development streams to prepare for senior trials and representative honours.",
+    age: "U14–U15",
+    title: "High Performance Track",
+    copy: "Tailored for advanced athletes focusing on deep match understanding, rapid speed of play, tactical decision-making, and physical readiness for elite competition.",
+    cta: "Explore Track",
+    // the coaching-huddle shot: the most senior-looking group in the library.
     slot: "home-program-performance",
     href: "/teams"
   },
   {
-    age: "Ages 9-13",
-    title: "Astra Evolution Girls Program",
-    copy: "A premier, dedicated stream driving girls' football development — specialised coaching to empower female athletes and cultivate the next generation of leaders.",
+    age: "All ages",
+    title: "Private Football Sessions",
+    copy: "Tailored 1-on-1 and small group programs focusing on individual technical improvements, addressing training gaps, enhancing physical readiness, and refining next-gen playing styles.",
+    cta: "Book Private Session",
+    // the single-player shot from the girls programme: a lone player with a ball
+    // reads as 1-on-1, and it keeps that photo (produced in Round 5b) on the page.
     slot: "home-program-girls",
-    href: "/teams"
+    // no trials/booking page exists; /contact is the enquiry route. Re-point when
+    // a booking page exists.
+    href: "/contact"
   }
 ];
 
@@ -218,46 +244,103 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 2 — Our Programs (Revised content spec §4; becomes the Visual Pathway
-            Grid in architecture §5, not yet applied). Headline with the red "Our"
-            accent + subhead, then the five program cards in a 3-on-top /
-            2-centred-below grid (t4). */}
+        {/* 2 — Visual Pathway Grid (Revised homepage architecture §5). Replaces
+            the old "Our Programs" card grid. The deck's note under this section
+            reads "Change the design similar to club essentials", so the five
+            blocks are now full-width rows using the Club Essentials treatment —
+            navy gradient bar, gold left-edge wipe on hover, warm sheen, gold
+            title, red CTA. Its OTHER note asks for "high-quality imagery behind
+            each block", so each row keeps its photo as a framed tile at the left
+            rather than dropping imagery altogether; text never sits over a photo,
+            so legibility is unchanged. §7 Club Essentials takes the card design
+            these rows are vacating. */}
         <FlowReveal className="section-band band-fog">
           <div className="container-wide">
             <div data-touchline-node>
-              <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
-                <span className="text-astra-red">Our</span> Programs
-              </h2>
-              <p className="mt-3 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
-                A tailored pathway for every player
+              <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
+                Targeted programmes
               </p>
+              <h2 className="crest-type type-h2 mt-3 text-white">
+                A <span className="text-astra-red">Structured</span> Journey From Grassroots to
+                Representative Excellence
+              </h2>
             </div>
-            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-6">
-              {programCards.map((program, index) => (
+            <div className="mt-10 flex flex-col gap-4">
+              {pathwayBlocks.map((block, index) => (
                 <PopCard
-                  key={program.title}
+                  key={block.title}
                   delay={index * 0.05}
-                  className={`card-dark overflow-hidden lg:col-span-2${index === 3 ? " lg:col-start-2" : ""}`}
+                  className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0e3258] to-[#0a1f38] ring-1 ring-white/10 transition duration-300 hover:ring-astra-gold/45 hover:shadow-[0_26px_55px_-26px_rgba(0,0,0,0.9)]"
                 >
-                  <Link href={program.href} className="card-link group block h-full">
-                    <SlotImage
-                      slot={program.slot}
-                      width={1280}
-                      height={853}
-                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                      className="h-44 w-full object-cover"
-                    />
-                    <div className="p-6">
-                      <p className="crest-type text-2xl text-astra-gold">{program.age}</p>
-                      <h3 className="mt-2 text-xl font-black text-white">{program.title}</h3>
-                      <p className="mt-3 text-sm leading-6 text-white/72">{program.copy}</p>
-                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
-                        Learn more <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
-                      </span>
+                  {/* gold left-edge accent — wipes in on hover/focus */}
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-y-0 left-0 z-10 w-1 origin-center scale-y-0 bg-astra-gold transition-transform duration-300 group-hover:scale-y-100 group-focus-within:scale-y-100"
+                  />
+                  {/* warm sheen drifting from the left on hover */}
+                  <span
+                    aria-hidden="true"
+                    className="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(120%_120%_at_0%_50%,rgba(242,201,76,0.10),transparent_55%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
+                  />
+                  <div className="relative grid items-center gap-4 p-5 sm:gap-6 sm:p-6 lg:grid-cols-[8rem_minmax(0,1.05fr)_minmax(0,1.5fr)_15rem] lg:gap-7">
+                    <div className="overflow-hidden rounded-2xl ring-1 ring-astra-gold/25">
+                      <SlotImage
+                        slot={block.slot}
+                        width={1280}
+                        height={853}
+                        sizes="(min-width: 1024px) 8rem, 100vw"
+                        className="h-32 w-full object-cover transition duration-500 group-hover:scale-105 lg:h-24"
+                      />
                     </div>
-                  </Link>
+                    <div>
+                      <p className="crest-type type-h5 text-astra-gold">{block.age}</p>
+                      <h3 className="crest-type type-h4 mt-1 text-white">{block.title}</h3>
+                    </div>
+                    <p className="type-body text-white/80">{block.copy}</p>
+                    <CtaLink
+                      href={block.href}
+                      className="w-full justify-center whitespace-nowrap px-5 py-3 text-sm font-black uppercase tracking-wide"
+                    >
+                      {block.cta}
+                      <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
+                    </CtaLink>
+                  </div>
                 </PopCard>
               ))}
+            </div>
+            {/* Mid-page promo banner (architecture §5, after the five blocks) —
+                the representative pathway that does not exist yet. Deliberately
+                no CTA: it is explicitly "coming soon", and a button would promise
+                somewhere to go. Sits INSIDE this section rather than as a band of
+                its own, so it adds no band and cannot disturb deep/fog parity. */}
+            <div
+              className="relative mt-8 overflow-hidden rounded-2xl px-6 py-6 ring-1 ring-astra-gold/25 sm:px-8"
+              style={{
+                background:
+                  "radial-gradient(120% 140% at 0% 50%, rgba(242,201,76,0.14) 0%, rgba(242,201,76,0) 52%), linear-gradient(90deg, #0a2c45 0%, #06192a 100%)"
+              }}
+            >
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:gap-6">
+                <span
+                  aria-hidden="true"
+                  className="grid h-12 w-12 shrink-0 place-items-center rounded-2xl bg-astra-gold/10 ring-1 ring-astra-gold/25"
+                >
+                  <Trophy className="h-6 w-6 text-astra-gold" />
+                </span>
+                <div>
+                  <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-gold">
+                    Future pathway
+                  </p>
+                  <h3 className="crest-type type-h4 mt-1 text-white">
+                    Representative Track (Coming Soon)
+                  </h3>
+                  <p className="type-body mt-2 max-w-4xl text-white/75">
+                    As Astra United FC continues to grow, players progressing through our Academy
+                    will have the direct opportunity to transition into future boys&apos; and girls&apos;
+                    representative teams and high-performance competitive programs.
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </FlowReveal>
