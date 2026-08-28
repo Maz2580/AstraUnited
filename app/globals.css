@@ -632,6 +632,13 @@ svg {
 .type-lead { font-size: 1rem; line-height: 1.5rem; font-weight: 400; }
 .type-body { font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; }
 
+/* The guide defines eight SIZE levels but no emphasis variant, and a few places
+   need a size from the scale set bold — section eyebrows, and the card sub-titles
+   the deck prints in bold. This lifts the weight without inventing a new size, so
+   everything still resolves to one of the guide's levels. Two-class selector so
+   it beats the level's own weight regardless of source order. */
+.type-body.type-strong { font-weight: 600; }
+
 /* Anton ships a single 400 weight. The heading levels above carry the guide's
    Inter weights (h3/h4 700, h5 600), so pairing one with `crest-type` would make
    the browser SYNTHESISE a bold — a smeared, faked-heavy display face. Two-class

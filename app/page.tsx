@@ -175,8 +175,11 @@ export default function Home() {
                 className="w-full flex-1 min-h-[380px] object-cover"
               />
               <div className="border-t border-white/10 p-5 text-white">
+                {/* Kicker stays at 12px — the guide's own microcopy floor, which
+                    it blesses explicitly. The caption below it was 14px, between
+                    that floor and the smallest body level, so it joins P2. */}
                 <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Academy training</p>
-                <p className="mt-2 text-sm leading-6 text-white/72">
+                <p className="type-body mt-2 text-white/72">
                   Academy training at Darebin International Sports Centre.
                 </p>
               </div>
@@ -193,7 +196,11 @@ export default function Home() {
             the deck's longer copy and a bold line per pillar. */}
         <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">
+            {/* Eyebrow, not a heading — it labels the section the h2 below names,
+                so it stays a <p> and keeps the outline at h2 -> h3. It was 14px,
+                off the guide's scale entirely; now it sits on P2 with the bold
+                weight, which is the smallest level the guide defines. */}
+            <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
               {developmentModel.eyebrow}
             </p>
             <h2 className="crest-type type-h2 mt-3 text-white">

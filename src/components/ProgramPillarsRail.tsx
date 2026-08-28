@@ -92,9 +92,9 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-astra-gold/10 ring-1 ring-astra-gold/25">
                   <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" />
                 </span>
-                <p className="crest-type type-h4 text-white">{pillar.label}</p>
+                <h3 className="crest-type type-h5 text-white">{pillar.label}</h3>
               </div>
-              <p className="type-h5 mt-3 text-astra-gold">{pillar.title}</p>
+              <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
               <p className="type-body mt-2 text-white/70">{pillar.copy}</p>
             </div>
           );
@@ -165,12 +165,12 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                   >
                     <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" />
                   </span>
-                  <p className="crest-type type-h4 text-white">{pillar.label}</p>
+                  <h3 className="crest-type type-h5 text-white">{pillar.label}</h3>
                 </div>
                 {/* The deck's bold line for each pillar. Held at full gold rather
                     than dimmed with the copy, so every card keeps a readable
                     anchor while the spotlight is somewhere else on the rail. */}
-                <p className="type-h5 mt-3 text-astra-gold">{pillar.title}</p>
+                <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
                 {/* copy is always present; it brightens from dim to full as the
                     spotlight (or hover) reaches the card. */}
                 <p
