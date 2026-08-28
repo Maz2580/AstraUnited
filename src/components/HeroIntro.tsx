@@ -133,7 +133,7 @@ function LeadReveal({
   const startOf = (i: number) =>
     words.length <= 1 ? bandStart : bandStart + (lastStart - bandStart) * (i / (words.length - 1));
   return (
-    <p className="text-base leading-7 text-white/80 sm:text-lg sm:leading-8">
+    <p className="type-lead text-white/80">
       {words.map((word, i) => {
         const start = startOf(i);
         return (
@@ -237,7 +237,7 @@ export function HeroIntro() {
           <div className="flex flex-col items-center gap-5">
             <motion.h1
               style={reduce ? undefined : { opacity: headlineOpacity, y: headlineY, scale: headlineScale }}
-              className="crest-type mx-auto max-w-4xl text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl xl:text-7xl"
+              className="crest-type type-h1 mx-auto max-w-4xl text-white"
             >
               {/* One block per sentence: the copy is a negation followed by the
                   claim, and letting it wrap freely strands the "A" at the end of
@@ -254,7 +254,7 @@ export function HeroIntro() {
                 shouting over the footage. */}
             <motion.p
               style={reduce ? undefined : { opacity: subheadOpacity, y: subheadY }}
-              className="mx-auto max-w-3xl text-base font-black leading-7 text-astra-gold sm:text-lg sm:leading-8"
+              className="type-subhead mx-auto max-w-3xl text-astra-gold"
             >
               {heroContent.subhead}
             </motion.p>

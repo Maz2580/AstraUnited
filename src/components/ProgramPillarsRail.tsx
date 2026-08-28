@@ -92,10 +92,10 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-astra-gold/10 ring-1 ring-astra-gold/25">
                   <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" />
                 </span>
-                <p className="crest-type text-lg text-white">{pillar.label}</p>
+                <p className="crest-type type-h4 text-white">{pillar.label}</p>
               </div>
-              <p className="mt-3 text-sm font-black text-astra-gold">{pillar.title}</p>
-              <p className="mt-2 text-sm leading-6 text-white/70">{pillar.copy}</p>
+              <p className="type-h5 mt-3 text-astra-gold">{pillar.title}</p>
+              <p className="type-body mt-2 text-white/70">{pillar.copy}</p>
             </div>
           );
         })}
@@ -165,16 +165,16 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                   >
                     <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" />
                   </span>
-                  <p className="crest-type text-lg text-white">{pillar.label}</p>
+                  <p className="crest-type type-h4 text-white">{pillar.label}</p>
                 </div>
                 {/* The deck's bold line for each pillar. Held at full gold rather
                     than dimmed with the copy, so every card keeps a readable
                     anchor while the spotlight is somewhere else on the rail. */}
-                <p className="mt-3 text-sm font-black text-astra-gold">{pillar.title}</p>
+                <p className="type-h5 mt-3 text-astra-gold">{pillar.title}</p>
                 {/* copy is always present; it brightens from dim to full as the
                     spotlight (or hover) reaches the card. */}
                 <p
-                  className="mt-2 text-sm leading-6 transition-colors duration-300"
+                  className="type-body mt-2 transition-colors duration-300"
                   style={{
                     color: "rgba(255,255,255, calc(0.5 + max(var(--spot,0), var(--hover,0)) * 0.4))"
                   }}

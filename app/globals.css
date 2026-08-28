@@ -597,6 +597,64 @@ svg {
   }
 }
 
+/* --- Round 7 typography scale ------------------------------------------------
+   From the team's "Astra - Optimised UX typography" guide. One class per level;
+   each sets ONLY size / line-height / weight. Family is left to the element:
+   pair with `crest-type` for the Anton display face, or use bare for Inter,
+   which body already sets. That keeps a single source of truth for the scale and
+   stops per-component sizes drifting apart again.
+
+   Mobile values below 768px, desktop at and above it — the same breakpoint
+   `.section-band` already switches on. Line heights are the guide's fix for the
+   old near-1:1 display leading (headlines used leading-[0.95]), which collided
+   on wrapped mobile text.
+
+   Levels: h1 56/64 · h2 40/48 · h3 28/36 · h4 22/28 · h5 18/24 · subhead 20/28 ·
+   lead 18/28 · body 16/24 (desktop px). Nothing here drops below 12px, the
+   guide's accessibility floor. */
+.type-h1,
+.type-h2,
+.type-h3,
+.type-h4,
+.type-h5,
+.type-subhead,
+.type-lead,
+.type-body {
+  letter-spacing: 0;
+}
+
+.type-h1 { font-size: 2.25rem; line-height: 2.75rem; font-weight: 400; }
+.type-h2 { font-size: 1.75rem; line-height: 2.25rem; font-weight: 400; }
+.type-h3 { font-size: 1.375rem; line-height: 1.75rem; font-weight: 700; }
+.type-h4 { font-size: 1.125rem; line-height: 1.5rem; font-weight: 700; }
+.type-h5 { font-size: 1rem; line-height: 1.375rem; font-weight: 600; }
+.type-subhead { font-size: 1rem; line-height: 1.5rem; font-weight: 500; }
+.type-lead { font-size: 1rem; line-height: 1.5rem; font-weight: 400; }
+.type-body { font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; }
+
+/* Anton ships a single 400 weight. The heading levels above carry the guide's
+   Inter weights (h3/h4 700, h5 600), so pairing one with `crest-type` would make
+   the browser SYNTHESISE a bold — a smeared, faked-heavy display face. Two-class
+   selector so it wins on specificity regardless of source order. */
+.crest-type.type-h1,
+.crest-type.type-h2,
+.crest-type.type-h3,
+.crest-type.type-h4,
+.crest-type.type-h5 {
+  font-weight: 400;
+}
+
+@media (min-width: 768px) {
+  .type-h1 { font-size: 3.5rem; line-height: 4rem; }
+  .type-h2 { font-size: 2.5rem; line-height: 3rem; }
+  .type-h3 { font-size: 1.75rem; line-height: 2.25rem; }
+  .type-h4 { font-size: 1.375rem; line-height: 1.75rem; }
+  .type-h5 { font-size: 1.125rem; line-height: 1.5rem; }
+  .type-subhead { font-size: 1.25rem; line-height: 1.75rem; }
+  .type-lead { font-size: 1.125rem; line-height: 1.75rem; }
+  .type-body { font-size: 1rem; line-height: 1.5rem; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

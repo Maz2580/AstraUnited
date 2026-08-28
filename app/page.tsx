@@ -149,7 +149,7 @@ export default function Home() {
             className="container-wide grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch"
           >
             <div>
-              <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+              <h2 className="crest-type type-h2 text-white">
                 Developing the <span className="text-astra-red">Complete</span> Player and the
                 Resilient Individual
               </h2>
@@ -157,10 +157,8 @@ export default function Home() {
                   so the band keeps its accent line under the headline. Sentence
                   case, not uppercase — the same call §1's hero sub-headline made.
                   mt-4 / mt-6 preserve the previous vertical rhythm exactly. */}
-              <p className="mt-4 max-w-2xl text-base font-black leading-7 text-astra-gold sm:text-lg sm:leading-8">
-                {welcome.lead}
-              </p>
-              <p className="mt-6 max-w-2xl text-base leading-7 text-white/75">{welcome.body}</p>
+              <p className="type-subhead mt-4 max-w-2xl text-astra-gold">{welcome.lead}</p>
+              <p className="type-body mt-6 max-w-2xl text-white/75">{welcome.body}</p>
             </div>
             {/* The card matches the text column's height instead of floating
                 centred inside it (items-stretch above). The photo absorbs the
@@ -198,7 +196,7 @@ export default function Home() {
             <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">
               {developmentModel.eyebrow}
             </p>
-            <h2 className="mt-3 crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+            <h2 className="crest-type type-h2 mt-3 text-white">
               The <span className="text-astra-red">Four</span> Fundamental Pillars of Football
               Development
             </h2>
@@ -206,9 +204,7 @@ export default function Home() {
                 separate subhead. The lead-in takes the gold accent line every
                 other band has, and its trailing colon hands straight over to the
                 four cards. */}
-            <p className="mt-4 max-w-3xl text-base font-black leading-7 text-astra-gold sm:text-lg sm:leading-8">
-              {developmentModel.intro}
-            </p>
+            <p className="type-subhead mt-4 max-w-3xl text-astra-gold">{developmentModel.intro}</p>
             <div className="mt-10">
               <ProgramPillarsRail pillars={developmentPillars} />
             </div>
