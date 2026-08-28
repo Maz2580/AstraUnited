@@ -68,30 +68,37 @@ export const PHOTO_SLOTS = [
   },
   // Club Essentials (architecture §7) took the card design the pathway rows gave
   // up, so its three items need photos of their own — the five pathway shots are
-  // all spoken for. Sourced from existing library images that were not yet on a
-  // slot, so nothing is duplicated across the homepage.
+  // all spoken for.
+  //
+  // These three are GENERATED (Higgsfield "soul_location", Aug 2026), not club
+  // photography, which is why they are places and equipment with no people in
+  // them: putting AI-generated children on a real club's site would be a claim
+  // about the club that a parent could reasonably take at face value. Their alt
+  // text describes a generic suburban ground rather than asserting it is Astra's,
+  // for the same reason. Replace them with real club photography via /admin
+  // whenever the club has it — the slot keys make that a swap, not a code change.
   {
     key: "home-essential-club",
     label: "Homepage — Club Essentials: Meet the Club card",
     default: {
-      src: "/images/community/astra-community-squad-portrait-1280.webp",
-      alt: "Astra United FC squad and coaching staff together on the grass at Darebin International Sports Centre"
+      src: "/images/ground/astra-ground-clubhouse-dugout-1280.webp",
+      alt: "A suburban football clubhouse and covered players' dugout beside a grass pitch in late afternoon sun"
     }
   },
   {
     key: "home-essential-trials",
     label: "Homepage — Club Essentials: Trials & Fees card",
     default: {
-      src: "/images/match/astra-match-aerial-control-1280.webp",
-      alt: "Astra United player winning an aerial ball against an opponent during a competitive match"
+      src: "/images/kit/astra-kit-boots-ball-touchline-1280.webp",
+      alt: "Football boots, shin pads, a match ball and a folded training bib laid out on the touchline of a dewy grass pitch"
     }
   },
   {
     key: "home-essential-fixtures",
     label: "Homepage — Club Essentials: Fixtures & Events card",
     default: {
-      src: "/images/ground/astra-ground-wide-sky-1280.webp",
-      alt: "Wide view of the Darebin International Sports Centre pitch under an open sky on a match day"
+      src: "/images/ground/astra-ground-floodlit-dusk-1280.webp",
+      alt: "A floodlit suburban football ground at dusk, corner flag in the foreground and an empty stand beyond"
     }
   },
   {
