@@ -66,6 +66,34 @@ export const PHOTO_SLOTS = [
       alt: "Astra United girls' program player holding a football on the pitch at Darebin International Sports Centre"
     }
   },
+  // Club Essentials (architecture §7) took the card design the pathway rows gave
+  // up, so its three items need photos of their own — the five pathway shots are
+  // all spoken for. Sourced from existing library images that were not yet on a
+  // slot, so nothing is duplicated across the homepage.
+  {
+    key: "home-essential-club",
+    label: "Homepage — Club Essentials: Meet the Club card",
+    default: {
+      src: "/images/community/astra-community-squad-portrait-1280.webp",
+      alt: "Astra United FC squad and coaching staff together on the grass at Darebin International Sports Centre"
+    }
+  },
+  {
+    key: "home-essential-trials",
+    label: "Homepage — Club Essentials: Trials & Fees card",
+    default: {
+      src: "/images/match/astra-match-aerial-control-1280.webp",
+      alt: "Astra United player winning an aerial ball against an opponent during a competitive match"
+    }
+  },
+  {
+    key: "home-essential-fixtures",
+    label: "Homepage — Club Essentials: Fixtures & Events card",
+    default: {
+      src: "/images/ground/astra-ground-wide-sky-1280.webp",
+      alt: "Wide view of the Darebin International Sports Centre pitch under an open sky on a match day"
+    }
+  },
   {
     key: "home-news",
     label: "Homepage — News & media photo",

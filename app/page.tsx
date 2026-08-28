@@ -1,15 +1,11 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  CalendarDays,
-  ClipboardList,
   ExternalLink,
-  GraduationCap,
   MapPin,
   ShieldCheck,
   Trophy,
-  Users,
-  type LucideIcon
+  Users
 } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroIntro } from "@/src/components/HeroIntro";
@@ -112,37 +108,33 @@ const pathwayBlocks: {
   }
 ];
 
-// Club Essentials quick-links matrix (Revised content spec §5): routes parents,
-// senior players, and fans straight to their destination. Rendered as full-width
-// navy bars (t6) — gold title · description · red CTA.
-const clubEssentials: { title: string; copy: string; cta: string; href: string; icon: LucideIcon }[] = [
+// Club Essentials — the Quick Navigation Matrix (Revised homepage architecture
+// §7). Cut from four items to three and all renamed, per the deck. It also takes
+// the CARD design the pathway grid gave up, which is the other half of the deck's
+// swap, so each item now carries a photo and no longer needs an icon.
+const clubEssentials: { title: string; copy: string; cta: string; href: string; slot: SlotKey }[] = [
   {
-    title: "Our Teams",
-    copy: "From Under 6s to First Team squads, explore our comprehensive Astra FC team rosters.",
-    cta: "Explore Squads",
-    href: "/teams",
-    icon: Users
+    title: "Meet the Club",
+    copy: "Discover our club history, leadership team, and our growth vision across Melbourne suburbs.",
+    cta: "About Astra United",
+    href: "/the-club",
+    slot: "home-essential-club"
   },
   {
-    title: "Astra Academy",
-    copy: "Specialist football coaching programmes engineered for elite youth player development.",
-    cta: "Academy Programs",
-    href: "/teams",
-    icon: GraduationCap
-  },
-  {
-    title: "Fixtures & Results",
-    copy: "Stay up to date with the latest league fixtures, results, and upcoming kick-off times.",
-    cta: "Match Centre",
-    href: "/news-media",
-    icon: CalendarDays
-  },
-  {
-    title: "Join the Club",
-    copy: "Comprehensive information on youth football trials, club membership fees, and registration.",
-    cta: "Trial Information",
+    title: "Trials & Fees",
+    copy: "Stay informed on upcoming youth football trials, seasonal club membership fees, and step-by-step registration.",
+    cta: "Trial & Fee Info",
     href: "/join-us",
-    icon: ClipboardList
+    slot: "home-essential-trials"
+  },
+  {
+    title: "Fixtures & Events",
+    copy: "Access the Training Calendar, Academy Events, Program Schedule, and Private Sessions.",
+    cta: "View Event Calendar",
+    // the live "This Week at Astra" band further down IS the training calendar
+    // and events rail, so this routes there rather than off to another page.
+    href: "/#schedule",
+    slot: "home-essential-fixtures"
   }
 ];
 
@@ -345,56 +337,48 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 3 — Club Essentials (Revised content spec §5): a quick-links matrix
-            that routes each persona to their destination. Full-width navy bars
-            on a near-black band — gold title, description, red CTA (t6). */}
+        {/* 3 — Club Essentials, the Quick Navigation Matrix (Revised homepage
+            architecture §7). The deck's note under this section reads "Change the
+            design similar to our programs", so it now takes the photo-card design
+            the pathway grid vacated: image, gold crest title, copy, red CTA. Cut
+            from four items to three and all renamed. Keeps its own headline and
+            gold subhead — the deck specs neither a Small Label nor a replacement
+            headline here, only the matrix itself. */}
         <FlowReveal className="section-band band-deep">
           <div className="container-wide">
             <div data-touchline-node>
-              <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
+              <h2 className="crest-type type-h2 text-white">
                 <span className="text-astra-red">Club</span> Essentials
               </h2>
-              <p className="mt-3 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
+              <p className="type-subhead mt-3 text-astra-gold">
                 Quick links to everything you need
               </p>
             </div>
-            <div className="mt-10 flex flex-col gap-4">
-              {clubEssentials.map((item, index) => {
-                const Icon = item.icon;
-                return (
-                  <PopCard
-                    key={item.title}
-                    delay={index * 0.05}
-                    className="group relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#0e3258] to-[#0a1f38] ring-1 ring-white/10 transition duration-300 hover:ring-astra-gold/45 hover:shadow-[0_26px_55px_-26px_rgba(0,0,0,0.9)]"
-                  >
-                    {/* gold left-edge accent — wipes in on hover/focus */}
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-y-0 left-0 w-1 origin-center scale-y-0 bg-astra-gold transition-transform duration-300 group-hover:scale-y-100 group-focus-within:scale-y-100"
+            <div className="mt-10 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {clubEssentials.map((item, index) => (
+                <PopCard key={item.title} delay={index * 0.05} className="card-dark overflow-hidden">
+                  <Link href={item.href} className="card-link group block h-full">
+                    <SlotImage
+                      slot={item.slot}
+                      width={1280}
+                      height={853}
+                      sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                      className="h-44 w-full object-cover"
                     />
-                    {/* warm sheen drifting from the left on hover */}
-                    <span
-                      aria-hidden="true"
-                      className="pointer-events-none absolute inset-0 -z-0 bg-[radial-gradient(120%_120%_at_0%_50%,rgba(242,201,76,0.10),transparent_55%)] opacity-0 transition-opacity duration-300 group-hover:opacity-100"
-                    />
-                    <div className="relative grid items-center gap-4 p-5 sm:gap-6 sm:p-6 lg:grid-cols-[3.5rem_minmax(0,0.9fr)_minmax(0,1.7fr)_15rem] lg:gap-7">
-                      {/* icon tile */}
-                      <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-astra-gold/10 ring-1 ring-astra-gold/25 transition-colors duration-300 group-hover:bg-astra-gold/20">
-                        <Icon aria-hidden="true" className="h-6 w-6 text-astra-gold" />
-                      </span>
-                      <p className="crest-type text-2xl text-astra-gold">{item.title}</p>
-                      <p className="text-sm leading-6 text-white/80 sm:text-base">{item.copy}</p>
-                      <CtaLink
-                        href={item.href}
-                        className="w-full justify-center whitespace-nowrap px-5 py-3 text-sm font-black uppercase tracking-wide"
-                      >
+                    <div className="p-6">
+                      <h3 className="crest-type type-h4 text-astra-gold">{item.title}</h3>
+                      <p className="type-body mt-3 text-white/72">{item.copy}</p>
+                      <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
                         {item.cta}
-                        <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
-                      </CtaLink>
+                        <ArrowRight
+                          aria-hidden="true"
+                          className="h-4 w-4 transition group-hover:translate-x-1"
+                        />
+                      </span>
                     </div>
-                  </PopCard>
-                );
-              })}
+                  </Link>
+                </PopCard>
+              ))}
             </div>
           </div>
         </FlowReveal>
