@@ -683,21 +683,27 @@ svg {
 }
 
 /* The conversion footer (§10). Every other band is one of two navies, which is
-   what makes the page feel like one surface — so the final call to action leaves
-   that system deliberately and arrives in club red. It is the only band that is
-   not deep or fog, and that is the point: the colour change is the signal that
-   the page has stopped explaining and started asking.
+   what makes the page read as one surface — so the closing ask leaves that system
+   deliberately and arrives in club red. Being outside the deep/fog alternation it
+   also cannot disturb it.
 
-   The diagonal hatch is barely visible on its own; it stops a large flat red
-   panel from banding on wide screens. Sits under .container-wide, which
-   section-band already lifts to z-index 20. */
+   Red alone was not enough, so the band is built as a floodlit pitch at night:
+   crimson falling to near-black, two light beams raking in from the top corners,
+   and a perspective grid along the bottom that reads as the pitch receding. All
+   CSS — no photograph to load, and it stays sharp at any width. Nothing else on
+   the page uses this vocabulary, which is the point of a final call to action. */
 .band-final {
+  /* the beams are rotated and sit at left/right -8%, so they overhang the band.
+     Nothing above this in the tree clips, and at some widths that overhang would
+     become a horizontal scrollbar — so the band clips its own decoration. */
+  overflow: hidden;
   background:
-    radial-gradient(90% 120% at 12% 6%, rgba(242, 201, 76, 0.18), transparent 52%),
-    radial-gradient(80% 110% at 90% 94%, rgba(0, 0, 0, 0.5), transparent 62%),
-    linear-gradient(135deg, #c81916 0%, #7c100e 46%, #2a0708 100%);
+    radial-gradient(90% 120% at 12% 4%, rgba(242, 201, 76, 0.20), transparent 54%),
+    radial-gradient(70% 90% at 50% 100%, rgba(0, 0, 0, 0.62), transparent 66%),
+    linear-gradient(150deg, #c81916 0%, #85110f 38%, #35090a 72%, #150405 100%);
 }
 
+/* fine grain, so a large flat red panel does not band on wide screens */
 .band-final::before {
   position: absolute;
   inset: 0;
@@ -708,6 +714,62 @@ svg {
     rgba(255, 255, 255, 0.035) 0 2px,
     transparent 2px 26px
   );
+}
+
+/* floodlights raking in from the top corners, breathing out of sync */
+.final-beam {
+  position: absolute;
+  top: -20%;
+  height: 140%;
+  width: 48%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 244, 218, 0.22) 0%,
+    rgba(255, 244, 218, 0.07) 36%,
+    transparent 72%
+  );
+  filter: blur(30px);
+  animation: astra-beam-breathe 9s ease-in-out infinite;
+}
+
+.final-beam-left {
+  left: -8%;
+  transform-origin: top center;
+  transform: rotate(15deg);
+}
+
+.final-beam-right {
+  right: -8%;
+  transform-origin: top center;
+  transform: rotate(-15deg);
+  animation-delay: -4.5s;
+}
+
+@keyframes astra-beam-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* the pitch itself, receding into the band. A flat grid tipped back in
+   perspective and faded out toward the horizon. */
+.final-pitch {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 54%;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.13) 0 2px, transparent 2px 96px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.09) 0 2px, transparent 2px 64px);
+  transform: perspective(560px) rotateX(70deg);
+  transform-origin: bottom center;
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 88%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 88%);
 }
 
 /* §8 hero: the orbiting ball.

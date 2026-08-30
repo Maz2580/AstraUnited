@@ -634,6 +634,14 @@ export default function Home() {
             band would vanish. Same reason the primary CTA is gold rather than the
             site's red button. */}
         <FlowReveal className="section-band band-final">
+          {/* decorative only, and deliberately siblings of the content rather than
+              pseudo-elements: .band-final already spends ::before on grain, and a
+              floodlight needs its own element to breathe on its own timer.
+              .section-band lifts .container-wide to z-index 20, so these sit
+              behind the copy without any z-index of their own. */}
+          <span aria-hidden="true" className="final-beam final-beam-left" />
+          <span aria-hidden="true" className="final-beam final-beam-right" />
+          <span aria-hidden="true" className="final-pitch" />
           <div data-touchline-node className="container-wide">
             <div className="mx-auto max-w-3xl text-center">
               <h2 className="crest-type type-h2 text-white">
