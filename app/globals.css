@@ -682,6 +682,34 @@ svg {
   animation: astra-dash-march 1.4s linear infinite;
 }
 
+/* The conversion footer (§10). Every other band is one of two navies, which is
+   what makes the page feel like one surface — so the final call to action leaves
+   that system deliberately and arrives in club red. It is the only band that is
+   not deep or fog, and that is the point: the colour change is the signal that
+   the page has stopped explaining and started asking.
+
+   The diagonal hatch is barely visible on its own; it stops a large flat red
+   panel from banding on wide screens. Sits under .container-wide, which
+   section-band already lifts to z-index 20. */
+.band-final {
+  background:
+    radial-gradient(90% 120% at 12% 6%, rgba(242, 201, 76, 0.18), transparent 52%),
+    radial-gradient(80% 110% at 90% 94%, rgba(0, 0, 0, 0.5), transparent 62%),
+    linear-gradient(135deg, #c81916 0%, #7c100e 46%, #2a0708 100%);
+}
+
+.band-final::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.035) 0 2px,
+    transparent 2px 26px
+  );
+}
+
 /* §8 hero: the orbiting ball.
 
    The orbits are SVG ellipses, not rotated CSS circles. Two reasons. A hairline

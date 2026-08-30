@@ -7,10 +7,8 @@ import {
   ExternalLink,
   GraduationCap,
   Hand,
-  MapPin,
   ShieldCheck,
-  Trophy,
-  Users
+  Trophy
 } from "lucide-react";
 import { CtaLink } from "@/src/components/CtaLink";
 import { HeroIntro } from "@/src/components/HeroIntro";
@@ -35,6 +33,7 @@ import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 import { NewsSection } from "@/src/components/content/NewsSection";
 import { ScheduleSection } from "@/src/components/content/ScheduleSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
+import { SubscribeBox } from "@/src/components/content/SubscribeBox";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
 
@@ -621,46 +620,61 @@ export default function Home() {
             of → join). Renders band-fog, so Join flips to band-deep below it. */}
         <ScheduleSection />
 
-        {/* 10 — Join / contact CTA (Revised content spec §9): moved to sit directly
-            after the News section as the closing call to action. */}
-        <FlowReveal className="section-band band-deep">
-          <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
-            <SectionHeader
-              eyebrow="Join Astra"
-              title="Ready to lace up your boots?"
-              copy="Registration is open for the 2026 season. Join as a player, coach, volunteer, or community partner - we train and play at Darebin International Sports Centre."
-              inverse
-            />
-            <div className="grid gap-4 sm:grid-cols-2">
-              <PopCard>
-                <Link href="/join-us" className="card-dark card-link group block h-full p-6 text-white">
-                  <Users aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
-                  <h3 className="text-xl font-black">Register or trial</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/72">Player registration, open trials, and development pathway information for the 2026 season.</p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
-                    Start here <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </span>
+        {/* 10 — The Conversion Footer (Revised homepage architecture §10). The
+            deck's closing ask: headline, the membership/trials paragraph, two
+            registration CTAs, and the newsletter the deck titles "Stay Connected"
+            — which moves here out of the News band.
+
+            BAND: the team asked for this section to stand apart, so it is the one
+            band on the page that leaves the deep/fog navy system entirely and
+            arrives in club red. Because it is outside that alternation it also
+            cannot disturb it — the ten bands above still run strictly deep/fog.
+
+            The headline accent is GOLD, not the usual red: a red word on a red
+            band would vanish. Same reason the primary CTA is gold rather than the
+            site's red button. */}
+        <FlowReveal className="section-band band-final">
+          <div data-touchline-node className="container-wide">
+            <div className="mx-auto max-w-3xl text-center">
+              <h2 className="crest-type type-h2 text-white">
+                Secure Your Place in the Astra United{" "}
+                <span className="text-astra-gold">Family</span>
+              </h2>
+              <p className="type-lead mx-auto mt-5 max-w-2xl text-white/85">
+                Don&apos;t miss out on the upcoming competitive cycle. Lock in your football club
+                membership, register for our upcoming youth football trials, and experience an
+                elite development journey.{" "}
+                <strong className="font-bold text-astra-gold">
+                  Registrations for the 2026 season are officially open.
+                </strong>
+              </p>
+              <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
+                <Link
+                  href="/join-us"
+                  className="btn btn-sweep inline-flex w-full items-center justify-center gap-2 rounded bg-astra-gold px-6 py-3.5 text-sm font-black uppercase tracking-wide text-astra-ink sm:w-auto"
+                >
+                  Apply for 2026 Academy Registration
+                  <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
                 </Link>
-              </PopCard>
-              <PopCard delay={0.08}>
-                <Link href="/contact" className="card-dark card-link group block h-full p-6 text-white">
-                  <MapPin aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
-                  <h3 className="text-xl font-black">Darebin International Sports Centre</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/72">281 Darebin Road, Thornbury VIC 3071. Reach us for registration, sponsorship, volunteering, or media.</p>
-                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
-                    Contact the club <ArrowRight aria-hidden="true" className="h-4 w-4 transition group-hover:translate-x-1" />
-                  </span>
+                {/* no representative-trials page exists yet — §8 lists that track
+                    as coming soon — so this lands on /join-us with the rest of the
+                    trial information. Re-point when there is somewhere to go. */}
+                <Link
+                  href="/join-us"
+                  className="btn inline-flex w-full items-center justify-center gap-2 rounded border border-white/45 px-6 py-3.5 text-sm font-black uppercase tracking-wide text-white transition hover:bg-white/10 sm:w-auto"
+                >
+                  Register for Representative Trials
+                  <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
                 </Link>
-              </PopCard>
+              </div>
+            </div>
+
+            <div className="mx-auto mt-10 max-w-3xl">
+              <SubscribeBox />
             </div>
           </div>
         </FlowReveal>
 
-        {/* Club Spotlight (mid) */}
-        <SpotlightSection placement="mid" />
-
-        {/* Club Spotlight (after news) */}
-        <SpotlightSection placement="after-news" />
       </Touchline>
     </main>
   );

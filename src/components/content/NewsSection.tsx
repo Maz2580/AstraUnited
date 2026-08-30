@@ -5,12 +5,12 @@ import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
 import { listSummaries, partnersCard } from "@/src/lib/content/news";
 import { NewsCard } from "./NewsCard";
-import { SubscribeBox } from "./SubscribeBox";
 
 /**
  * "Latest News & Match Reports" — Revised homepage architecture §9, "News from
  * the Training Ground & Partners". A homepage teaser showing the three most
- * recent posts and the newsletter Subscribe box.
+ * recent posts. The newsletter signup that used to close this band now lives in
+ * §10, where the deck puts it.
  *
  * The deck's two §9 entries are not extra blocks: the match report IS the first
  * card (the seed post carries its headline, and a real published report replaces
@@ -66,11 +66,6 @@ export async function NewsSection() {
             View all news
             <ArrowRight aria-hidden="true" className="btn-icon h-4 w-4" />
           </CtaLink>
-        </div>
-
-        {/* Compact newsletter signup bar, beneath the news cards. */}
-        <div className="mt-6">
-          <SubscribeBox />
         </div>
       </div>
     </FlowReveal>
