@@ -40,7 +40,9 @@ type SamplePost = {
 export const samplePosts: SamplePost[] = [
   {
     slug: "senior-team-secure-three-points",
-    title: "Senior Team Secure Crucial Three Points",
+    // headline per Revised Homepage Architecture §9. Seed copy: it is replaced
+    // wholesale the moment the club publishes a real report through /admin.
+    title: "Senior Squad Secures Crucial Three Points in Local Football Thriller",
     category: "Match Report",
     dateLabel: "14 June 2026",
     excerpt:
