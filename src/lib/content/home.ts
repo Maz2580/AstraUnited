@@ -122,21 +122,38 @@ export const trustStandards = {
 //
 // Each title drops the deck's trailing "(Coming Soon)": every card carries a
 // COMING SOON pill, so repeating it in the heading says the same thing twice.
+//
+// `intro`, and the closing sentence on three of the four `copy` fields, come from
+// Mazdak's design mockup rather than the architecture doc — they are the only
+// copy on the page that is not in the team's deck. Flagged so the team can adopt
+// or drop them; everything else here is verbatim.
+//
+// `art` is decorative generated artwork (Higgsfield "z_image", Aug 2026), not
+// club photography, and is deliberately NOT on a photo slot: the whole band is
+// temporary by definition — each card leaves as its initiative launches — so five
+// more entries in the admin Photos tab would be clutter with a short life.
+export const comingSoonIntro =
+  "Pioneering the future of football development through evidence-based innovation, advanced technology, and holistic player growth programs.";
+
 export const comingSoon = [
   {
     title: "The Astra Learning Centre",
-    copy: "We don't just coach young footballers—we educate families. Rooted in our founder's academic background in Sport Management and Clinical Psychology, this digital hub will feature monthly modules on Sports Psychology, Nutrition & Recovery, Parent Education, and Football Tactics."
+    copy: "We don't just coach young footballers—we educate families. Rooted in our founder's academic background in Sport Management and Clinical Psychology, this digital hub will feature monthly modules on Sports Psychology, Nutrition & Recovery, Parent Education, and Football Tactics.",
+    art: "/images/future/astra-future-learning-centre-1280.webp"
   },
   {
     title: "\u201cAstra Evolution\u201d Girls Program (Ages 9\u201313)",
-    copy: "A dedicated, specialised stream driving girls' football development through empowering, sports-science-backed coaching models."
+    copy: "A dedicated, specialised stream driving girls' football development through empowering, sports-science-backed coaching models. Building confidence, leadership, and a lifelong love for the game.",
+    art: "/images/future/astra-future-girls-program-1280.webp"
   },
   {
     title: "Goalkeeper Academy & Elite Next-Gen Squads",
-    copy: "Specialised positional training frameworks designed for modern goalkeeping and elite match preparation."
+    copy: "Specialised positional training frameworks designed for modern goalkeeping and elite match preparation. Developing the next generation of game-changers.",
+    art: "/images/future/astra-future-goalkeeper-1280.webp"
   },
   {
     title: "Interactive Match Centre",
-    copy: "Real-time fixture tracking, results, and detailed match analytics."
+    copy: "Real-time fixture tracking, results, and detailed match analytics. Advanced performance insights for players, parents, and coaches.",
+    art: "/images/future/astra-future-match-centre-1280.webp"
   }
 ];

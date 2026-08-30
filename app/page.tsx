@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import {
   ArrowRight,
@@ -23,6 +24,7 @@ import { StandardsBoard } from "@/src/components/StandardsBoard";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
 import {
   comingSoon,
+  comingSoonIntro,
   developmentModel,
   developmentPillars,
   trustStandards,
@@ -440,61 +442,94 @@ export default function Home() {
         </FlowReveal>
 
         {/* 5 — Future Preview & Coming Soon Initiatives (Revised homepage
-            architecture §8). Four initiatives that do not exist yet, so the
-            design says "not built" rather than leaning on the words alone:
-            dashed borders, a faint blueprint grid, and dashes that march along
-            each card's top edge. Nothing else on the page uses a dashed edge, and
-            marching dashes are a different KIND of motion from the travelling
-            lights on the pillars rail and the standards board — a third
-            travelling light would only have repeated the page's own trick.
+            architecture §8), built to Mazdak's design. Each card carries its own
+            generated artwork bleeding in from the right behind the copy, a
+            circular gold icon badge, and a COMING SOON pill; the header pairs the
+            heading with an orbiting-ball hero graphic. No CTA on the cards — none
+            of these exist yet, so a button would promise somewhere to go.
+
+            The artwork is masked, not scrimmed: each image fades out toward the
+            left with a CSS mask, so the card's own gradient shows through
+            underneath. An overlay would have needed a colour matching a gradient
+            that changes across the card, which cannot be done with one value.
 
             This is also where the Astra Evolution Girls Program returns: §5 drops
             it from the live pathway grid on the deck's instruction, and until
             this band existed girls' football had no mention on the homepage. */}
         <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide">
-            <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
-              Future preview
-            </p>
-            <h2 className="crest-type type-h2 mt-3 text-white">
-              Innovation &amp; <span className="text-astra-red">Future</span> Growth Initiatives
-            </h2>
+            <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
+              <div>
+                <p className="type-body type-strong inline-flex items-center gap-2 uppercase tracking-[0.2em] text-astra-red">
+                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-astra-red" />
+                  Future preview
+                </p>
+                <h2 className="crest-type type-h2 mt-3 text-white">
+                  Innovation &amp; <span className="text-astra-red">Future</span> Growth Initiatives
+                </h2>
+                <p className="type-body mt-4 max-w-2xl text-white/72">{comingSoonIntro}</p>
+              </div>
+              {/* orbiting-ball hero graphic */}
+              <div className="relative mx-auto hidden aspect-[16/10] w-full max-w-lg lg:block">
+                <Image
+                  src="/images/future/astra-future-orbit-ball-1280.webp"
+                  alt=""
+                  aria-hidden="true"
+                  fill
+                  sizes="(min-width: 1024px) 38vw, 0px"
+                  className="object-contain"
+                />
+              </div>
+            </div>
+
             {/* Two across rather than four: the Learning Centre carries four times
                 the copy of the Match Centre, and a wider column stops that
-                imbalance stretching every card to its height. It is also a grid
-                shape the page does not use anywhere else. */}
+                imbalance stretching every card to the tallest one's height. */}
             <div className="mt-10 grid gap-5 sm:grid-cols-2">
               {comingSoon.map((item, index) => {
                 const Icon = SOON_ICONS[index];
                 return (
                   <PopCard key={item.title} delay={index * 0.05} className="h-full">
-                    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-dashed border-astra-gold/30 bg-gradient-to-br from-[#0d2c4d] to-[#06141f] p-6 transition-colors duration-300 hover:border-astra-gold/60">
-                      {/* marching dashes: under construction */}
-                      <span aria-hidden="true" className="dash-rule absolute inset-x-0 top-0 h-px" />
-                      {/* blueprint grid, barely there */}
-                      <span
+                    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#0c2338] to-[#061320] p-6 transition-colors duration-300 hover:border-astra-gold/45">
+                      {/* generated artwork, faded out toward the left by a mask so
+                          the card gradient carries through beneath it */}
+                      <div
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+                        className="pointer-events-none absolute inset-y-0 right-0 w-[64%] opacity-30 sm:opacity-80"
                         style={{
-                          backgroundImage:
-                            "linear-gradient(rgba(242,201,76,1) 1px, transparent 1px), linear-gradient(90deg, rgba(242,201,76,1) 1px, transparent 1px)",
-                          backgroundSize: "28px 28px"
+                          maskImage:
+                            "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.55) 38%, black 82%)",
+                          WebkitMaskImage:
+                            "linear-gradient(to right, transparent 0%, rgba(0,0,0,0.55) 38%, black 82%)"
                         }}
-                      />
+                      >
+                        <Image
+                          src={item.art}
+                          alt=""
+                          fill
+                          sizes="(min-width: 640px) 22vw, 60vw"
+                          className="object-cover"
+                        />
+                      </div>
+                      {/* marching dashes along the top edge — under construction */}
+                      <span aria-hidden="true" className="dash-rule absolute inset-x-0 top-0 h-px" />
+
                       <div className="relative flex items-start justify-between gap-4">
                         <span
                           aria-hidden="true"
-                          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-dashed border-astra-gold/40 bg-astra-gold/5"
+                          className="grid h-12 w-12 shrink-0 place-items-center rounded-full border border-astra-gold/40 bg-astra-gold/10"
                         >
                           <Icon className="h-5 w-5 text-astra-gold" />
                         </span>
-                        <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-astra-gold/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-astra-gold ring-1 ring-astra-gold/25">
+                        <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-astra-gold/12 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-astra-gold ring-1 ring-astra-gold/30 backdrop-blur">
                           <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-astra-gold" />
                           Coming soon
                         </span>
                       </div>
-                      <h3 className="crest-type type-h4 relative mt-5 text-white">{item.title}</h3>
-                      <p className="type-body relative mt-3 text-white/72">{item.copy}</p>
+                      <h3 className="crest-type type-h4 relative mt-5 max-w-[19ch] text-white">
+                        {item.title}
+                      </h3>
+                      <p className="type-body relative mt-3 max-w-[38ch] text-white/72">{item.copy}</p>
                     </div>
                   </PopCard>
                 );
