@@ -682,6 +682,49 @@ svg {
   animation: astra-dash-march 1.4s linear infinite;
 }
 
+/* §8 hero: the orbiting ball. The gold rings are drawn in CSS rather than baked
+   into the artwork, so they can actually turn — a conic gradient masked down to a
+   1px ring, spun about its own centre, reads as a bright arc travelling round the
+   orbit. Each ring sits on its own plane (rotateX on the parent) so the spin
+   stays in that plane instead of pinwheeling flat.
+
+   The ball image itself is blended with mix-blend-screen at the call site: the
+   render is a bright subject on near-black, and screen drops those dark pixels to
+   nothing, which is what removes the visible image box against the band. */
+@keyframes astra-orbit-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes astra-orbit-float {
+  0%,
+  100% {
+    transform: translateY(-0.5rem);
+  }
+  50% {
+    transform: translateY(0.5rem);
+  }
+}
+
+.orbit-ring {
+  background: conic-gradient(
+    from 0deg,
+    transparent 0deg,
+    rgba(242, 201, 76, 0) 30deg,
+    rgba(242, 201, 76, 0.85) 90deg,
+    rgba(242, 201, 76, 0) 160deg,
+    transparent 360deg
+  );
+  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
+  animation: astra-orbit-spin 14s linear infinite;
+}
+
+.orbit-float {
+  animation: astra-orbit-float 7s ease-in-out infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

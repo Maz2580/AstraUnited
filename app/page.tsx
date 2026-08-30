@@ -19,6 +19,7 @@ import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
 import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
+import { FutureOrbit } from "@/src/components/FutureOrbit";
 import { ProgramPillarsRail } from "@/src/components/ProgramPillarsRail";
 import { StandardsBoard } from "@/src/components/StandardsBoard";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
@@ -460,8 +461,7 @@ export default function Home() {
           <div data-touchline-node className="container-wide">
             <div className="grid gap-8 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
               <div>
-                <p className="type-body type-strong inline-flex items-center gap-2 uppercase tracking-[0.2em] text-astra-red">
-                  <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-astra-red" />
+                <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
                   Future preview
                 </p>
                 <h2 className="crest-type type-h2 mt-3 text-white">
@@ -469,16 +469,12 @@ export default function Home() {
                 </h2>
                 <p className="type-body mt-4 max-w-2xl text-white/72">{comingSoonIntro}</p>
               </div>
-              {/* orbiting-ball hero graphic */}
-              <div className="relative mx-auto hidden aspect-[16/10] w-full max-w-lg lg:block">
-                <Image
-                  src="/images/future/astra-future-orbit-ball-1280.webp"
-                  alt=""
-                  aria-hidden="true"
-                  fill
-                  sizes="(min-width: 1024px) 38vw, 0px"
-                  className="object-contain"
-                />
+              {/* Orbiting-ball hero. The rings are drawn in CSS so they actually
+                  turn, the ball is screen-blended so its image box disappears
+                  against the band, and the whole assembly leans toward the
+                  pointer. See FutureOrbit. */}
+              <div className="hidden lg:block">
+                <FutureOrbit />
               </div>
             </div>
 
