@@ -682,43 +682,36 @@ svg {
   animation: astra-dash-march 1.4s linear infinite;
 }
 
-/* §8 hero: the orbiting ball. The gold rings are drawn in CSS rather than baked
-   into the artwork, so they can actually turn — a conic gradient masked down to a
-   1px ring, spun about its own centre, reads as a bright arc travelling round the
-   orbit. Each ring sits on its own plane (rotateX on the parent) so the spin
-   stays in that plane instead of pinwheeling flat.
+/* §8 hero: the orbiting ball.
 
-   The ball image itself is blended with mix-blend-screen at the call site: the
-   render is a bright subject on near-black, and screen drops those dark pixels to
-   nothing, which is what removes the visible image box against the band. */
-@keyframes astra-orbit-spin {
+   The orbits are SVG ellipses, not rotated CSS circles. Two reasons. A hairline
+   ring rotated to rotateX(72deg) lands on sub-pixel widths and shimmers, and a
+   conic gradient spun about its centre sweeps at a constant ANGULAR rate, which
+   in projection reads as a radar sweep rather than something travelling a path.
+
+   An SVG ellipse with pathLength="100" fixes both: the bright segment is a dash
+   moving along the path itself, so it travels at constant arc-length speed and
+   stays crisp at any size. Normalising to 100 also means one keyframe drives
+   every orbit whatever its actual perimeter. */
+@keyframes astra-orbit-dash {
   to {
-    transform: rotate(360deg);
+    stroke-dashoffset: -100;
   }
 }
 
 @keyframes astra-orbit-float {
   0%,
   100% {
-    transform: translateY(-0.5rem);
+    transform: translateY(-0.45rem);
   }
   50% {
-    transform: translateY(0.5rem);
+    transform: translateY(0.45rem);
   }
 }
 
-.orbit-ring {
-  background: conic-gradient(
-    from 0deg,
-    transparent 0deg,
-    rgba(242, 201, 76, 0) 30deg,
-    rgba(242, 201, 76, 0.85) 90deg,
-    rgba(242, 201, 76, 0) 160deg,
-    transparent 360deg
-  );
-  -webkit-mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
-  mask: radial-gradient(farthest-side, transparent calc(100% - 1.5px), #000 calc(100% - 1.5px));
-  animation: astra-orbit-spin 14s linear infinite;
+.orbit-dash {
+  animation: astra-orbit-dash linear infinite;
+  filter: drop-shadow(0 0 5px rgba(242, 201, 76, 0.75));
 }
 
 .orbit-float {

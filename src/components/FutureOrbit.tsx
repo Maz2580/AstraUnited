@@ -5,37 +5,92 @@ import { useRef, type CSSProperties, type PointerEvent } from "react";
 import { useReducedMotion } from "framer-motion";
 
 /**
- * The §8 hero: a football sitting inside two turning gold orbits that lean and
- * tilt toward the pointer.
+ * The §8 hero: a football with light travelling around it on elliptical orbits
+ * that pass BEHIND and in FRONT of the ball.
  *
- * Three things make it read as an object in space rather than a picture of one:
+ * The orbits are SVG ellipses drawn twice — once in a layer behind the ball and
+ * once in a layer in front of it, the front copy clipped to its lower half. With
+ * the ball sitting between the two layers in Z, the top of each orbit is hidden
+ * by the ball and the bottom crosses over it. That occlusion is the whole reason
+ * it reads as something going round a sphere rather than a ring drawn on top of
+ * a picture; the previous version had no occlusion and looked flat.
  *
- * 1. The rings are CSS, not part of the artwork. A conic gradient masked down to
- *    a hairline ring, spun about its own centre, sends a bright arc travelling
- *    round the orbit; each ring sits on its own rotateX plane so it turns IN that
- *    plane. Baked-into-the-image rings could never move.
- * 2. The ball artwork carries a real alpha channel. mix-blend-screen was tried
- *    first and was wrong: screen only erases pure black, and the render's
- *    background is mid-dark navy, so it lightened the band into a visible
- *    rectangle instead of disappearing. The asset is now a proper cutout
- *    (Higgsfield image_background_remover, trimmed to the subject), which is the
- *    only approach that holds up over a gradient band.
+ * Each orbit carries a faint full ellipse for the path and a short bright dash
+ * that travels it. Both ellipses set pathLength="100", so the dash is expressed
+ * in percent of the path and one keyframe drives every orbit no matter its real
+ * perimeter — and because the dash moves ALONG the path, it travels at constant
+ * arc-length speed instead of the constant angular speed a spun conic gradient
+ * gives, which is what made the old version look like a radar sweep.
  *
- *    The artwork is also a BARE ball — no baked rings, no HUD circles. An earlier
- *    render had both, and they sat frozen while the CSS orbits turned around
- *    them, which read as broken rather than rich. Everything that moves here now
- *    moves; nothing is painted on.
- * 3. Pointer position drives a small parallax: the whole assembly tilts a few
- *    degrees, and the ball shifts slightly further than the rings, so the two
- *    separate in depth as you move across it.
+ * Pointer position leans the whole assembly and pushes the ball a little further
+ * than the orbits, so the planes separate in depth as you move across it.
+ * Tracking writes CSS variables straight to the node rather than going through
+ * React state: pointermove fires constantly and re-rendering the tree at that
+ * rate for a decorative tilt would be waste — the same approach the touchline and
+ * the pillars rail already use.
  *
- * Pointer tracking writes CSS variables straight to the node rather than going
- * through React state — this fires on every pointermove, and re-rendering the
- * tree at that rate for a decorative tilt would be wasteful.
+ * The ball artwork is a bare cut-out: no baked rings, no HUD circles. Anything
+ * painted into the image cannot move, and an earlier render's frozen rings sat
+ * dead while these turned around them.
  *
- * With reduced motion the rings and float stop (the global reduced-motion rule
- * handles that) and the tilt is never wired up.
+ * Reduced motion: the global rule stops the dash and the float, leaving the
+ * orbits as static arcs, and the tilt is never wired up.
  */
+
+// rx / ry / rotation / seconds-per-lap / direction. Deliberately unequal so the
+// three never line up into a single pulsing shape.
+const ORBITS = [
+  { rx: 188, ry: 62, rot: -16, dur: 11, reverse: false, width: 1.6, dash: 16 },
+  { rx: 150, ry: 96, rot: 28, dur: 8, reverse: true, width: 1.3, dash: 11 },
+  { rx: 168, ry: 40, rot: 8, dur: 14, reverse: false, width: 1.1, dash: 8 }
+];
+
+function Orbits({ clipped = false }: { clipped?: boolean }) {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 400 400"
+      className="absolute inset-0 h-full w-full overflow-visible"
+      // the front copy shows only its lower half, so the top of every orbit is
+      // left to the ball to cover
+      style={clipped ? { clipPath: "inset(50% 0 0 0)" } : undefined}
+    >
+      {ORBITS.map((o) => (
+        <g key={`${o.rx}-${o.ry}`} transform={`rotate(${o.rot} 200 200)`}>
+          {/* the path itself, barely there */}
+          <ellipse
+            cx={200}
+            cy={200}
+            rx={o.rx}
+            ry={o.ry}
+            fill="none"
+            stroke="rgba(242,201,76,0.16)"
+            strokeWidth={o.width}
+          />
+          {/* the light travelling it */}
+          <ellipse
+            className="orbit-dash"
+            cx={200}
+            cy={200}
+            rx={o.rx}
+            ry={o.ry}
+            fill="none"
+            stroke="rgba(242,201,76,0.95)"
+            strokeWidth={o.width + 0.4}
+            strokeLinecap="round"
+            pathLength={100}
+            strokeDasharray={`${o.dash} ${100 - o.dash}`}
+            style={{
+              animationDuration: `${o.dur}s`,
+              animationDirection: o.reverse ? "reverse" : "normal"
+            }}
+          />
+        </g>
+      ))}
+    </svg>
+  );
+}
+
 export function FutureOrbit() {
   const reduced = useReducedMotion() ?? false;
   const stageRef = useRef<HTMLDivElement | null>(null);
@@ -45,10 +100,8 @@ export function FutureOrbit() {
     if (!el || reduced) return;
     const rect = el.getBoundingClientRect();
     // -0.5 … 0.5 from the centre of the stage
-    const x = (event.clientX - rect.left) / rect.width - 0.5;
-    const y = (event.clientY - rect.top) / rect.height - 0.5;
-    el.style.setProperty("--px", x.toFixed(3));
-    el.style.setProperty("--py", y.toFixed(3));
+    el.style.setProperty("--px", ((event.clientX - rect.left) / rect.width - 0.5).toFixed(3));
+    el.style.setProperty("--py", ((event.clientY - rect.top) / rect.height - 0.5).toFixed(3));
   };
 
   const release = () => {
@@ -63,54 +116,34 @@ export function FutureOrbit() {
       ref={stageRef}
       onPointerMove={track}
       onPointerLeave={release}
-      className="relative mx-auto aspect-square w-full max-w-[26rem]"
-      style={{ perspective: "900px", "--px": 0, "--py": 0 } as CSSProperties}
+      className="relative mx-auto aspect-square w-full max-w-[27rem]"
+      style={{ perspective: "1000px", "--px": 0, "--py": 0 } as CSSProperties}
     >
-      {/* everything leans together toward the pointer */}
       <div
         className="absolute inset-0 transition-transform duration-500 ease-out [transform-style:preserve-3d]"
-        style={{
-          transform:
-            "rotateX(calc(var(--py) * -14deg)) rotateY(calc(var(--px) * 18deg))"
-        }}
+        style={{ transform: "rotateX(calc(var(--py) * -12deg)) rotateY(calc(var(--px) * 16deg))" }}
       >
         {/* soft gold bloom behind the ball */}
         <span
           aria-hidden="true"
-          className="absolute inset-[12%] rounded-full"
+          className="absolute inset-[14%] rounded-full"
           style={{
             background:
-              "radial-gradient(circle, rgba(242,201,76,0.22) 0%, rgba(242,201,76,0.06) 45%, transparent 70%)"
+              "radial-gradient(circle, rgba(242,201,76,0.20) 0%, rgba(242,201,76,0.05) 48%, transparent 72%)"
           }}
         />
 
-        {/* outer orbit — leans back, turns slowly */}
-        <div
-          aria-hidden="true"
-          className="absolute inset-0 grid place-items-center"
-          style={{ transform: "rotateX(72deg)" }}
-        >
-          <span className="orbit-ring block h-full w-full rounded-full" />
+        {/* orbits behind the ball */}
+        <div className="absolute inset-0" style={{ transform: "translateZ(0px)" }}>
+          <Orbits />
         </div>
 
-        {/* inner orbit — tighter, tilted the other way, turning the other way */}
+        {/* the ball, between the two orbit layers */}
         <div
-          aria-hidden="true"
-          className="absolute inset-[16%] grid place-items-center"
-          style={{ transform: "rotateX(66deg) rotateZ(24deg)" }}
-        >
-          <span
-            className="orbit-ring block h-full w-full rounded-full"
-            style={{ animationDirection: "reverse", animationDuration: "9s" }}
-          />
-        </div>
-
-        {/* the ball: floats, and shifts a little further than the rings so the
-            two planes separate as the pointer moves */}
-        <div
-          className="absolute inset-[14%] transition-transform duration-500 ease-out"
+          className="absolute inset-[17%]"
           style={{
-            transform: "translate3d(calc(var(--px) * 14px), calc(var(--py) * 14px), 60px)"
+            transform: "translate3d(calc(var(--px) * 12px), calc(var(--py) * 12px), 40px)",
+            transition: "transform 500ms ease-out"
           }}
         >
           <div className="orbit-float relative h-full w-full">
@@ -119,10 +152,15 @@ export function FutureOrbit() {
               alt=""
               aria-hidden="true"
               fill
-              sizes="(min-width: 1024px) 26rem, 0px"
+              sizes="(min-width: 1024px) 27rem, 0px"
               className="object-contain"
             />
           </div>
+        </div>
+
+        {/* orbits in front of the ball — lower half only */}
+        <div className="absolute inset-0" style={{ transform: "translateZ(80px)" }}>
+          <Orbits clipped />
         </div>
       </div>
     </div>
