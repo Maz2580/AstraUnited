@@ -77,31 +77,38 @@ export const developmentPillars = [
   }
 ];
 
-// "Why Families Choose Astra" (Revised content spec §6) — five labelled reasons
-// that reinforce the decision to join. Each is a {label, detail} pair: the label
-// rides the swinging tag, the detail reveals on hover/focus (and shows inline in
-// the accessible/mobile fallback). Verbatim from the team's revised copy.
-export const whyFamilies = [
-  {
-    label: "Qualified Coaching Pedigree",
-    detail: "Learn from highly experienced, accredited UEFA and AFC coaches."
-  },
-  {
-    label: "Safe & Inclusive Environment",
-    detail: "Built strictly on rigorous child safeguarding and protection frameworks."
-  },
-  {
-    label: "Structured Development Pathway",
-    detail:
-      "A clear blueprint designed to transition players seamlessly from the Youth Academy to senior football."
-  },
-  {
-    label: "Multicultural Community Focus",
-    detail:
-      "Uniting diverse families across local Melbourne suburbs through a shared love of the game."
-  },
-  {
-    label: "Elite Training Environments",
-    detail: "Access to premium pitches and structured training setups tailored for player growth."
-  }
-];
+// Trust, Safety & Professional Standards (Revised homepage architecture §6) —
+// the parent-reassurance band. This REPLACES the five "Why families choose Astra"
+// reasons: the deck answers the same question a parent is asking, but with
+// specific checkable credentials (WWCC, insurance frameworks) rather than general
+// qualities, which is the whole point of the section per its user-flow goal.
+//
+// The headline lives in JSX in app/page.tsx so it can carry the red accent; the
+// lead-in and the four guardrails are plain prose and live here verbatim. The
+// deck specs no Small Label for §6, so — as in §3 — the lead-in takes the gold
+// accent line instead of a separate subhead.
+export const trustStandards = {
+  intro:
+    "At Astra United FC, providing a safe, inclusive, and professionally managed environment is our highest priority. We eliminate the guesswork for families by operating under strict professional guardrails:",
+  items: [
+    {
+      label: "Child Safe Commitment",
+      detail: "Fully aligned with national child safe frameworks and rigid internal club protocols."
+    },
+    {
+      label: "Rigorous Child Safeguarding Policies",
+      detail:
+        "Every coach and staff member holds verified technical qualifications and mandatory Working with Children Checks (WWCC)."
+    },
+    {
+      label: "Comprehensive Insurances",
+      detail:
+        "Fully backed by robust Public Liability and Professional Indemnity Insurance frameworks."
+    },
+    {
+      label: "Inclusive Culture",
+      detail:
+        "A supportive, positive, and pressure-free learning environment where mistakes are embraced as vital learning tools."
+    }
+  ]
+};

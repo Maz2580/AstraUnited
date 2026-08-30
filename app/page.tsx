@@ -1,7 +1,10 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  ClipboardCheck,
   ExternalLink,
+  HeartHandshake,
+  Lock,
   MapPin,
   ShieldCheck,
   Trophy,
@@ -14,16 +17,20 @@ import { FlowReveal, PopCard } from "@/src/components/FlowReveal";
 import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
-import { WhyFamiliesBoard } from "@/src/components/WhyFamiliesBoard";
 import { ProgramPillarsRail } from "@/src/components/ProgramPillarsRail";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
-import { developmentModel, developmentPillars, welcome, whyFamilies } from "@/src/lib/content/home";
+import { developmentModel, developmentPillars, trustStandards, welcome } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 import { NewsSection } from "@/src/components/content/NewsSection";
 import { ScheduleSection } from "@/src/components/content/ScheduleSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
+
+// One icon per guardrail, in the deck's order. It prints these as emoji
+// (lock, shield, clipboard, handshake); the design system is lucide, so these
+// are the lucide equivalents.
+const TRUST_ICONS = [Lock, ShieldCheck, ClipboardCheck, HeartHandshake] as const;
 
 const sponsorTiers = [
   {
@@ -396,30 +403,56 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 5 — Why families choose Astra (Revised content spec §6): moved to sit
-            directly after the founder bio. Interactive "hanging tags" board (t7) —
-            the five reasons swing from a rail on scroll, drag, and pointer for a
-            3D, locker-room feel that rewards continued scrolling. */}
-        <FlowReveal className="section-band band-deep" id="why-families">
+        {/* 5 — Trust, Safety & Professional Standards (Revised homepage
+            architecture §6). Replaces the "Why families choose Astra" board: the
+            deck answers the same parent question with checkable credentials
+            instead of general qualities.
+
+            The Round-6 travelling-light pathway board is retired with it. That
+            component was built for FIVE milestones reading as a journey from
+            Future Stars to First Team; safeguarding and insurance are not steps
+            on a journey, and the journey idea now lives in §5's own headline.
+            Restore with: git checkout 678360f -- src/components/WhyFamiliesBoard.tsx
+
+            Presented as one solid panel of divided rows rather than another grid
+            of cards — the page already has pillar cards, pathway rows and
+            essentials cards, and a single unbroken panel reads as a credentials
+            list, which is what this section is. */}
+        <FlowReveal className="section-band band-deep" id="trust-standards">
           <div className="container-wide">
             <div
               data-touchline-node
-              className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center"
+              className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start"
             >
               <div>
-                <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">Why Astra</p>
-                <h2 className="mt-3 crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
-                  Why families choose <span className="text-astra-red">Astra</span>
+                <h2 className="crest-type type-h2 text-white">
+                  Uncompromising Standards. A <span className="text-astra-red">Protected</span>{" "}
+                  Environment.
                 </h2>
-                <p className="mt-4 text-lg font-black uppercase tracking-[0.04em] text-astra-gold sm:text-xl">
-                  Every reason is a step on the pathway
-                </p>
-                <p className="mt-4 max-w-md text-base leading-7 text-white/70">
-                  Easy-to-scan reasons that reinforce the decision to join — from accredited
-                  coaching to a safe, inclusive pathway from the Youth Academy to senior football.
-                </p>
+                <p className="type-subhead mt-4 text-astra-gold">{trustStandards.intro}</p>
               </div>
-              <WhyFamiliesBoard reasons={whyFamilies} />
+              <ul className="grid gap-5 rounded-2xl bg-gradient-to-br from-[#0d2c4d] to-[#06141f] p-6 ring-1 ring-astra-gold/15 sm:p-7">
+                {trustStandards.items.map((item, index) => {
+                  const Icon = TRUST_ICONS[index];
+                  return (
+                    <li
+                      key={item.label}
+                      className="flex gap-4 border-b border-white/10 pb-5 last:border-b-0 last:pb-0"
+                    >
+                      <span
+                        aria-hidden="true"
+                        className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-astra-gold/10 ring-1 ring-astra-gold/25"
+                      >
+                        <Icon className="h-5 w-5 text-astra-gold" />
+                      </span>
+                      <div>
+                        <h3 className="crest-type type-h5 text-astra-gold">{item.label}</h3>
+                        <p className="type-body mt-1 text-white/75">{item.detail}</p>
+                      </div>
+                    </li>
+                  );
+                })}
+              </ul>
             </div>
           </div>
         </FlowReveal>
