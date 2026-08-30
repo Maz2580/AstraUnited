@@ -88,6 +88,7 @@ export const developmentPillars = [
 // deck specs no Small Label for §6, so — as in §3 — the lead-in takes the gold
 // accent line instead of a separate subhead.
 export const trustStandards = {
+  eyebrow: "Parent peace of mind",
   intro:
     "At Astra United FC, providing a safe, inclusive, and professionally managed environment is our highest priority. We eliminate the guesswork for families by operating under strict professional guardrails:",
   items: [

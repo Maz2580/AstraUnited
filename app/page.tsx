@@ -1,10 +1,7 @@
 import Link from "next/link";
 import {
   ArrowRight,
-  ClipboardCheck,
   ExternalLink,
-  HeartHandshake,
-  Lock,
   MapPin,
   ShieldCheck,
   Trophy,
@@ -18,6 +15,7 @@ import { Touchline } from "@/src/components/Touchline";
 import { SectionHeader } from "@/src/components/SectionHeader";
 import { FounderFeature } from "@/src/components/FounderFeature";
 import { ProgramPillarsRail } from "@/src/components/ProgramPillarsRail";
+import { StandardsBoard } from "@/src/components/StandardsBoard";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
 import { developmentModel, developmentPillars, trustStandards, welcome } from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
@@ -26,11 +24,6 @@ import { ScheduleSection } from "@/src/components/content/ScheduleSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
-
-// One icon per guardrail, in the deck's order. It prints these as emoji
-// (lock, shield, clipboard, handshake); the design system is lucide, so these
-// are the lucide equivalents.
-const TRUST_ICONS = [Lock, ShieldCheck, ClipboardCheck, HeartHandshake] as const;
 
 const sponsorTiers = [
   {
@@ -404,55 +397,35 @@ export default function Home() {
         </FlowReveal>
 
         {/* 5 — Trust, Safety & Professional Standards (Revised homepage
-            architecture §6). Replaces the "Why families choose Astra" board: the
-            deck answers the same parent question with checkable credentials
-            instead of general qualities.
+            architecture §6). Replaces the "Why families choose Astra" CONTENT —
+            the deck answers the same parent question with checkable credentials
+            instead of general qualities — while KEEPING the Round-6 travelling
+            light board it was rendered on. See StandardsBoard for the two changes
+            that adaptation needed.
 
-            The Round-6 travelling-light pathway board is retired with it. That
-            component was built for FIVE milestones reading as a journey from
-            Future Stars to First Team; safeguarding and insurance are not steps
-            on a journey, and the journey idea now lives in §5's own headline.
-            Restore with: git checkout 678360f -- src/components/WhyFamiliesBoard.tsx
-
-            Presented as one solid panel of divided rows rather than another grid
-            of cards — the page already has pillar cards, pathway rows and
-            essentials cards, and a single unbroken panel reads as a credentials
-            list, which is what this section is. */}
+            Header follows the §4 pattern: the deck's own section name takes the
+            h2, and the line the deck labels "Headline:" becomes the gold deck
+            line beneath it. That keeps the block descending (16 -> 40 -> 20 -> 16)
+            and puts the section's actual subject in the heading. */}
         <FlowReveal className="section-band band-deep" id="trust-standards">
           <div className="container-wide">
             <div
               data-touchline-node
-              className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-start"
+              className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center"
             >
               <div>
-                <h2 className="crest-type type-h2 text-white">
-                  Uncompromising Standards. A <span className="text-astra-red">Protected</span>{" "}
-                  Environment.
+                <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
+                  {trustStandards.eyebrow}
+                </p>
+                <h2 className="crest-type type-h2 mt-3 text-white">
+                  Trust, <span className="text-astra-red">Safety</span> &amp; Professional Standards
                 </h2>
-                <p className="type-subhead mt-4 text-astra-gold">{trustStandards.intro}</p>
+                <p className="type-subhead mt-4 text-astra-gold">
+                  Uncompromising Standards. A Protected Environment.
+                </p>
+                <p className="type-body mt-4 max-w-md text-white/75">{trustStandards.intro}</p>
               </div>
-              <ul className="grid gap-5 rounded-2xl bg-gradient-to-br from-[#0d2c4d] to-[#06141f] p-6 ring-1 ring-astra-gold/15 sm:p-7">
-                {trustStandards.items.map((item, index) => {
-                  const Icon = TRUST_ICONS[index];
-                  return (
-                    <li
-                      key={item.label}
-                      className="flex gap-4 border-b border-white/10 pb-5 last:border-b-0 last:pb-0"
-                    >
-                      <span
-                        aria-hidden="true"
-                        className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-astra-gold/10 ring-1 ring-astra-gold/25"
-                      >
-                        <Icon className="h-5 w-5 text-astra-gold" />
-                      </span>
-                      <div>
-                        <h3 className="crest-type type-h5 text-astra-gold">{item.label}</h3>
-                        <p className="type-body mt-1 text-white/75">{item.detail}</p>
-                      </div>
-                    </li>
-                  );
-                })}
-              </ul>
+              <StandardsBoard items={trustStandards.items} />
             </div>
           </div>
         </FlowReveal>
