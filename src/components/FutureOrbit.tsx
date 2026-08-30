@@ -20,6 +20,11 @@ import { useReducedMotion } from "framer-motion";
  *    rectangle instead of disappearing. The asset is now a proper cutout
  *    (Higgsfield image_background_remover, trimmed to the subject), which is the
  *    only approach that holds up over a gradient band.
+ *
+ *    The artwork is also a BARE ball — no baked rings, no HUD circles. An earlier
+ *    render had both, and they sat frozen while the CSS orbits turned around
+ *    them, which read as broken rather than rich. Everything that moves here now
+ *    moves; nothing is painted on.
  * 3. Pointer position drives a small parallax: the whole assembly tilts a few
  *    degrees, and the ball shifts slightly further than the rings, so the two
  *    separate in depth as you move across it.
@@ -110,7 +115,7 @@ export function FutureOrbit() {
         >
           <div className="orbit-float relative h-full w-full">
             <Image
-              src="/images/future/astra-future-orbit-ball-cutout-1280.webp"
+              src="/images/future/astra-future-ball-1280.webp"
               alt=""
               aria-hidden="true"
               fill
