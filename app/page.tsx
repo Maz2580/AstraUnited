@@ -343,14 +343,48 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 3 — Club Essentials, the Quick Navigation Matrix (Revised homepage
+        {/* 3 — Trust, Safety & Professional Standards (Revised homepage
+            architecture §6). Replaces the "Why families choose Astra" CONTENT —
+            the deck answers the same parent question with checkable credentials
+            instead of general qualities — while KEEPING the Round-6 travelling
+            light board it was rendered on. See StandardsBoard for the two changes
+            that adaptation needed.
+
+            Header follows the §4 pattern: the deck's own section name takes the
+            h2, and the line the deck labels "Headline:" becomes the gold deck
+            line beneath it. That keeps the block descending (16 -> 40 -> 20 -> 16)
+            and puts the section's actual subject in the heading. */}
+        <FlowReveal className="section-band band-deep" id="trust-standards">
+          <div className="container-wide">
+            <div
+              data-touchline-node
+              className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center"
+            >
+              <div>
+                <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
+                  {trustStandards.eyebrow}
+                </p>
+                <h2 className="crest-type type-h2 mt-3 text-white">
+                  Trust, <span className="text-astra-red">Safety</span> &amp; Professional Standards
+                </h2>
+                <p className="type-subhead mt-4 text-astra-gold">
+                  Uncompromising Standards. A Protected Environment.
+                </p>
+                <p className="type-body mt-4 max-w-md text-white/75">{trustStandards.intro}</p>
+              </div>
+              <StandardsBoard items={trustStandards.items} />
+            </div>
+          </div>
+        </FlowReveal>
+
+        {/* 4 — Club Essentials, the Quick Navigation Matrix (Revised homepage
             architecture §7). The deck's note under this section reads "Change the
             design similar to our programs", so it now takes the photo-card design
             the pathway grid vacated: image, gold crest title, copy, red CTA. Cut
             from four items to three and all renamed. Keeps its own headline and
             gold subhead — the deck specs neither a Small Label nor a replacement
             headline here, only the matrix itself. */}
-        <FlowReveal className="section-band band-deep">
+        <FlowReveal className="section-band band-fog">
           <div className="container-wide">
             <div data-touchline-node>
               <h2 className="crest-type type-h2 text-white">
@@ -389,44 +423,10 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 4 — Founder feature (moved to sit directly after Club Essentials) */}
-        <FlowReveal className="section-band band-fog">
+        {/* 5 — Founder feature (sits between Club Essentials and the sponsor wall) */}
+        <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide">
             <FounderFeature />
-          </div>
-        </FlowReveal>
-
-        {/* 5 — Trust, Safety & Professional Standards (Revised homepage
-            architecture §6). Replaces the "Why families choose Astra" CONTENT —
-            the deck answers the same parent question with checkable credentials
-            instead of general qualities — while KEEPING the Round-6 travelling
-            light board it was rendered on. See StandardsBoard for the two changes
-            that adaptation needed.
-
-            Header follows the §4 pattern: the deck's own section name takes the
-            h2, and the line the deck labels "Headline:" becomes the gold deck
-            line beneath it. That keeps the block descending (16 -> 40 -> 20 -> 16)
-            and puts the section's actual subject in the heading. */}
-        <FlowReveal className="section-band band-deep" id="trust-standards">
-          <div className="container-wide">
-            <div
-              data-touchline-node
-              className="grid gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-center"
-            >
-              <div>
-                <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
-                  {trustStandards.eyebrow}
-                </p>
-                <h2 className="crest-type type-h2 mt-3 text-white">
-                  Trust, <span className="text-astra-red">Safety</span> &amp; Professional Standards
-                </h2>
-                <p className="type-subhead mt-4 text-astra-gold">
-                  Uncompromising Standards. A Protected Environment.
-                </p>
-                <p className="type-body mt-4 max-w-md text-white/75">{trustStandards.intro}</p>
-              </div>
-              <StandardsBoard items={trustStandards.items} />
-            </div>
           </div>
         </FlowReveal>
 
