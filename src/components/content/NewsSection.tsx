@@ -3,7 +3,7 @@ import { FlowReveal } from "@/src/components/FlowReveal";
 import { CtaLink } from "@/src/components/CtaLink";
 import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
-import { listSummaries } from "@/src/lib/content/news";
+import { listSummaries, partnersCard } from "@/src/lib/content/news";
 import { NewsCard } from "./NewsCard";
 import { SubscribeBox } from "./SubscribeBox";
 
@@ -58,13 +58,7 @@ export async function NewsSection() {
               is also the /sponsors hero: the homepage card matching the hero of
               the page it opens is the pattern the rest of the site already uses.
               No body — the deck gives one sentence, and it reads as the headline. */}
-          <NewsCard
-            href="/sponsors"
-            image="/images/kit/astra-kit-ball-1280.webp"
-            kicker="Our Partners"
-            title="Astra United FC proudly welcomes local businesses dedicated to grassroots development."
-            cta="View Platinum, Gold &amp; Silver Sponsorship Packages"
-          />
+          <NewsCard {...partnersCard} />
         </div>
 
         <div className="mt-7">

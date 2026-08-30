@@ -72,6 +72,25 @@ export const samplePosts: SamplePost[] = [
   }
 ];
 
+/**
+ * The standing Partners entry (Revised homepage architecture §9). It rides in the
+ * same card row as the posts on BOTH surfaces that list them — the homepage band
+ * and the /news-media index — so it lives here rather than in either component.
+ * Defining it twice was how the two surfaces disagreed in the first place.
+ *
+ * Not a post: an open invitation to local businesses is not something the club
+ * publishes and re-dates, so it is never fed through /admin and never ages out.
+ * No body — the deck gives one sentence and it reads as the headline.
+ */
+export const partnersCard = {
+  id: "partners",
+  href: "/sponsors",
+  image: "/images/kit/astra-kit-ball-1280.webp",
+  kicker: "Our Partners",
+  title: "Astra United FC proudly welcomes local businesses dedicated to grassroots development.",
+  cta: "View Platinum, Gold & Silver Sponsorship Packages"
+};
+
 /** Listing cards: live admin posts if any, otherwise the seed sample posts. */
 export function listSummaries(liveEvents: EventPost[]): PostSummary[] {
   if (liveEvents.length > 0) {
