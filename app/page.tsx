@@ -221,15 +221,21 @@ export default function Home() {
             <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
               {developmentModel.eyebrow}
             </p>
+            {/* The model's own name is the section's title, so it takes the h2.
+                The deck labels "The Four Fundamental Pillars of Football
+                Development" as the Headline, but that line describes what the
+                model CONTAINS — it works as the gold deck line beneath the name,
+                and this way the club's proprietary model is what the section is
+                called. It also keeps the block strictly descending: eyebrow 16,
+                h2 40, gold 20, body 16, cards 18 -> 16. */}
             <h2 className="crest-type type-h2 mt-3 text-white">
-              The <span className="text-astra-red">Four</span> Fundamental Pillars of Football
-              Development
+              The <span className="text-astra-red">Astra</span> Player Development Model
             </h2>
-            {/* The deck gives §4 a label, a headline and this lead-in, with no
-                separate subhead. The lead-in takes the gold accent line every
-                other band has, and its trailing colon hands straight over to the
-                four cards. */}
-            <p className="type-subhead mt-4 max-w-3xl text-astra-gold">{developmentModel.intro}</p>
+            <p className="type-subhead mt-4 max-w-3xl text-astra-gold">
+              The Four Fundamental Pillars of Football Development
+            </p>
+            {/* Lead-in; its trailing colon hands straight over to the four cards. */}
+            <p className="type-body mt-4 max-w-3xl text-white/75">{developmentModel.intro}</p>
             <div className="mt-10">
               <ProgramPillarsRail pillars={developmentPillars} />
             </div>
