@@ -1,7 +1,11 @@
 import Link from "next/link";
 import {
   ArrowRight,
+  BarChart3,
+  Crown,
   ExternalLink,
+  GraduationCap,
+  Hand,
   MapPin,
   ShieldCheck,
   Trophy,
@@ -17,13 +21,25 @@ import { FounderFeature } from "@/src/components/FounderFeature";
 import { ProgramPillarsRail } from "@/src/components/ProgramPillarsRail";
 import { StandardsBoard } from "@/src/components/StandardsBoard";
 import { SponsorMarquee } from "@/src/components/SponsorMarquee";
-import { developmentModel, developmentPillars, trustStandards, welcome } from "@/src/lib/content/home";
+import {
+  comingSoon,
+  developmentModel,
+  developmentPillars,
+  trustStandards,
+  welcome
+} from "@/src/lib/content/home";
 import { SpotlightSection } from "@/src/components/content/SpotlightSection";
 import { NewsSection } from "@/src/components/content/NewsSection";
 import { ScheduleSection } from "@/src/components/content/ScheduleSection";
 import { SlotImage } from "@/src/components/content/SlotImage";
 import type { SlotKey } from "@/src/lib/content/photo-slots";
 
+
+// One icon per initiative, in the deck's order. It prints these as emoji
+// (brain, crown, glove, chart); these are the lucide equivalents. GraduationCap
+// rather than Brain for the Learning Centre — Brain already carries the
+// Psychological pillar in §4, and reusing it would imply a link that is not there.
+const SOON_ICONS = [GraduationCap, Crown, Hand, BarChart3] as const;
 
 const sponsorTiers = [
   {
@@ -161,7 +177,7 @@ export default function Home() {
             meant touching NewsSection and ScheduleSection, which carry their band
             internally, and would have moved seven approved sections onto
             backgrounds they were not designed against. */}
-        <FlowReveal className="section-band band-fog">
+        <FlowReveal className="section-band band-deep">
           <div
             data-touchline-node
             className="container-wide grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch"
@@ -212,7 +228,7 @@ export default function Home() {
             "where does my child fit". Same ProgramPillarsRail component the team
             screenshotted as their reference for this section (image3), now with
             the deck's longer copy and a bold line per pillar. */}
-        <FlowReveal className="section-band band-deep">
+        <FlowReveal className="section-band band-fog">
           <div data-touchline-node className="container-wide">
             {/* Eyebrow, not a heading — it labels the section the h2 below names,
                 so it stays a <p> and keeps the outline at h2 -> h3. It was 14px,
@@ -252,7 +268,7 @@ export default function Home() {
             rather than dropping imagery altogether; text never sits over a photo,
             so legibility is unchanged. §7 Club Essentials takes the card design
             these rows are vacating. */}
-        <FlowReveal className="section-band band-fog">
+        <FlowReveal className="section-band band-deep">
           <div className="container-wide">
             <div data-touchline-node>
               <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
@@ -354,7 +370,7 @@ export default function Home() {
             h2, and the line the deck labels "Headline:" becomes the gold deck
             line beneath it. That keeps the block descending (16 -> 40 -> 20 -> 16)
             and puts the section's actual subject in the heading. */}
-        <FlowReveal className="section-band band-deep" id="trust-standards">
+        <FlowReveal className="section-band band-fog" id="trust-standards">
           <div className="container-wide">
             <div
               data-touchline-node
@@ -384,7 +400,7 @@ export default function Home() {
             from four items to three and all renamed. Keeps its own headline and
             gold subhead — the deck specs neither a Small Label nor a replacement
             headline here, only the matrix itself. */}
-        <FlowReveal className="section-band band-fog">
+        <FlowReveal className="section-band band-deep">
           <div className="container-wide">
             <div data-touchline-node>
               <h2 className="crest-type type-h2 text-white">
@@ -423,14 +439,78 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 5 — Founder feature (sits between Club Essentials and the sponsor wall) */}
+        {/* 5 — Future Preview & Coming Soon Initiatives (Revised homepage
+            architecture §8). Four initiatives that do not exist yet, so the
+            design says "not built" rather than leaning on the words alone:
+            dashed borders, a faint blueprint grid, and dashes that march along
+            each card's top edge. Nothing else on the page uses a dashed edge, and
+            marching dashes are a different KIND of motion from the travelling
+            lights on the pillars rail and the standards board — a third
+            travelling light would only have repeated the page's own trick.
+
+            This is also where the Astra Evolution Girls Program returns: §5 drops
+            it from the live pathway grid on the deck's instruction, and until
+            this band existed girls' football had no mention on the homepage. */}
+        <FlowReveal className="section-band band-fog">
+          <div data-touchline-node className="container-wide">
+            <p className="type-body type-strong uppercase tracking-[0.2em] text-astra-red">
+              Future preview
+            </p>
+            <h2 className="crest-type type-h2 mt-3 text-white">
+              Innovation &amp; <span className="text-astra-red">Future</span> Growth Initiatives
+            </h2>
+            {/* Two across rather than four: the Learning Centre carries four times
+                the copy of the Match Centre, and a wider column stops that
+                imbalance stretching every card to its height. It is also a grid
+                shape the page does not use anywhere else. */}
+            <div className="mt-10 grid gap-5 sm:grid-cols-2">
+              {comingSoon.map((item, index) => {
+                const Icon = SOON_ICONS[index];
+                return (
+                  <PopCard key={item.title} delay={index * 0.05} className="h-full">
+                    <div className="relative flex h-full flex-col overflow-hidden rounded-2xl border border-dashed border-astra-gold/30 bg-gradient-to-br from-[#0d2c4d] to-[#06141f] p-6 transition-colors duration-300 hover:border-astra-gold/60">
+                      {/* marching dashes: under construction */}
+                      <span aria-hidden="true" className="dash-rule absolute inset-x-0 top-0 h-px" />
+                      {/* blueprint grid, barely there */}
+                      <span
+                        aria-hidden="true"
+                        className="pointer-events-none absolute inset-0 opacity-[0.05]"
+                        style={{
+                          backgroundImage:
+                            "linear-gradient(rgba(242,201,76,1) 1px, transparent 1px), linear-gradient(90deg, rgba(242,201,76,1) 1px, transparent 1px)",
+                          backgroundSize: "28px 28px"
+                        }}
+                      />
+                      <div className="relative flex items-start justify-between gap-4">
+                        <span
+                          aria-hidden="true"
+                          className="grid h-11 w-11 shrink-0 place-items-center rounded-xl border border-dashed border-astra-gold/40 bg-astra-gold/5"
+                        >
+                          <Icon className="h-5 w-5 text-astra-gold" />
+                        </span>
+                        <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-astra-gold/10 px-3 py-1 text-xs font-black uppercase tracking-[0.14em] text-astra-gold ring-1 ring-astra-gold/25">
+                          <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-astra-gold" />
+                          Coming soon
+                        </span>
+                      </div>
+                      <h3 className="crest-type type-h4 relative mt-5 text-white">{item.title}</h3>
+                      <p className="type-body relative mt-3 text-white/72">{item.copy}</p>
+                    </div>
+                  </PopCard>
+                );
+              })}
+            </div>
+          </div>
+        </FlowReveal>
+
+        {/* 6 — Founder feature (sits between the coming-soon band and the sponsor wall) */}
         <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide">
             <FounderFeature />
           </div>
         </FlowReveal>
 
-        {/* 6 — Sponsorship & Community Partners (Revised content spec §7, t8):
+        {/* 7 — Sponsorship & Community Partners (Revised content spec §7, t8):
             moved up to sit directly after Why Families. A premium "Trusted by"
             logo wall (placeholder partners — real sponsor marks drop into the same
             slots) over the value pitch and partner tiers — tuned to attract
@@ -496,7 +576,7 @@ export default function Home() {
           </div>
         </FlowReveal>
 
-        {/* 7 — Latest News & Match Reports (Revised content spec §8, t9):
+        {/* 8 — Latest News & Match Reports (Revised content spec §8, t9):
             event-driven cards + View All / Subscribe, sitting directly after
             Sponsors. Renders the latest live admin posts (falls back to static
             previews when none are published). See NewsSection. */}
@@ -505,12 +585,12 @@ export default function Home() {
         {/* Club Spotlight (before join) */}
         <SpotlightSection placement="before-join" />
 
-        {/* 8 — "This Week at Astra": live training schedule + special events,
+        {/* 9 — "This Week at Astra": live training schedule + special events,
             admin-managed, sitting right before the Join CTA (what you'd be part
             of → join). Renders band-fog, so Join flips to band-deep below it. */}
         <ScheduleSection />
 
-        {/* 9 — Join / contact CTA (Revised content spec §9): moved to sit directly
+        {/* 10 — Join / contact CTA (Revised content spec §9): moved to sit directly
             after the News section as the closing call to action. */}
         <FlowReveal className="section-band band-deep">
           <div data-touchline-node className="container-wide grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">

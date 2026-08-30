@@ -662,6 +662,26 @@ svg {
   .type-body { font-size: 1rem; line-height: 1.5rem; }
 }
 
+/* §8 "coming soon" cards. The dashes along each card's top edge march slowly
+   left to right — an under-construction signal that reads as a DIFFERENT kind of
+   motion from the travelling lights on the pillars rail and the standards board,
+   so a third moving element doesn't just repeat the page's existing trick. The
+   global reduced-motion block below already stops it. */
+@keyframes astra-dash-march {
+  to {
+    background-position: 18px 0;
+  }
+}
+
+.dash-rule {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(242, 201, 76, 0.85) 0 9px,
+    transparent 9px 18px
+  );
+  animation: astra-dash-march 1.4s linear infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,

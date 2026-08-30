@@ -113,3 +113,30 @@ export const trustStandards = {
     }
   ]
 };
+
+// Future Preview & Coming Soon Initiatives (Revised homepage architecture §8) —
+// four initiatives that do not exist yet. This is also where the Astra Evolution
+// Girls Program reappears: §5 dropped it from the live pathway grid on the deck's
+// instruction, and until this section existed the club's girls' football had no
+// mention anywhere on the homepage.
+//
+// Each title drops the deck's trailing "(Coming Soon)": every card carries a
+// COMING SOON pill, so repeating it in the heading says the same thing twice.
+export const comingSoon = [
+  {
+    title: "The Astra Learning Centre",
+    copy: "We don't just coach young footballers—we educate families. Rooted in our founder's academic background in Sport Management and Clinical Psychology, this digital hub will feature monthly modules on Sports Psychology, Nutrition & Recovery, Parent Education, and Football Tactics."
+  },
+  {
+    title: "\u201cAstra Evolution\u201d Girls Program (Ages 9\u201313)",
+    copy: "A dedicated, specialised stream driving girls' football development through empowering, sports-science-backed coaching models."
+  },
+  {
+    title: "Goalkeeper Academy & Elite Next-Gen Squads",
+    copy: "Specialised positional training frameworks designed for modern goalkeeping and elite match preparation."
+  },
+  {
+    title: "Interactive Match Centre",
+    copy: "Real-time fixture tracking, results, and detailed match analytics."
+  }
+];
