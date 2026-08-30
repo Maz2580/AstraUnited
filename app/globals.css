@@ -82,19 +82,31 @@ svg {
   text-transform: uppercase;
 }
 
+/* Every band gets the SAME breathing room, top and bottom.
+
+   It previously carried min-height: 72svh (82svh from md up) with the content
+   vertically centred. Those two together are why the spacing looked inconsistent:
+   a band whose content was shorter than the minimum had the leftover height split
+   above and below it, so the actual gap varied with how much copy a section
+   happened to have. Measured at 1440x900 it ran from 112px on the pathway grid to
+   219px on the schedule strip — a 107px spread that no amount of padding tuning
+   could even out, because the padding was never the thing that differed.
+
+   Height is now content plus padding, so the gap IS the padding everywhere. The
+   values also come down: 88px a side on desktop rather than 112px, 56px rather
+   than 80px on mobile. flex/center is kept because several bands centre their own
+   inner grid; with no minimum it has nothing left to distribute. */
 .section-band {
   position: relative;
   display: flex;
-  min-height: 72svh;
   align-items: center;
   width: 100%;
-  padding: 5rem 1.25rem;
+  padding: 3.5rem 1.25rem;
 }
 
 @media (min-width: 768px) {
   .section-band {
-    min-height: 82svh;
-    padding: 7rem 2rem;
+    padding: 5.5rem 2rem;
   }
 }
 
