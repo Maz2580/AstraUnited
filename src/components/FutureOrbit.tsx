@@ -14,10 +14,12 @@ import { useReducedMotion } from "framer-motion";
  *    a hairline ring, spun about its own centre, sends a bright arc travelling
  *    round the orbit; each ring sits on its own rotateX plane so it turns IN that
  *    plane. Baked-into-the-image rings could never move.
- * 2. The ball is blended with mix-blend-screen. The render is a bright subject on
- *    near-black, and screen drops near-black to nothing, so the image box that
- *    used to sit on the band simply disappears — no cutout, no matching the
- *    background colour, and the glow still blends outward.
+ * 2. The ball artwork carries a real alpha channel. mix-blend-screen was tried
+ *    first and was wrong: screen only erases pure black, and the render's
+ *    background is mid-dark navy, so it lightened the band into a visible
+ *    rectangle instead of disappearing. The asset is now a proper cutout
+ *    (Higgsfield image_background_remover, trimmed to the subject), which is the
+ *    only approach that holds up over a gradient band.
  * 3. Pointer position drives a small parallax: the whole assembly tilts a few
  *    degrees, and the ball shifts slightly further than the rings, so the two
  *    separate in depth as you move across it.
@@ -108,12 +110,12 @@ export function FutureOrbit() {
         >
           <div className="orbit-float relative h-full w-full">
             <Image
-              src="/images/future/astra-future-orbit-ball-1280.webp"
+              src="/images/future/astra-future-orbit-ball-cutout-1280.webp"
               alt=""
               aria-hidden="true"
               fill
               sizes="(min-width: 1024px) 26rem, 0px"
-              className="object-contain mix-blend-screen"
+              className="object-contain"
             />
           </div>
         </div>
