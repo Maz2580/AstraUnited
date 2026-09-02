@@ -59,7 +59,7 @@ export function SubscribeBox() {
             <p className="text-base font-black text-white">
               Stay <span className="text-astra-gold">Connected</span>
             </p>
-            <p className="mt-0.5 max-w-md text-sm text-white/72">
+            <p className="mt-0.5 max-w-md text-sm text-astra-white">
               Sign up for our newsletter to get direct notifications on pitch updates, kit
               launches, and upcoming holiday football camps.
             </p>

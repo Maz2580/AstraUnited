@@ -311,7 +311,7 @@ export function HeroIntro() {
         <motion.a
           href="#club-flow"
           style={reduce ? undefined : { opacity: affordanceOpacity }}
-          className="absolute left-1/2 top-[calc(100svh-3.75rem)] z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-xs font-black uppercase tracking-wide text-white/80 transition hover:text-white"
+          className="absolute left-1/2 top-[calc(100svh-3.75rem)] z-20 flex -translate-x-1/2 flex-col items-center gap-2 text-xs font-black uppercase tracking-wide text-astra-white transition hover:text-white"
         >
           Scroll to explore
           <ArrowDown aria-hidden="true" className="h-5 w-5 animate-bounce" />

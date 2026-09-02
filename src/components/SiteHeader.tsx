@@ -28,7 +28,7 @@ export function SiteHeader() {
               <div key={item.href} className="group relative">
                 <Link
                   href={item.href}
-                  className="nav-underline rounded px-3 py-2 text-sm font-semibold text-white/82 transition hover:text-white"
+                  className="nav-underline rounded px-3 py-2 text-sm font-semibold text-astra-white transition hover:text-white"
                 >
                   {item.label}
                 </Link>
@@ -41,7 +41,7 @@ export function SiteHeader() {
                       <Link
                         key={child.href}
                         href={child.href}
-                        className="block rounded-lg px-3 py-2 text-sm font-semibold text-white/80 transition hover:bg-white/10 hover:text-white"
+                        className="block rounded-lg px-3 py-2 text-sm font-semibold text-astra-white transition hover:bg-white/10 hover:text-white"
                       >
                         {child.label}
                       </Link>
@@ -53,7 +53,7 @@ export function SiteHeader() {
               <Link
                 key={item.href}
                 href={item.href}
-                className="nav-underline rounded px-3 py-2 text-sm font-semibold text-white/82 transition hover:text-white"
+                className="nav-underline rounded px-3 py-2 text-sm font-semibold text-astra-white transition hover:text-white"
               >
                 {item.label}
               </Link>

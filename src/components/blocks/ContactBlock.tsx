@@ -17,7 +17,7 @@ export function ContactBlock({ email, phone, welfare, socials, address, mapEmbed
     <div className="container-wide grid gap-8 lg:grid-cols-2">
       <div className="card-dark p-7 sm:p-8">
         <h2 className="crest-type text-2xl text-white">Direct contact</h2>
-        <ul className="mt-6 grid gap-4 text-sm text-white/80">
+        <ul className="mt-6 grid gap-4 text-sm text-astra-white">
           <li>
             <a href={`mailto:${email}`} className="flex items-center gap-3 transition hover:text-white">
               <Mail aria-hidden="true" className="h-5 w-5 shrink-0 text-astra-red" /> {email}
@@ -46,7 +46,7 @@ export function ContactBlock({ email, phone, welfare, socials, address, mapEmbed
                 href={s.href}
                 target="_blank"
                 rel="noreferrer noopener"
-                className="flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs font-bold text-white/80 transition hover:border-white/35 hover:bg-white/10 hover:text-white"
+                className="flex items-center gap-2 rounded-full border border-white/12 bg-white/5 px-3 py-1.5 text-xs font-bold text-astra-white transition hover:border-white/35 hover:bg-white/10 hover:text-white"
               >
                 {Icon ? <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" /> : <span className="font-black text-astra-gold">X</span>}
                 {s.handle}

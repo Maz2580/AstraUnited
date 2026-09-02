@@ -20,13 +20,13 @@ export function SiteFooter() {
             height={110}
             className="mb-5 h-24 w-24 object-contain"
           />
-          <p className="max-w-md text-sm leading-6 text-white/72">
+          <p className="max-w-md text-sm leading-6 text-astra-white">
             A community football club and player development pathway based at Darebin International Sports Centre in Melbourne's north.
           </p>
         </div>
         <div>
           <h2 className="crest-type mb-4 text-lg">Explore</h2>
-          <ul className="grid gap-2 text-sm text-white/72">
+          <ul className="grid gap-2 text-sm text-astra-white">
             {navItems.map((item) => (
               <li key={item.href}>
                 <Link className="transition hover:text-white" href={item.href}>
@@ -43,13 +43,13 @@ export function SiteFooter() {
         </div>
         <div>
           <h2 className="crest-type mb-4 text-lg">Home Ground</h2>
-          <p className="flex gap-3 text-sm leading-6 text-white/72">
+          <p className="flex gap-3 text-sm leading-6 text-astra-white">
             <MapPin aria-hidden="true" className="mt-1 h-5 w-5 shrink-0 text-astra-red" />
             <span>{clubContact.ground}, {clubContact.address}</span>
           </p>
           <a
             href={`mailto:${clubContact.email}`}
-            className="mt-4 flex items-center gap-3 text-sm text-white/72 transition hover:text-white"
+            className="mt-4 flex items-center gap-3 text-sm text-astra-white transition hover:text-white"
           >
             <Mail aria-hidden="true" className="h-5 w-5 shrink-0 text-astra-red" />
             {clubContact.email}
@@ -57,7 +57,7 @@ export function SiteFooter() {
         </div>
         <div>
           <h2 className="crest-type mb-4 text-lg">Connect</h2>
-          <ul className="grid gap-2 text-sm text-white/72">
+          <ul className="grid gap-2 text-sm text-astra-white">
             {socialLinks.map((social) => {
               const Icon = socialIcons[social.label];
               return (
@@ -83,7 +83,7 @@ export function SiteFooter() {
           </ul>
         </div>
       </div>
-      <div className="mx-auto mt-10 flex w-full max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-xs text-white/60 sm:flex-row sm:items-center sm:justify-between">
+      <div className="mx-auto mt-10 flex w-full max-w-7xl flex-col gap-3 border-t border-white/10 pt-6 text-xs text-astra-white sm:flex-row sm:items-center sm:justify-between">
         <p>
           Copyright &copy; {new Date().getFullYear()} Astra United Football Club | All Rights Reserved. | Designed by Sash Digital Agency
         </p>

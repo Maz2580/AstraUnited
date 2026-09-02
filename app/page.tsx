@@ -194,7 +194,7 @@ export default function Home() {
                   case, not uppercase — the same call §1's hero sub-headline made.
                   mt-4 / mt-6 preserve the previous vertical rhythm exactly. */}
               <p className="type-subhead mt-4 max-w-2xl text-astra-gold">{welcome.lead}</p>
-              <p className="type-body mt-6 max-w-2xl text-white/75">{welcome.body}</p>
+              <p className="type-body mt-6 max-w-2xl text-astra-white">{welcome.body}</p>
             </div>
             {/* The card matches the text column's height instead of floating
                 centred inside it (items-stretch above). The photo absorbs the
@@ -215,7 +215,7 @@ export default function Home() {
                     it blesses explicitly. The caption below it was 14px, between
                     that floor and the smallest body level, so it joins P2. */}
                 <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Academy training</p>
-                <p className="type-body mt-2 text-white/72">
+                <p className="type-body mt-2 text-astra-white">
                   Academy training at Darebin International Sports Centre.
                 </p>
               </div>
@@ -253,7 +253,7 @@ export default function Home() {
               The Four Fundamental Pillars of Football Development
             </p>
             {/* Lead-in; its trailing colon hands straight over to the four cards. */}
-            <p className="type-body mt-4 max-w-3xl text-white/75">{developmentModel.intro}</p>
+            <p className="type-body mt-4 max-w-3xl text-astra-white">{developmentModel.intro}</p>
             <div className="mt-10">
               <ProgramPillarsRail pillars={developmentPillars} />
             </div>
@@ -312,7 +312,7 @@ export default function Home() {
                       <p className="crest-type type-h5 text-astra-gold">{block.age}</p>
                       <h3 className="crest-type type-h4 mt-1 text-white">{block.title}</h3>
                     </div>
-                    <p className="type-body text-white/80">{block.copy}</p>
+                    <p className="type-body text-astra-white">{block.copy}</p>
                     <CtaLink
                       href={block.href}
                       className="w-full justify-center whitespace-nowrap px-5 py-3 text-sm font-black uppercase tracking-wide"
@@ -350,7 +350,7 @@ export default function Home() {
                   <h3 className="crest-type type-h4 mt-1 text-white">
                     Representative Track (Coming Soon)
                   </h3>
-                  <p className="type-body mt-2 max-w-4xl text-white/75">
+                  <p className="type-body mt-2 max-w-4xl text-astra-white">
                     As Astra United FC continues to grow, players progressing through our Academy
                     will have the direct opportunity to transition into future boys&apos; and girls&apos;
                     representative teams and high-performance competitive programs.
@@ -388,7 +388,7 @@ export default function Home() {
                 <p className="type-subhead mt-4 text-astra-gold">
                   Uncompromising Standards. A Protected Environment.
                 </p>
-                <p className="type-body mt-4 max-w-md text-white/75">{trustStandards.intro}</p>
+                <p className="type-body mt-4 max-w-md text-astra-white">{trustStandards.intro}</p>
               </div>
               <StandardsBoard items={trustStandards.items} />
             </div>
@@ -425,7 +425,7 @@ export default function Home() {
                     />
                     <div className="p-6">
                       <h3 className="crest-type type-h4 text-astra-gold">{item.title}</h3>
-                      <p className="type-body mt-3 text-white/72">{item.copy}</p>
+                      <p className="type-body mt-3 text-astra-white">{item.copy}</p>
                       <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
                         {item.cta}
                         <ArrowRight
@@ -466,7 +466,7 @@ export default function Home() {
                 <h2 className="crest-type type-h2 mt-3 text-white">
                   Innovation &amp; <span className="text-astra-red">Future</span> Growth Initiatives
                 </h2>
-                <p className="type-body mt-4 max-w-2xl text-white/72">{comingSoonIntro}</p>
+                <p className="type-body mt-4 max-w-2xl text-astra-white">{comingSoonIntro}</p>
               </div>
               {/* Orbiting-ball hero. The rings are drawn in CSS so they actually
                   turn, the ball is screen-blended so its image box disappears
@@ -524,7 +524,7 @@ export default function Home() {
                       <h3 className="crest-type type-h4 relative mt-5 max-w-[19ch] text-white">
                         {item.title}
                       </h3>
-                      <p className="type-body relative mt-3 max-w-[38ch] text-white/72">{item.copy}</p>
+                      <p className="type-body relative mt-3 max-w-[38ch] text-astra-white">{item.copy}</p>
                     </div>
                   </PopCard>
                 );
@@ -550,7 +550,7 @@ export default function Home() {
             <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
               Sponsorship &amp; Community <span className="text-astra-red">Partners</span>
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-white/75">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-astra-white">
               Astra Football Club welcomes local businesses who want to support grassroots football
               and youth pathways across Melbourne&apos;s north.
             </p>
@@ -590,12 +590,12 @@ export default function Home() {
                 <PopCard key={tier.title} className="card-dark p-6" delay={index * 0.05}>
                   <ShieldCheck aria-hidden="true" className="mb-5 h-7 w-7 text-astra-gold" />
                   <h3 className="text-xl font-black text-white">{tier.title}</h3>
-                  <p className="mt-3 text-sm leading-6 text-white/72">{tier.copy}</p>
+                  <p className="mt-3 text-sm leading-6 text-astra-white">{tier.copy}</p>
                 </PopCard>
               ))}
             </div>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <p className="text-sm font-semibold text-white/72">
+              <p className="text-sm font-semibold text-astra-white">
                 Interested in becoming an official corporate or community sponsor?
               </p>
               <CtaLink href="/sponsors" className="px-5 py-3 text-sm font-black uppercase tracking-wide">
@@ -648,7 +648,7 @@ export default function Home() {
                 Secure Your Place in the Astra United{" "}
                 <span className="text-astra-gold">Family</span>
               </h2>
-              <p className="type-lead mx-auto mt-5 max-w-2xl text-white/85">
+              <p className="type-lead mx-auto mt-5 max-w-2xl text-astra-white">
                 Don&apos;t miss out on the upcoming competitive cycle. Lock in your football club
                 membership, register for our upcoming youth football trials, and experience an
                 elite development journey.{" "}

@@ -21,7 +21,7 @@ export function TableBlock({ title, intro, columns, rows }: Props) {
             {rows.map((row, ri) => (
               <tr key={ri} className="border-b border-white/8 last:border-0">
                 {row.map((cell, ci) => (
-                  <td key={ci} className={`px-5 py-4 align-top leading-6 ${ci === 0 ? "font-black text-white" : "text-white/72"}`}>
+                  <td key={ci} className={`px-5 py-4 align-top leading-6 ${ci === 0 ? "font-black text-white" : "text-astra-white"}`}>
                     {cell}
                   </td>
                 ))}
