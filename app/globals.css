@@ -82,19 +82,31 @@ svg {
   text-transform: uppercase;
 }
 
+/* Every band gets the SAME breathing room, top and bottom.
+
+   It previously carried min-height: 72svh (82svh from md up) with the content
+   vertically centred. Those two together are why the spacing looked inconsistent:
+   a band whose content was shorter than the minimum had the leftover height split
+   above and below it, so the actual gap varied with how much copy a section
+   happened to have. Measured at 1440x900 it ran from 112px on the pathway grid to
+   219px on the schedule strip — a 107px spread that no amount of padding tuning
+   could even out, because the padding was never the thing that differed.
+
+   Height is now content plus padding, so the gap IS the padding everywhere. The
+   values also come down: 88px a side on desktop rather than 112px, 56px rather
+   than 80px on mobile. flex/center is kept because several bands centre their own
+   inner grid; with no minimum it has nothing left to distribute. */
 .section-band {
   position: relative;
   display: flex;
-  min-height: 72svh;
   align-items: center;
   width: 100%;
-  padding: 5rem 1.25rem;
+  padding: 3.5rem 1.25rem;
 }
 
 @media (min-width: 768px) {
   .section-band {
-    min-height: 82svh;
-    padding: 7rem 2rem;
+    padding: 5.5rem 2rem;
   }
 }
 
@@ -595,6 +607,217 @@ svg {
   to {
     transform: translateX(-50%);
   }
+}
+
+/* --- Round 7 typography scale ------------------------------------------------
+   From the team's "Astra - Optimised UX typography" guide. One class per level;
+   each sets ONLY size / line-height / weight. Family is left to the element:
+   pair with `crest-type` for the Anton display face, or use bare for Inter,
+   which body already sets. That keeps a single source of truth for the scale and
+   stops per-component sizes drifting apart again.
+
+   Mobile values below 768px, desktop at and above it — the same breakpoint
+   `.section-band` already switches on. Line heights are the guide's fix for the
+   old near-1:1 display leading (headlines used leading-[0.95]), which collided
+   on wrapped mobile text.
+
+   Levels: h1 56/64 · h2 40/48 · h3 28/36 · h4 22/28 · h5 18/24 · subhead 20/28 ·
+   lead 18/28 · body 16/24 (desktop px). Nothing here drops below 12px, the
+   guide's accessibility floor. */
+.type-h1,
+.type-h2,
+.type-h3,
+.type-h4,
+.type-h5,
+.type-subhead,
+.type-lead,
+.type-body {
+  letter-spacing: 0;
+}
+
+.type-h1 { font-size: 2.25rem; line-height: 2.75rem; font-weight: 400; }
+.type-h2 { font-size: 1.75rem; line-height: 2.25rem; font-weight: 400; }
+.type-h3 { font-size: 1.375rem; line-height: 1.75rem; font-weight: 700; }
+.type-h4 { font-size: 1.125rem; line-height: 1.5rem; font-weight: 700; }
+.type-h5 { font-size: 1rem; line-height: 1.375rem; font-weight: 600; }
+.type-subhead { font-size: 1rem; line-height: 1.5rem; font-weight: 500; }
+.type-lead { font-size: 1rem; line-height: 1.5rem; font-weight: 400; }
+.type-body { font-size: 0.875rem; line-height: 1.25rem; font-weight: 400; }
+
+/* The guide defines eight SIZE levels but no emphasis variant, and a few places
+   need a size from the scale set bold — section eyebrows, and the card sub-titles
+   the deck prints in bold. This lifts the weight without inventing a new size, so
+   everything still resolves to one of the guide's levels. Two-class selector so
+   it beats the level's own weight regardless of source order. */
+.type-body.type-strong { font-weight: 600; }
+
+/* Anton ships a single 400 weight. The heading levels above carry the guide's
+   Inter weights (h3/h4 700, h5 600), so pairing one with `crest-type` would make
+   the browser SYNTHESISE a bold — a smeared, faked-heavy display face. Two-class
+   selector so it wins on specificity regardless of source order. */
+.crest-type.type-h1,
+.crest-type.type-h2,
+.crest-type.type-h3,
+.crest-type.type-h4,
+.crest-type.type-h5 {
+  font-weight: 400;
+}
+
+@media (min-width: 768px) {
+  .type-h1 { font-size: 3.5rem; line-height: 4rem; }
+  .type-h2 { font-size: 2.5rem; line-height: 3rem; }
+  .type-h3 { font-size: 1.75rem; line-height: 2.25rem; }
+  .type-h4 { font-size: 1.375rem; line-height: 1.75rem; }
+  .type-h5 { font-size: 1.125rem; line-height: 1.5rem; }
+  .type-subhead { font-size: 1.25rem; line-height: 1.75rem; }
+  .type-lead { font-size: 1.125rem; line-height: 1.75rem; }
+  .type-body { font-size: 1rem; line-height: 1.5rem; }
+}
+
+/* §8 "coming soon" cards. The dashes along each card's top edge march slowly
+   left to right — an under-construction signal that reads as a DIFFERENT kind of
+   motion from the travelling lights on the pillars rail and the standards board,
+   so a third moving element doesn't just repeat the page's existing trick. The
+   global reduced-motion block below already stops it. */
+@keyframes astra-dash-march {
+  to {
+    background-position: 18px 0;
+  }
+}
+
+.dash-rule {
+  background-image: repeating-linear-gradient(
+    90deg,
+    rgba(242, 201, 76, 0.85) 0 9px,
+    transparent 9px 18px
+  );
+  animation: astra-dash-march 1.4s linear infinite;
+}
+
+/* The conversion footer (§10). Every other band is one of two navies, which is
+   what makes the page read as one surface — so the closing ask leaves that system
+   deliberately and arrives in club red. Being outside the deep/fog alternation it
+   also cannot disturb it.
+
+   Red alone was not enough, so the band is built as a floodlit pitch at night:
+   crimson falling to near-black, two light beams raking in from the top corners,
+   and a perspective grid along the bottom that reads as the pitch receding. All
+   CSS — no photograph to load, and it stays sharp at any width. Nothing else on
+   the page uses this vocabulary, which is the point of a final call to action. */
+.band-final {
+  /* the beams are rotated and sit at left/right -8%, so they overhang the band.
+     Nothing above this in the tree clips, and at some widths that overhang would
+     become a horizontal scrollbar — so the band clips its own decoration. */
+  overflow: hidden;
+  background:
+    radial-gradient(90% 120% at 12% 4%, rgba(242, 201, 76, 0.20), transparent 54%),
+    radial-gradient(70% 90% at 50% 100%, rgba(0, 0, 0, 0.62), transparent 66%),
+    linear-gradient(150deg, #c81916 0%, #85110f 38%, #35090a 72%, #150405 100%);
+}
+
+/* fine grain, so a large flat red panel does not band on wide screens */
+.band-final::before {
+  position: absolute;
+  inset: 0;
+  content: "";
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    115deg,
+    rgba(255, 255, 255, 0.035) 0 2px,
+    transparent 2px 26px
+  );
+}
+
+/* floodlights raking in from the top corners, breathing out of sync */
+.final-beam {
+  position: absolute;
+  top: -20%;
+  height: 140%;
+  width: 48%;
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(255, 244, 218, 0.22) 0%,
+    rgba(255, 244, 218, 0.07) 36%,
+    transparent 72%
+  );
+  filter: blur(30px);
+  animation: astra-beam-breathe 9s ease-in-out infinite;
+}
+
+.final-beam-left {
+  left: -8%;
+  transform-origin: top center;
+  transform: rotate(15deg);
+}
+
+.final-beam-right {
+  right: -8%;
+  transform-origin: top center;
+  transform: rotate(-15deg);
+  animation-delay: -4.5s;
+}
+
+@keyframes astra-beam-breathe {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+/* the pitch itself, receding into the band. A flat grid tipped back in
+   perspective and faded out toward the horizon. */
+.final-pitch {
+  position: absolute;
+  inset: auto 0 0 0;
+  height: 54%;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(90deg, rgba(255, 255, 255, 0.13) 0 2px, transparent 2px 96px),
+    repeating-linear-gradient(0deg, rgba(255, 255, 255, 0.09) 0 2px, transparent 2px 64px);
+  transform: perspective(560px) rotateX(70deg);
+  transform-origin: bottom center;
+  -webkit-mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 88%);
+  mask-image: linear-gradient(to top, rgba(0, 0, 0, 0.95) 0%, transparent 88%);
+}
+
+/* §8 hero: the orbiting ball.
+
+   The orbits are SVG ellipses, not rotated CSS circles. Two reasons. A hairline
+   ring rotated to rotateX(72deg) lands on sub-pixel widths and shimmers, and a
+   conic gradient spun about its centre sweeps at a constant ANGULAR rate, which
+   in projection reads as a radar sweep rather than something travelling a path.
+
+   An SVG ellipse with pathLength="100" fixes both: the bright segment is a dash
+   moving along the path itself, so it travels at constant arc-length speed and
+   stays crisp at any size. Normalising to 100 also means one keyframe drives
+   every orbit whatever its actual perimeter. */
+@keyframes astra-orbit-dash {
+  to {
+    stroke-dashoffset: -100;
+  }
+}
+
+@keyframes astra-orbit-float {
+  0%,
+  100% {
+    transform: translateY(-0.45rem);
+  }
+  50% {
+    transform: translateY(0.45rem);
+  }
+}
+
+.orbit-dash {
+  animation: astra-orbit-dash linear infinite;
+  filter: drop-shadow(0 0 5px rgba(242, 201, 76, 0.75));
+}
+
+.orbit-float {
+  animation: astra-orbit-float 7s ease-in-out infinite;
 }
 
 @media (prefers-reduced-motion: reduce) {

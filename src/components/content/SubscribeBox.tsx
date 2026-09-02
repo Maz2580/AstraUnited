@@ -21,7 +21,8 @@ function SubmitButton() {
 }
 
 /**
- * Compact newsletter signup bar beneath the News cards. Posts to the public
+ * Newsletter signup. Lives in the §10 conversion footer, where the deck places
+ * it as "Stay Connected"; it sat under the News cards until Round 7. Posts to the public
  * `subscribe` server action, which captures the email to the club's store
  * (viewable in /admin); an email service can be wired on top later. One row on
  * desktop, stacking on mobile; shows an inline thank-you on success.
@@ -56,10 +57,11 @@ export function SubscribeBox() {
           </span>
           <div>
             <p className="text-base font-black text-white">
-              Never miss a <span className="text-astra-gold">match report</span>
+              Stay <span className="text-astra-gold">Connected</span>
             </p>
-            <p className="mt-0.5 text-sm text-white/60">
-              Fixtures, results &amp; club news — straight to your inbox.
+            <p className="mt-0.5 max-w-md text-sm text-white/60">
+              Sign up for our newsletter to get direct notifications on pitch updates, kit
+              launches, and upcoming holiday football camps.
             </p>
           </div>
         </div>

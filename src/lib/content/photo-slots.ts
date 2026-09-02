@@ -22,7 +22,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-academy-mini",
-    label: "Homepage — Mini-Kickers card",
+    label: "Homepage — Pathway row 1: Astra Foundation Hub (U5–U7)",
     default: {
       src: "/images/academy/astra-academy-mini-kickers-1280.webp",
       alt: "Young Astra United Academy players in navy kit and Academy bibs with their coaches during a Mini-Kickers session at Darebin",
@@ -32,7 +32,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-academy-junior",
-    label: "Homepage — Junior Academy card",
+    label: "Homepage — Pathway row 2: Astra Youth Academy (U8–U10)",
     default: {
       src: "/images/academy/astra-academy-dribble-duel-1280.webp",
       alt: "Astra United youth player in navy kit dribbling past a defender during an academy training session at Darebin",
@@ -42,7 +42,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-academy-youth",
-    label: "Homepage — Youth Development card",
+    label: "Homepage — Pathway row 3: Next-Gen Performance Program (U11–U13)",
     default: {
       src: "/images/academy/astra-academy-youth-training-1280.webp",
       alt: "Astra United youth players in kit and bibs training in a small-sided session with coaches on the Darebin pitch",
@@ -52,7 +52,7 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-program-performance",
-    label: "Homepage — Next-Gen Performance Groups card",
+    label: "Homepage — Pathway row 4: High Performance Track (U14–U15)",
     default: {
       src: "/images/academy/astra-academy-coaching-huddle-1280.webp",
       alt: "Astra United coaches and advanced youth players in a high-intensity training huddle on the Darebin pitch"
@@ -60,10 +60,45 @@ export const PHOTO_SLOTS = [
   },
   {
     key: "home-program-girls",
-    label: "Homepage — Astra Evolution Girls Program card",
+    label: "Homepage — Pathway row 5: Private Football Sessions (all ages)",
     default: {
       src: "/images/womens/astra-girls-program-wide-1280.webp",
       alt: "Astra United girls' program player holding a football on the pitch at Darebin International Sports Centre"
+    }
+  },
+  // Club Essentials (architecture §7) took the card design the pathway rows gave
+  // up, so its three items need photos of their own — the five pathway shots are
+  // all spoken for.
+  //
+  // These three are GENERATED (Higgsfield "soul_location", Aug 2026), not club
+  // photography, which is why they are places and equipment with no people in
+  // them: putting AI-generated children on a real club's site would be a claim
+  // about the club that a parent could reasonably take at face value. Their alt
+  // text describes a generic suburban ground rather than asserting it is Astra's,
+  // for the same reason. Replace them with real club photography via /admin
+  // whenever the club has it — the slot keys make that a swap, not a code change.
+  {
+    key: "home-essential-club",
+    label: "Homepage — Club Essentials: Meet the Club card",
+    default: {
+      src: "/images/ground/astra-ground-clubhouse-dugout-1280.webp",
+      alt: "A suburban football clubhouse and covered players' dugout beside a grass pitch in late afternoon sun"
+    }
+  },
+  {
+    key: "home-essential-trials",
+    label: "Homepage — Club Essentials: Trials & Fees card",
+    default: {
+      src: "/images/kit/astra-kit-boots-ball-touchline-1280.webp",
+      alt: "Football boots, shin pads, a match ball and a folded training bib laid out on the touchline of a dewy grass pitch"
+    }
+  },
+  {
+    key: "home-essential-fixtures",
+    label: "Homepage — Club Essentials: Fixtures & Events card",
+    default: {
+      src: "/images/ground/astra-ground-floodlit-dusk-1280.webp",
+      alt: "A floodlit suburban football ground at dusk, corner flag in the foreground and an empty stand beyond"
     }
   },
   {

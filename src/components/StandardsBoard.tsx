@@ -2,34 +2,53 @@
 
 import { useEffect, useRef, type CSSProperties } from "react";
 import { useReducedMotion } from "framer-motion";
-import { Award, MapPin, ShieldCheck, TrendingUp, Users } from "lucide-react";
+import { ClipboardCheck, HeartHandshake, Lock, ShieldCheck } from "lucide-react";
 
-export type WhyReason = { label: string; detail: string };
+export type StandardItem = { label: string; detail: string };
 
-const ICONS = [Award, ShieldCheck, TrendingUp, Users, MapPin] as const;
-
-// Each reason's resting position along the rail (0 = top / Future Stars,
-// 1 = bottom / First Team). Evenly spread so the journey reads cleanly.
-const POS = [0.1, 0.3, 0.5, 0.7, 0.9];
+// One icon per guardrail, in the deck's order. The deck prints these as emoji
+// (lock, shield, clipboard, handshake); the design system is lucide, so these are
+// the lucide equivalents.
+const ICONS = [Lock, ShieldCheck, ClipboardCheck, HeartHandshake] as const;
 
 /**
- * "The Academy Pathway" — the five Why-Families reasons rendered as milestones
- * on a luminous vertical rail that traces a young player's journey from Future
- * Stars to the First Team. A soft glow travels down the rail; each milestone
- * warms as the glow passes and breathes on its own out-of-sync timer, so the
- * shimmer never visibly repeats. Calm and peripheral — atmosphere, not action.
+ * The guardrails rail — the travelling-light board built in Round 6, carried over
+ * to §6 Trust, Safety & Professional Standards. A luminous vertical rail runs top
+ * to bottom, a soft glow travels down it, and each guardrail blooms open as the
+ * glow reaches it, then eases shut as it moves on. Hover or focus opens one
+ * manually at any time.
+ *
+ * Two changes from the version that rendered the five "Why families" reasons:
+ *
+ * 1. Positions are DERIVED from the item count rather than a fixed five-slot
+ *    array, so four guardrails spread evenly instead of leaving a gap where the
+ *    fifth used to be.
+ * 2. The "Future Stars" / "First Team" captions that used to top and tail the
+ *    rail are gone. They marked the two ends of a player's journey, which is what
+ *    the old content was; safeguarding and insurance are not a journey, and
+ *    labelling them as one would have been simply untrue. The rail now reads as a
+ *    spine connecting the standards rather than a path between two points.
  */
-export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
+export function StandardsBoard({ items }: { items: StandardItem[] }) {
   const reduced = useReducedMotion();
-  const tags = reasons.slice(0, ICONS.length);
+  const tags = items.slice(0, ICONS.length);
+
+  // Evenly spaced down the rail, inset half a step at each end so the first and
+  // last cards sit inside the rail rather than flush against its tips.
+  const positions = tags.map((_, i) => (i + 0.5) / tags.length);
 
   const nodeRefs = useRef<(HTMLDivElement | null)[]>([]);
   const travelerRef = useRef<HTMLSpanElement | null>(null);
 
   useEffect(() => {
-    // Reduced motion → a static, evenly-lit pathway. No travelling glow.
+    // Reduced motion → a static, evenly-lit board. No travelling glow.
     if (reduced) {
-      nodeRefs.current.forEach((el) => el?.style.setProperty("--glow", "0.5"));
+      nodeRefs.current.forEach((el) => {
+        el?.style.setProperty("--glow", "0.5");
+        // every guardrail stays open: with no light to reveal them, hiding the
+        // detail behind motion would hide it permanently.
+        el?.style.setProperty("--open", "1");
+      });
       return;
     }
 
@@ -45,15 +64,16 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
 
       nodeRefs.current.forEach((el, i) => {
         if (!el) return;
-        // proximity bump: bright when the travelling glow is near this milestone
-        const proximity = Math.max(0, 1 - Math.abs(phase - POS[i]) * 5);
+        // proximity bump: bright when the travelling glow is near this guardrail.
+        // Scaled to the spacing so the reveal window tracks the item count.
+        const proximity = Math.max(0, 1 - Math.abs(phase - positions[i]) * tags.length * 1.25);
         // independent breath at an incommensurate rate → the whole never loops
         const breath = 0.5 + 0.5 * Math.sin(t * (0.22 + i * 0.017) + i * 1.3);
         const glow = Math.min(1, proximity * 0.85 + breath * 0.3);
         el.style.setProperty("--glow", glow.toFixed(3));
-        // auto-reveal: as the glow reaches this milestone it blooms fully open,
-        // then eases shut as the light moves on to the next. Smoothstep so the
-        // card stays closed until the light is genuinely close.
+        // auto-reveal: as the glow reaches this guardrail it blooms fully open,
+        // then eases shut as the light moves on. Smoothstep so the card stays
+        // closed until the light is genuinely close.
         const open = proximity * proximity * (3 - 2 * proximity);
         el.style.setProperty("--open", open.toFixed(3));
       });
@@ -62,23 +82,18 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
     };
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [reduced]);
+  }, [reduced, tags.length, positions]);
 
   return (
     <div className="mx-auto w-full max-w-md lg:mx-0">
-      {/* journey start */}
-      <p className="mb-3 pl-12 text-[0.7rem] font-black uppercase tracking-[0.22em] text-astra-gold/80">
-        Future Stars
-      </p>
-
-      <div className="relative min-h-[480px] sm:min-h-[520px]">
-        {/* the rail the journey runs along */}
+      <div className="relative min-h-[520px] sm:min-h-[560px]">
+        {/* the rail the light runs along */}
         <span
           aria-hidden="true"
           className="absolute bottom-0 top-0 w-px bg-gradient-to-b from-astra-gold/10 via-astra-gold/45 to-astra-gold/10"
           style={{ left: "1.5rem" }}
         />
-        {/* the travelling glow — the journey progressing */}
+        {/* the travelling glow */}
         {!reduced && (
           <span
             ref={travelerRef}
@@ -93,17 +108,18 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
           />
         )}
 
-        {/* the five milestones */}
-        {tags.map((reason, i) => {
+        {tags.map((item, i) => {
           const Icon = ICONS[i];
           return (
             <div
-              key={reason.label}
+              key={item.label}
               ref={(el) => {
                 nodeRefs.current[i] = el;
               }}
               className="absolute inset-x-0"
-              style={{ top: `${POS[i] * 100}%`, "--glow": "0.3", "--open": "0" } as CSSProperties}
+              style={
+                { top: `${positions[i] * 100}%`, "--glow": "0.3", "--open": "0" } as CSSProperties
+              }
             >
               <div className="flex -translate-y-1/2 items-start gap-4">
                 {/* node on the rail */}
@@ -117,10 +133,10 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
                       "0 0 calc(5px + var(--glow,0) * 16px) calc(var(--glow,0) * 3px) rgba(242,201,76, calc(0.25 + var(--glow,0) * 0.65))"
                   }}
                 />
-                {/* milestone card */}
+                {/* guardrail card */}
                 <div
                   tabIndex={0}
-                  aria-label={`${reason.label}. ${reason.detail}`}
+                  aria-label={`${item.label}. ${item.detail}`}
                   className="w-full rounded-2xl bg-gradient-to-br from-[#0d2c4d] to-[#06141f] px-4 py-3 transition [--hover:0] hover:[--hover:1] focus:outline-none focus-within:[--hover:1]"
                   style={{
                     boxShadow:
@@ -129,19 +145,20 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
                 >
                   <div className="flex items-center gap-2">
                     <Icon aria-hidden="true" className="h-4 w-4 shrink-0 text-astra-gold" />
-                    <p className="crest-type text-sm leading-tight text-white">{reason.label}</p>
+                    <h3 className="crest-type type-h5 leading-tight text-white">{item.label}</h3>
                   </div>
                   {/* Reveal = whichever is greater: the travelling light (--open) or
-                      hover/focus (--hover). Lets the auto-bloom and manual reveal coexist. */}
+                      hover/focus (--hover). Lets the auto-bloom and manual reveal
+                      coexist. maxHeight allows for the longer §6 copy. */}
                   <p
                     className="overflow-hidden text-xs leading-5 transition-all duration-300"
                     style={{
-                      maxHeight: "calc(max(var(--open,0), var(--hover,0)) * 7rem)",
+                      maxHeight: "calc(max(var(--open,0), var(--hover,0)) * 9rem)",
                       marginTop: "calc(max(var(--open,0), var(--hover,0)) * 0.5rem)",
                       color: "rgba(255,255,255, calc(max(var(--open,0), var(--hover,0)) * 0.72))"
                     }}
                   >
-                    {reason.detail}
+                    {item.detail}
                   </p>
                 </div>
               </div>
@@ -149,11 +166,6 @@ export function WhyFamiliesBoard({ reasons }: { reasons: WhyReason[] }) {
           );
         })}
       </div>
-
-      {/* journey destination */}
-      <p className="mt-3 pl-12 text-[0.7rem] font-black uppercase tracking-[0.22em] text-astra-red">
-        First Team
-      </p>
     </div>
   );
 }

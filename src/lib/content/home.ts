@@ -1,51 +1,159 @@
+// Hero copy (Revised homepage architecture §1 — "Elite Vision & Immediate
+// Action"). The big headline is rendered in JSX inside HeroIntro so "Premier"
+// can carry the red brand accent — the same rule the Welcome band follows for
+// "United"; everything else lives here verbatim from the team's copy deck.
+//
+// `status` + `kicker` are currently unrendered: the pitch-status line is being
+// rebuilt as the standalone Live Utility Banner (architecture §2), so the copy
+// stays here rather than being deleted and immediately re-added.
 export const heroContent = {
   status: "All Astra pitches are currently OPEN for training and match days.",
   kicker: "Est. Melbourne's North - Academy & Senior",
-  headline:
-    "The Home of Football Community & Player Development in Melbourne's Suburbs",
+  subhead:
+    "Inspired by modern European player development models, Astra United FC is dedicated to shaping better players and better people",
   lead:
-    "Astra Football Club provides a professional, highly structured football environment for local families across Melbourne's growing northern and eastern suburbs, based at Darebin International Sports Centre.",
-  primaryCta: { label: "Register for 2026", href: "/join-us" },
-  secondaryCta: { label: "View match-day fixtures", href: "/teams" }
+    "Based in Melbourne's growing northern and eastern suburbs, we provide a highly structured, professional, safe, and enjoyable learning environment built for long-term athletic success. Join Astra United FC today.",
+  primaryCta: { label: "Register for 2026 Season", href: "/join-us" },
+  // No dedicated trials page yet — /join-us carries both the trial criteria and
+  // the interest form. Re-point this the moment a trials page exists.
+  secondaryCta: { label: "Book Football Trials", href: "/join-us" }
 };
 
-// "Welcome to Astra Football Club" — the first standalone section after the
-// hero motion (Revised content spec §3). The big headline is rendered in JSX so
-// "United" can carry the red accent; this object holds the subheadline + the two
-// intro paragraphs verbatim from the team's revised copy.
+// The Welcome band — "The Brand Philosophy" (Revised homepage architecture §3).
+// Only the headline is rendered in JSX (in app/page.tsx), so it can carry the red
+// brand accent; both paragraphs are plain prose and live here verbatim.
+//
+// There is no `subhead` field any more. The deck specs §3 as headline + body with
+// no "Small Label" line (§4 and §5 name one explicitly), and the old gold line —
+// "Excellence in Local Football and Player Development" — used the exact "local
+// football" framing §1 just moved the club away from. Instead `lead` TAKES that
+// gold slot: it is the deck's own opening paragraph, set in gold under the
+// headline exactly like the hero's §1 sub-headline. Same reasoning as §1, too —
+// gold but sentence case, because uppercase over a full sentence reads as
+// shouting. That also absorbs the two phrases the deck sets in bold ("Astra
+// United FC", "Player Development Academy"): the whole line is now the emphasis,
+// so they need no separate weight.
 export const welcome = {
-  subhead: "Excellence in Local Football and Player Development",
-  intro: [
-    "Welcome to Astra Football Club, a premier community-focused football club for players, coaches, and supporters. We are dedicated to fostering a professional environment where talent is meticulously nurtured from the grassroots up.",
-    "Whether you are looking for an elite Youth Academy with professional, highly qualified coaching or a competitive senior football team, Astra FC offers a distinct pathway for every player. Our mission is to combine technical excellence with a strong community spirit, ensuring every member of the Astra family can reach their full potential on the pitch. As a standout Melbourne soccer club, we proudly embrace the city's vibrant multicultural football culture and community values across all local Melbourne suburbs."
+  lead: "Welcome to Astra United FC, a progressive, community-focused Player Development Academy designed for players, coaches, and families who demand more from grassroots sports.",
+  body: "We believe that every child—regardless of their current playing experience or initial ability—deserves the opportunity to learn, evolve, and enjoy the beautiful game. At Astra United, the Academy represents the beginning of a much larger journey. We are building concrete foundations for future boys' and girls' representative teams. When families join us today, they are stepping onto a long-term development pathway designed to take players from grassroots fundamentals all the way to official, competitive league football."
+};
+
+// The Astra Player Development Model (Revised homepage architecture §4) — the
+// four coaching pillars. These were already on the page as a strip tucked under
+// the program cards; Round 7 promotes them to a section of their own, ahead of
+// the pathway grid, because the deck wants "how we develop players" answered
+// before "where does my child fit".
+//
+// Each pillar is {label, title, copy}: the label rides the rail node, the title
+// is the bold line the deck sets under each heading, and the copy is its
+// description. The fourth pillar is "Psychological" — it replaces the older
+// "Character", per the deck.
+export const developmentModel = {
+  eyebrow: "Our methodology",
+  intro:
+    "Our elite coaching philosophy doesn't leave development to chance. We meticulously train the complete athlete by focusing on four interconnected sports-science disciplines:"
+};
+
+export const developmentPillars = [
+  {
+    label: "Technical",
+    title: "Ball Mastery & Precision",
+    copy: "Developing an impeccable first touch, passing accuracy, receiving, advanced dribbling, and goal-scoring precision."
+  },
+  {
+    label: "Tactical",
+    title: "Game Intelligence",
+    copy: "Cultivating elite decision-making, spatial awareness, positional discipline, movement off the ball, and overall tactical intelligence."
+  },
+  {
+    label: "Physical",
+    title: "Physical Literacy",
+    copy: "Enhancing core coordination, balance, agility, explosive speed, and age-appropriate movement mechanics."
+  },
+  {
+    label: "Psychological",
+    title: "Mindset & Resilience",
+    copy: "Building deep self-confidence, concentration, resilience, emotional regulation, teamwork, and positive sporting behaviours."
+  }
+];
+
+// Trust, Safety & Professional Standards (Revised homepage architecture §6) —
+// the parent-reassurance band. This REPLACES the five "Why families choose Astra"
+// reasons: the deck answers the same question a parent is asking, but with
+// specific checkable credentials (WWCC, insurance frameworks) rather than general
+// qualities, which is the whole point of the section per its user-flow goal.
+//
+// The headline lives in JSX in app/page.tsx so it can carry the red accent; the
+// lead-in and the four guardrails are plain prose and live here verbatim. The
+// deck specs no Small Label for §6, so — as in §3 — the lead-in takes the gold
+// accent line instead of a separate subhead.
+export const trustStandards = {
+  eyebrow: "Parent peace of mind",
+  intro:
+    "At Astra United FC, providing a safe, inclusive, and professionally managed environment is our highest priority. We eliminate the guesswork for families by operating under strict professional guardrails:",
+  items: [
+    {
+      label: "Child Safe Commitment",
+      detail: "Fully aligned with national child safe frameworks and rigid internal club protocols."
+    },
+    {
+      label: "Rigorous Child Safeguarding Policies",
+      detail:
+        "Every coach and staff member holds verified technical qualifications and mandatory Working with Children Checks (WWCC)."
+    },
+    {
+      label: "Comprehensive Insurances",
+      detail:
+        "Fully backed by robust Public Liability and Professional Indemnity Insurance frameworks."
+    },
+    {
+      label: "Inclusive Culture",
+      detail:
+        "A supportive, positive, and pressure-free learning environment where mistakes are embraced as vital learning tools."
+    }
   ]
 };
 
-// "Why Families Choose Astra" (Revised content spec §6) — five labelled reasons
-// that reinforce the decision to join. Each is a {label, detail} pair: the label
-// rides the swinging tag, the detail reveals on hover/focus (and shows inline in
-// the accessible/mobile fallback). Verbatim from the team's revised copy.
-export const whyFamilies = [
+// Future Preview & Coming Soon Initiatives (Revised homepage architecture §8) —
+// four initiatives that do not exist yet. This is also where the Astra Evolution
+// Girls Program reappears: §5 dropped it from the live pathway grid on the deck's
+// instruction, and until this section existed the club's girls' football had no
+// mention anywhere on the homepage.
+//
+// Each title drops the deck's trailing "(Coming Soon)": every card carries a
+// COMING SOON pill, so repeating it in the heading says the same thing twice.
+//
+// `intro`, and the closing sentence on three of the four `copy` fields, come from
+// Mazdak's design mockup rather than the architecture doc — they are the only
+// copy on the page that is not in the team's deck. Flagged so the team can adopt
+// or drop them; everything else here is verbatim.
+//
+// `art` is decorative generated artwork (Higgsfield "z_image", Aug 2026), not
+// club photography, and is deliberately NOT on a photo slot: the whole band is
+// temporary by definition — each card leaves as its initiative launches — so five
+// more entries in the admin Photos tab would be clutter with a short life.
+export const comingSoonIntro =
+  "Pioneering the future of football development through evidence-based innovation, advanced technology, and holistic player growth programs.";
+
+export const comingSoon = [
   {
-    label: "Qualified Coaching Pedigree",
-    detail: "Learn from highly experienced, accredited UEFA and AFC coaches."
+    title: "The Astra Learning Centre",
+    copy: "We don't just coach young footballers—we educate families. Rooted in our founder's academic background in Sport Management and Clinical Psychology, this digital hub will feature monthly modules on Sports Psychology, Nutrition & Recovery, Parent Education, and Football Tactics.",
+    art: "/images/future/astra-future-learning-centre-1280.webp"
   },
   {
-    label: "Safe & Inclusive Environment",
-    detail: "Built strictly on rigorous child safeguarding and protection frameworks."
+    title: "\u201cAstra Evolution\u201d Girls Program (Ages 9\u201313)",
+    copy: "A dedicated, specialised stream driving girls' football development through empowering, sports-science-backed coaching models. Building confidence, leadership, and a lifelong love for the game.",
+    art: "/images/future/astra-future-girls-program-1280.webp"
   },
   {
-    label: "Structured Development Pathway",
-    detail:
-      "A clear blueprint designed to transition players seamlessly from the Youth Academy to senior football."
+    title: "Goalkeeper Academy & Elite Next-Gen Squads",
+    copy: "Specialised positional training frameworks designed for modern goalkeeping and elite match preparation. Developing the next generation of game-changers.",
+    art: "/images/future/astra-future-goalkeeper-1280.webp"
   },
   {
-    label: "Multicultural Community Focus",
-    detail:
-      "Uniting diverse families across local Melbourne suburbs through a shared love of the game."
-  },
-  {
-    label: "Elite Training Environments",
-    detail: "Access to premium pitches and structured training setups tailored for player growth."
+    title: "Interactive Match Centre",
+    copy: "Real-time fixture tracking, results, and detailed match analytics. Advanced performance insights for players, parents, and coaches.",
+    art: "/images/future/astra-future-match-centre-1280.webp"
   }
 ];

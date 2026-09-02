@@ -7,7 +7,7 @@ import { BlockRenderer } from "@/src/components/blocks/BlockRenderer";
 import { getPageBySlug, pages } from "@/src/lib/site-data";
 import { getClubContent } from "@/src/lib/content/store";
 import { isLive } from "@/src/lib/content/expiry";
-import { listSummaries } from "@/src/lib/content/news";
+import { listSummaries, partnersCard } from "@/src/lib/content/news";
 import { resolvePhoto, isSlotKey } from "@/src/lib/content/photo-slots";
 import { NewsCard } from "@/src/components/content/NewsCard";
 import { SeniorPathway } from "@/src/components/SeniorPathway";
@@ -56,7 +56,7 @@ export default async function MarketingPage({ params }: PageProps) {
       {newsPosts.length > 0 ? (
         <section className="section-band band-deep">
           <div className="container-wide">
-            <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">From the training ground</p>
+            <p className="text-sm font-black uppercase tracking-[0.2em] text-astra-red">From the training ground &amp; partners</p>
             <h2 className="crest-type mt-2 text-3xl leading-none text-white sm:text-4xl">Latest posts</h2>
             <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {newsPosts.map((post) => (
@@ -69,6 +69,10 @@ export default async function MarketingPage({ params }: PageProps) {
                   body={post.body}
                 />
               ))}
+              {/* same standing Partners entry the homepage band carries, so the
+                  two lists cannot drift apart. The index keeps every post — its
+                  job is to be complete — so it simply runs one card longer. */}
+              <NewsCard {...partnersCard} />
             </div>
           </div>
         </section>

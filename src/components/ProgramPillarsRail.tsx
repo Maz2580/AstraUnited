@@ -2,19 +2,23 @@
 
 import { useEffect, useRef, useState, type CSSProperties } from "react";
 import { useReducedMotion } from "framer-motion";
-import { Compass, HeartHandshake, Target, Zap } from "lucide-react";
+import { Brain, Compass, Target, Zap } from "lucide-react";
 
-export type ProgramPillar = { label: string; copy: string };
+export type ProgramPillar = { label: string; title: string; copy: string };
 
-// One icon per pillar, in data order (Technical · Tactical · Physical · Character).
-const ICONS = [Target, Compass, Zap, HeartHandshake] as const;
+// One icon per pillar, in data order (Technical · Tactical · Physical ·
+// Psychological). The fourth was HeartHandshake while the pillar was "Character";
+// now that it is "Mindset & Resilience", Brain carries the meaning. (The deck
+// draws it as a ⚖️ scale, but emoji would be the only ones on the page — the rest
+// of the design system is lucide, so it stays lucide.)
+const ICONS = [Target, Compass, Zap, Brain] as const;
 
 // Each pillar's resting position along the horizontal rail (centre of its
 // column), left → right. Evenly spread across four equal segments.
 const POS = [0.125, 0.375, 0.625, 0.875];
 
 /**
- * The development pillars (Technical · Tactical · Physical · Character) as a
+ * The development pillars (Technical · Tactical · Physical · Psychological) as a
  * HORIZONTAL companion to the vertical "Academy Pathway" rail: a luminous gold
  * rail runs left → right and a soft glow travels along it, SPOTLIGHTING each
  * pillar as it passes — the card lifts, its gold ring and icon warm up, and the
@@ -88,9 +92,10 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                 <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-astra-gold/10 ring-1 ring-astra-gold/25">
                   <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" />
                 </span>
-                <p className="crest-type text-lg text-white">{pillar.label}</p>
+                <h3 className="crest-type type-h5 text-white">{pillar.label}</h3>
               </div>
-              <p className="mt-3 text-sm leading-6 text-white/70">{pillar.copy}</p>
+              <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
+              <p className="type-body mt-2 text-white/70">{pillar.copy}</p>
             </div>
           );
         })}
@@ -141,7 +146,7 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
               {/* pillar card — whole at rest, spotlit as the light passes */}
               <div
                 tabIndex={0}
-                aria-label={`${pillar.label}. ${pillar.copy}`}
+                aria-label={`${pillar.label}. ${pillar.title}. ${pillar.copy}`}
                 className="mt-8 flex h-full flex-col rounded-2xl bg-gradient-to-br from-[#0d2c4d] to-[#06141f] p-5 transition-transform duration-300 [--hover:0] hover:[--hover:1] focus:outline-none focus-within:[--hover:1]"
                 style={{
                   transform: "translateY(calc(max(var(--spot,0), var(--hover,0)) * -6px))",
@@ -160,12 +165,16 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                   >
                     <Icon aria-hidden="true" className="h-4 w-4 text-astra-gold" />
                   </span>
-                  <p className="crest-type text-lg text-white">{pillar.label}</p>
+                  <h3 className="crest-type type-h5 text-white">{pillar.label}</h3>
                 </div>
+                {/* The deck's bold line for each pillar. Held at full gold rather
+                    than dimmed with the copy, so every card keeps a readable
+                    anchor while the spotlight is somewhere else on the rail. */}
+                <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
                 {/* copy is always present; it brightens from dim to full as the
                     spotlight (or hover) reaches the card. */}
                 <p
-                  className="mt-3 text-sm leading-6 transition-colors duration-300"
+                  className="type-body mt-2 transition-colors duration-300"
                   style={{
                     color: "rgba(255,255,255, calc(0.5 + max(var(--spot,0), var(--hover,0)) * 0.4))"
                   }}

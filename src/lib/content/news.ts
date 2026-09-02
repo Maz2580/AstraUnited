@@ -40,7 +40,9 @@ type SamplePost = {
 export const samplePosts: SamplePost[] = [
   {
     slug: "senior-team-secure-three-points",
-    title: "Senior Team Secure Crucial Three Points",
+    // headline per Revised Homepage Architecture §9. Seed copy: it is replaced
+    // wholesale the moment the club publishes a real report through /admin.
+    title: "Senior Squad Secures Crucial Three Points in Local Football Thriller",
     category: "Match Report",
     dateLabel: "14 June 2026",
     excerpt:
@@ -69,6 +71,25 @@ export const samplePosts: SamplePost[] = [
     image: "/images/academy/astra-academy-coaching-huddle-1280.webp"
   }
 ];
+
+/**
+ * The standing Partners entry (Revised homepage architecture §9). It rides in the
+ * same card row as the posts on BOTH surfaces that list them — the homepage band
+ * and the /news-media index — so it lives here rather than in either component.
+ * Defining it twice was how the two surfaces disagreed in the first place.
+ *
+ * Not a post: an open invitation to local businesses is not something the club
+ * publishes and re-dates, so it is never fed through /admin and never ages out.
+ * No body — the deck gives one sentence and it reads as the headline.
+ */
+export const partnersCard = {
+  id: "partners",
+  href: "/sponsors",
+  image: "/images/kit/astra-kit-ball-1280.webp",
+  kicker: "Our Partners",
+  title: "Astra United FC proudly welcomes local businesses dedicated to grassroots development.",
+  cta: "View Platinum, Gold & Silver Sponsorship Packages"
+};
 
 /** Listing cards: live admin posts if any, otherwise the seed sample posts. */
 export function listSummaries(liveEvents: EventPost[]): PostSummary[] {
