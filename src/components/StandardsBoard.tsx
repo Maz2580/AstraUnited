@@ -149,9 +149,13 @@ export function StandardsBoard({ items }: { items: StandardItem[] }) {
                   </div>
                   {/* Reveal = whichever is greater: the travelling light (--open) or
                       hover/focus (--hover). Lets the auto-bloom and manual reveal
-                      coexist. maxHeight allows for the longer §6 copy. */}
+                      coexist. maxHeight allows for the longer §6 copy.
+
+                      14px, not 12px: the detail is a full sentence of body copy,
+                      and at 12px over a fading opacity it read as blurry. 14/24
+                      is the same size the news and footer copy use. */}
                   <p
-                    className="overflow-hidden text-xs leading-5 transition-all duration-300"
+                    className="overflow-hidden text-sm leading-6 transition-all duration-300"
                     style={{
                       maxHeight: "calc(max(var(--open,0), var(--hover,0)) * 9rem)",
                       marginTop: "calc(max(var(--open,0), var(--hover,0)) * 0.5rem)",

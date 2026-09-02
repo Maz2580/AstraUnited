@@ -623,7 +623,21 @@ svg {
 
    Levels: h1 56/64 · h2 40/48 · h3 28/36 · h4 22/28 · h5 18/24 · subhead 20/28 ·
    lead 18/28 · body 16/24 (desktop px). Nothing here drops below 12px, the
-   guide's accessibility floor. */
+   guide's accessibility floor.
+
+   WHITE OPACITY (Round 7 team comment). Copy on the navy bands is white at a
+   reduced opacity, and the values had drifted — from 30% up to 85% — so the
+   same kind of text read crisp in one band and blurry in the next. The rule
+   now, using Club Essentials (which the team singled out as right) as the
+   reference:
+     · body / secondary copy, any size .......... text-white/72
+     · section intro paragraphs ................. text-white/75
+     · emphasised lines (lead, founder honours) . text-white/80–85
+     · tertiary meta (copyright, form hints,
+       "rest day") — the only thing dimmer ...... text-white/60, never lower
+   Anything at 12px never goes below 60%. The logo wall in the sponsor band is
+   the one deliberate exception: partner marks are dimmed to 55% because they
+   are logos, not copy, and they brighten to white on hover. */
 .type-h1,
 .type-h2,
 .type-h3,

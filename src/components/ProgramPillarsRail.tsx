@@ -95,7 +95,7 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                 <h3 className="crest-type type-h5 text-white">{pillar.label}</h3>
               </div>
               <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
-              <p className="type-body mt-2 text-white/70">{pillar.copy}</p>
+              <p className="type-body mt-2 text-white/72">{pillar.copy}</p>
             </div>
           );
         })}
@@ -171,12 +171,17 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                     than dimmed with the copy, so every card keeps a readable
                     anchor while the spotlight is somewhere else on the rail. */}
                 <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
-                {/* copy is always present; it brightens from dim to full as the
-                    spotlight (or hover) reaches the card. */}
+                {/* copy is always present; it brightens to full white as the
+                    spotlight (or hover) reaches the card. It RESTS at the site's
+                    72% body white — the same value Club Essentials uses — not
+                    dimmer: this used to sit at 50% while the light was elsewhere,
+                    which the team read as blurry, hard-to-read text. The lift
+                    on arrival is smaller now, but the card's translate and ring
+                    glow still carry the spotlight. */}
                 <p
                   className="type-body mt-2 transition-colors duration-300"
                   style={{
-                    color: "rgba(255,255,255, calc(0.5 + max(var(--spot,0), var(--hover,0)) * 0.4))"
+                    color: "rgba(255,255,255, calc(0.72 + max(var(--spot,0), var(--hover,0)) * 0.28))"
                   }}
                 >
                   {pillar.copy}

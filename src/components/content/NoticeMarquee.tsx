@@ -119,7 +119,7 @@ export function NoticeMarquee({ notices }: { notices: Notice[] }) {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close notice"
-              className="absolute right-4 top-4 rounded-full border border-white/12 p-2 text-white/70 transition hover:border-white/35 hover:text-white"
+              className="absolute right-4 top-4 rounded-full border border-white/12 p-2 text-white/72 transition hover:border-white/35 hover:text-white"
             >
               <X aria-hidden="true" className="h-4 w-4" />
             </button>
@@ -131,7 +131,7 @@ export function NoticeMarquee({ notices }: { notices: Notice[] }) {
             <h2 className="crest-type mt-3 text-3xl text-white">{current.title}</h2>
             <p className="mt-4 text-sm leading-6 text-white/80">{current.message}</p>
             {notices.length > 1 ? (
-              <div className="mt-6 flex items-center justify-between text-white/70">
+              <div className="mt-6 flex items-center justify-between text-white/72">
                 <button
                   type="button"
                   onClick={() => step(-1)}

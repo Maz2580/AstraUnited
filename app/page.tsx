@@ -550,7 +550,7 @@ export default function Home() {
             <h2 className="crest-type text-4xl leading-[0.95] text-white sm:text-5xl lg:text-6xl">
               Sponsorship &amp; Community <span className="text-astra-red">Partners</span>
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-7 text-white/70">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-white/75">
               Astra Football Club welcomes local businesses who want to support grassroots football
               and youth pathways across Melbourne&apos;s north.
             </p>
@@ -595,7 +595,7 @@ export default function Home() {
               ))}
             </div>
             <div className="mt-9 flex flex-col gap-4 sm:flex-row sm:items-center">
-              <p className="text-sm font-semibold text-white/70">
+              <p className="text-sm font-semibold text-white/72">
                 Interested in becoming an official corporate or community sponsor?
               </p>
               <CtaLink href="/sponsors" className="px-5 py-3 text-sm font-black uppercase tracking-wide">
