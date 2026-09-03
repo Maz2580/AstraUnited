@@ -149,8 +149,9 @@ const clubEssentials: { title: string; copy: string; cta: string; href: string; 
     title: "Fixtures & Events",
     copy: "Access the Training Calendar, Academy Events, Program Schedule, and Private Sessions.",
     cta: "View Event Calendar",
-    // the live "This Week at Astra" band further down IS the training calendar
-    // and events rail, so this routes there rather than off to another page.
+    // the live "This Week at Astra" band (up under the Welcome band) IS the
+    // training calendar and events rail, so this routes there rather than off
+    // to another page.
     href: "/#schedule",
     slot: "home-essential-fixtures"
   }
@@ -172,14 +173,14 @@ export default function Home() {
             this section, so there is no gold subhead line here (§4 and §5 do get
             one) — the headline carries the band on its own.
 
-            BAND NOTE: this flipped deep -> fog when §4 was inserted below it.
-            Bands alternate, so adding a section anywhere shifts the parity of
-            every band on one side of it. Flipping the ONE section above the
-            insertion was the whole fix — flipping everything below would have
-            meant touching NewsSection and ScheduleSection, which carry their band
-            internally, and would have moved seven approved sections onto
-            backgrounds they were not designed against. */}
-        <FlowReveal className="section-band band-deep">
+            BAND NOTE: bands alternate deep/fog, so moving a section anywhere
+            shifts the parity of every band on one side of it. When the schedule
+            moved up to sit directly below this band, this band flipped to fog
+            and the schedule took deep — two flips at the insertion point, and
+            every approved section from §4 down keeps the background it was
+            designed against. (It also means a live top Spotlight, which is
+            deep, no longer sits deep-on-deep against this band.) */}
+        <FlowReveal className="section-band band-fog">
           <div
             data-touchline-node
             className="container-wide grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-stretch"
@@ -222,6 +223,13 @@ export default function Home() {
             </PopCard>
           </div>
         </FlowReveal>
+
+        {/* "This Week at Astra": the live training calendar + special events,
+            admin-managed. Moved up from the foot of the page on the team's
+            Round-7 comment, so the week's sessions are the first practical thing
+            a parent meets after the welcome — before the methodology. Renders
+            band-deep (see ScheduleSection), between this fog band and §4's. */}
+        <ScheduleSection />
 
         {/* 1 — The Astra Player Development Model (Revised homepage architecture
             §4). The four pillars used to be a strip inside the Programs band
@@ -612,13 +620,9 @@ export default function Home() {
             previews when none are published). See NewsSection. */}
         <NewsSection />
 
-        {/* Club Spotlight (before join) */}
+        {/* Club Spotlight (before join). The schedule used to sit between this
+            and the footer; it now lives up under the Welcome band. */}
         <SpotlightSection placement="before-join" />
-
-        {/* 9 — "This Week at Astra": live training schedule + special events,
-            admin-managed, sitting right before the Join CTA (what you'd be part
-            of → join). Renders band-fog, so Join flips to band-deep below it. */}
-        <ScheduleSection />
 
         {/* 10 — The Conversion Footer (Revised homepage architecture §10). The
             deck's closing ask: headline, the membership/trials paragraph, two
