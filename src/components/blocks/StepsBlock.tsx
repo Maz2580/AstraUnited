@@ -15,7 +15,7 @@ export function StepsBlock({ title, items }: Props) {
                 {i + 1}
               </span>
               <h3 className="mt-4 text-lg font-black text-white">{item.title}</h3>
-              <p className="mt-2 text-sm leading-6 text-white/72">{item.copy}</p>
+              <p className="mt-2 text-sm leading-6 text-astra-white">{item.copy}</p>
             </PopCard>
           </li>
         ))}

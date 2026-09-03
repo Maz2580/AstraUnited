@@ -623,7 +623,27 @@ svg {
 
    Levels: h1 56/64 · h2 40/48 · h3 28/36 · h4 22/28 · h5 18/24 · subhead 20/28 ·
    lead 18/28 · body 16/24 (desktop px). Nothing here drops below 12px, the
-   guide's accessibility floor. */
+   guide's accessibility floor.
+
+   COPY WHITE (Round 7 team comment). The team found the white on small copy
+   inconsistent — crisp in Club Essentials and Future Preview, faint elsewhere.
+   The cause was a Tailwind trap, not a design decision: the opacity modifier
+   only accepts the theme's steps of five, so `text-white/72` (and /76, /82)
+   never generated a rule at all. Those elements silently inherited body's
+   colour, --astra-white (#f8fbfd), and rendered SOLID. Everything on a valid
+   step — /70, /75, /80, /60, /55 — really was dimmed, which is exactly the set
+   the team read as "blurry".
+
+   So the sections they liked were solid white by accident, and the rule now
+   makes that deliberate:
+     · ALL body / secondary / small copy on the navy bands ... text-astra-white
+       (solid; the class exists in tailwind.config as astra.white)
+     · plain `text-white` stays for headings and anything already solid
+   The only dimmed text left, each on purpose: the sponsor logo wall (marks,
+   not copy, brighten on hover), input placeholders, the schedule's empty
+   "Rest day" label, and the hero lead over the footage. Do not reintroduce
+   `text-white/NN` for copy — if a value is not a multiple of five it is
+   silently ignored, and if it is, it will read fainter than the rest. */
 .type-h1,
 .type-h2,
 .type-h3,

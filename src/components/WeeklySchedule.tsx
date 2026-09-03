@@ -156,7 +156,7 @@ export function WeeklySchedule({
               }`}
             >
               <div className="flex items-center justify-between">
-                <span className={`text-xs font-black uppercase tracking-[0.14em] ${isToday ? "text-astra-gold" : "text-white/55"}`}>
+                <span className={`text-xs font-black uppercase tracking-[0.14em] ${isToday ? "text-astra-gold" : "text-astra-white"}`}>
                   {day.short}
                 </span>
                 {isToday ? (
@@ -167,7 +167,7 @@ export function WeeklySchedule({
               </div>
               <div className="mt-3 flex flex-1 flex-col gap-2">
                 {sessions.length === 0 ? (
-                  <span className="text-xs text-white/30">Rest day</span>
+                  <span className="text-xs text-astra-white/60">Rest day</span>
                 ) : (
                   sessions.map((s) => {
                     const match = isMatchDay(s.group);
@@ -178,7 +178,7 @@ export function WeeklySchedule({
                           match ? "bg-astra-red/15 ring-astra-red/40" : "bg-white/5 ring-white/10"
                         }`}
                       >
-                        <p className={`text-xs font-black leading-tight ${match ? "text-white" : "text-white/90"}`}>
+                        <p className={`text-xs font-black leading-tight ${match ? "text-white" : "text-astra-white"}`}>
                           {s.group}
                         </p>
                         <p className="mt-1 text-[0.7rem] font-semibold text-astra-gold">
@@ -206,7 +206,7 @@ export function WeeklySchedule({
               >
                 <p className="text-xs font-black uppercase tracking-[0.12em] text-astra-gold">{fmtDate(ev.date)}</p>
                 <p className="mt-1.5 text-base font-black leading-tight text-white">{ev.title}</p>
-                <div className="mt-2 space-y-1 text-xs text-white/60">
+                <div className="mt-2 space-y-1 text-xs text-astra-white">
                   {ev.start ? (
                     <p>
                       {fmtTime(ev.start)}
@@ -219,7 +219,7 @@ export function WeeklySchedule({
                       {ev.location}
                     </p>
                   ) : null}
-                  {ev.note ? <p className="text-white/45">{ev.note}</p> : null}
+                  {ev.note ? <p>{ev.note}</p> : null}
                 </div>
               </div>
             ))}
@@ -233,7 +233,7 @@ export function WeeklySchedule({
 /** The live status pill — pulsing dot + "LIVE NOW" / "NEXT" / fallback. */
 function LivePill({ status }: { status: LiveStatus | null }) {
   let dotClass = "bg-white/40";
-  let label = <span className="text-white/70">Training &amp; events below</span>;
+  let label = <span className="text-astra-white">Training &amp; events below</span>;
 
   if (status?.live) {
     dotClass = "bg-astra-red";
@@ -249,7 +249,7 @@ function LivePill({ status }: { status: LiveStatus | null }) {
     label = (
       <span className="text-white">
         <span className="font-black text-astra-gold">NEXT</span> — {session.group} · {dayLong} {fmtTime(session.start)}{" "}
-        <span className="text-white/55">· {relativeDay(daysUntil)}</span>
+        <span className="text-astra-white">· {relativeDay(daysUntil)}</span>
       </span>
     );
   }

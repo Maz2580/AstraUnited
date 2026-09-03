@@ -15,7 +15,11 @@ export async function ScheduleSection() {
     // id: the Club Essentials "Fixtures & Events" card links here — this band IS
     // the training calendar and events rail, so it is the destination rather than
     // a separate page.
-    <FlowReveal className="section-band band-fog" id="schedule">
+    //
+    // band-deep: this sits between the Welcome band (fog) and §4 (fog), so it
+    // takes deep to keep the alternation. It was fog when it lived at the foot of
+    // the page, between News (deep) and the red conversion footer.
+    <FlowReveal className="section-band band-deep" id="schedule">
       {/* No data-touchline-node here: the floating ball overlaps this dense
           schedule grid (esp. on mobile), so the ball skips this section. */}
       <div className="container-wide">

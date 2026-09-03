@@ -44,7 +44,7 @@ export function NewsCard({
         <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-gold">{kicker}</p>
         <h3 className="mt-3 text-xl font-black leading-tight text-white">{title}</h3>
         {body ? (
-          <p className="mt-3 line-clamp-3 text-sm leading-6 text-white/72">{body}</p>
+          <p className="mt-3 line-clamp-3 text-sm leading-6 text-astra-white">{body}</p>
         ) : null}
         <span className="mt-5 inline-flex items-center gap-2 text-sm font-black text-astra-red">
           {cta}

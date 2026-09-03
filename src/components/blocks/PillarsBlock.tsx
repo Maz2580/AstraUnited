@@ -11,7 +11,7 @@ export function PillarsBlock({ title, items }: Props) {
         {items.map((item, index) => (
           <PopCard key={item.label} className="card-dark p-5" delay={index * 0.04}>
             <p className="text-xs font-black uppercase tracking-[0.14em] text-astra-red">{item.label}</p>
-            <p className="mt-2 text-sm leading-6 text-white/72">{item.copy}</p>
+            <p className="mt-2 text-sm leading-6 text-astra-white">{item.copy}</p>
           </PopCard>
         ))}
       </div>

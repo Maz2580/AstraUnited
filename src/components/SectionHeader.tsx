@@ -24,7 +24,7 @@ export function SectionHeader({
         {title}
       </h2>
       {copy ? (
-        <p className={`mt-5 text-base leading-7 sm:text-lg ${inverse ? "text-white/72" : "text-slate-700"}`}>
+        <p className={`mt-5 text-base leading-7 sm:text-lg ${inverse ? "text-astra-white" : "text-slate-700"}`}>
           {copy}
         </p>
       ) : null}

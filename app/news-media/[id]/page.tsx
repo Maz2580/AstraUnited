@@ -58,7 +58,7 @@ export default async function NewsPostPage({ params }: Props) {
             <div className="mx-auto mt-8 max-w-3xl">
               <div className="flex flex-wrap items-center gap-3 text-xs font-black uppercase tracking-[0.16em]">
                 <span className="rounded-full bg-astra-red/15 px-3 py-1 text-astra-red">{article.category}</span>
-                {article.dateLabel ? <span className="text-white/50">{article.dateLabel}</span> : null}
+                {article.dateLabel ? <span className="text-astra-white">{article.dateLabel}</span> : null}
               </div>
               <h1 className="crest-type mt-4 text-4xl leading-[1.04] text-white sm:text-5xl">{article.title}</h1>
             </div>

@@ -155,7 +155,9 @@ export function StandardsBoard({ items }: { items: StandardItem[] }) {
                     style={{
                       maxHeight: "calc(max(var(--open,0), var(--hover,0)) * 9rem)",
                       marginTop: "calc(max(var(--open,0), var(--hover,0)) * 0.5rem)",
-                      color: "rgba(255,255,255, calc(max(var(--open,0), var(--hover,0)) * 0.72))"
+                      // fades in to the site's solid copy white (#f8fbfd), not to a
+                      // dimmed 72% as before — every other card's copy is solid.
+                      color: "rgba(248,251,253, max(var(--open,0), var(--hover,0)))"
                     }}
                   >
                     {item.detail}

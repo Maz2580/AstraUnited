@@ -24,7 +24,7 @@ export function PageHero({ eyebrow, title, intro, hero, overrideSrc }: Props) {
           <span className="text-xs font-bold uppercase tracking-[0.18em] text-astra-gold">{eyebrow}</span>
         </div>
         <h1 className="crest-type mt-5 max-w-5xl text-5xl leading-[0.9] sm:text-7xl">{title}</h1>
-        <p className="mt-6 max-w-3xl text-lg leading-8 text-white/76">{intro}</p>
+        <p className="mt-6 max-w-3xl text-lg leading-8 text-astra-white">{intro}</p>
       </Reveal>
     </section>
   );

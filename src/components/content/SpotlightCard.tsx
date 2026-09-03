@@ -64,7 +64,7 @@ export function SpotlightCard({ event, unoptimized = false }: { event: EventPost
       <h3 className="crest-type mt-3 text-3xl leading-none text-white sm:text-4xl" style={headlineStyle}>
         {event.headline}
       </h3>
-      <p className="mt-4 text-sm leading-6 text-white/72" style={bodyStyle}>
+      <p className="mt-4 text-sm leading-6 text-astra-white" style={bodyStyle}>
         {event.body}
       </p>
       {showCta ? (

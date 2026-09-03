@@ -11,7 +11,7 @@ export function CardsBlock({ title, intro, items }: Props) {
         {items.map((item, index) => (
           <PopCard key={item.title} className="card-dark p-6" delay={index * 0.05}>
             <h3 className="text-xl font-black text-white">{item.title}</h3>
-            <p className="mt-3 text-sm leading-6 text-white/72">{item.copy}</p>
+            <p className="mt-3 text-sm leading-6 text-astra-white">{item.copy}</p>
           </PopCard>
         ))}
       </div>

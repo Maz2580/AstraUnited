@@ -47,7 +47,7 @@ export function ContactForm({ title, intro, subjects, submitLabel, mailto }: Pro
           {submitLabel}
           <Send aria-hidden="true" className="btn-icon h-4 w-4" />
         </button>
-        <p className="text-xs text-white/48">This opens your email app addressed to the club. We aim to respond within 48 business hours.</p>
+        <p className="text-xs text-astra-white">This opens your email app addressed to the club. We aim to respond within 48 business hours.</p>
       </form>
     </div>
   );

@@ -35,7 +35,7 @@ export function SeniorPathway({ band = "band-deep" }: { band?: string }) {
           <WomensMotionCard />
           <div className="border-t border-white/10 p-5 text-white">
             <p className="text-xs font-black uppercase tracking-normal text-astra-gold">Women&apos;s First Team</p>
-            <p className="mt-2 text-sm leading-6 text-white/72">
+            <p className="mt-2 text-sm leading-6 text-astra-white">
               A growing women&apos;s program at Darebin International Sports Centre.
             </p>
           </div>

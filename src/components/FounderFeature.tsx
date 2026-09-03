@@ -61,13 +61,13 @@ export function FounderFeature() {
           <h2 className="crest-type mt-5 text-4xl leading-[0.95] text-white sm:text-5xl">
             {founder.name}
           </h2>
-          <p className="mt-3 text-base font-semibold text-white/80">{founder.role}</p>
+          <p className="mt-3 text-base font-semibold text-astra-white">{founder.role}</p>
 
           <ul className="mt-5 flex flex-wrap gap-2" aria-label="Credentials">
             {founder.titles.map((title) => (
               <li
                 key={title}
-                className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide text-white/75"
+                className="rounded-full border border-white/15 bg-white/5 px-3 py-1.5 text-[0.7rem] font-bold uppercase tracking-wide text-astra-white"
               >
                 {title}
               </li>
@@ -81,12 +81,12 @@ export function FounderFeature() {
             </blockquote>
           </figure>
 
-          <p className="mt-7 max-w-2xl text-base leading-7 text-white/75">{founder.summary}</p>
+          <p className="mt-7 max-w-2xl text-base leading-7 text-astra-white">{founder.summary}</p>
 
           <dl className="mt-8 grid gap-px overflow-hidden rounded border border-white/10 bg-white/5 sm:grid-cols-2 lg:grid-cols-4">
             {founder.honours.map((honour) => (
               <div key={honour} className="bg-astra-ink/40 px-4 py-4">
-                <dd className="text-sm font-semibold leading-6 text-white/85">{honour}</dd>
+                <dd className="text-sm font-semibold leading-6 text-astra-white">{honour}</dd>
               </div>
             ))}
           </dl>

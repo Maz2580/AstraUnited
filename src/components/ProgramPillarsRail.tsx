@@ -95,7 +95,7 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                 <h3 className="crest-type type-h5 text-white">{pillar.label}</h3>
               </div>
               <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
-              <p className="type-body mt-2 text-white/70">{pillar.copy}</p>
+              <p className="type-body mt-2 text-astra-white">{pillar.copy}</p>
             </div>
           );
         })}
@@ -171,16 +171,11 @@ export function ProgramPillarsRail({ pillars }: { pillars: ProgramPillar[] }) {
                     than dimmed with the copy, so every card keeps a readable
                     anchor while the spotlight is somewhere else on the rail. */}
                 <p className="type-body type-strong mt-3 text-astra-gold">{pillar.title}</p>
-                {/* copy is always present; it brightens from dim to full as the
-                    spotlight (or hover) reaches the card. */}
-                <p
-                  className="type-body mt-2 transition-colors duration-300"
-                  style={{
-                    color: "rgba(255,255,255, calc(0.5 + max(var(--spot,0), var(--hover,0)) * 0.4))"
-                  }}
-                >
-                  {pillar.copy}
-                </p>
+                {/* copy is always present, in the site's one solid copy white.
+                    It used to sit at 50% and brighten as the spotlight arrived,
+                    which the team read as blurry, hard-to-read text; the card's
+                    lift and ring glow carry the spotlight on their own. */}
+                <p className="type-body mt-2 text-astra-white">{pillar.copy}</p>
               </div>
             </div>
           );
